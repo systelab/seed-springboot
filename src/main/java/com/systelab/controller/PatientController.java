@@ -2,7 +2,7 @@ package com.systelab.controller;
 
 import com.systelab.model.Patient;
 import com.systelab.repository.PatientRepository;
-import com.systelab.service.PatientNotFoundException;
+import com.systelab.repository.PatientNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

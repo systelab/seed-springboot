@@ -1,4 +1,4 @@
-package com.systelab.service;
+package com.systelab.repository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

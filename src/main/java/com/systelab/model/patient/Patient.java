@@ -1,4 +1,4 @@
-package com.systelab.model;
+package com.systelab.model.patient;
 
 import io.swagger.annotations.ApiModelProperty;
 

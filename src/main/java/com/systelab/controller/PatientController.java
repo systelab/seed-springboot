@@ -1,10 +1,11 @@
 package com.systelab.controller;
 
-import com.systelab.model.Patient;
+import com.systelab.model.patient.Patient;
 import com.systelab.repository.PatientRepository;
 import com.systelab.repository.PatientNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -13,9 +14,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@Api(value = "Patient", description = "API for patient management", produces = "application/json")
+@Api(value = "Patient", description = "API for patient management")
 @RestController
-@RequestMapping("/seed/v1")
+@RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
     @Autowired

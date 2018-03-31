@@ -1,0 +1,79 @@
+package com.systelab.controller;
+
+import com.systelab.model.user.User;
+import com.systelab.repository.PatientNotFoundException;
+import com.systelab.repository.UserRepository;
+import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
+
+@Api(value = "User", description = "API for user management")
+@RestController
+@RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
+
+
+    @ApiOperation(value = "User Login", notes = "")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "An authorization key in the header"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Internal Server Error")})
+
+    @PostMapping(value = "users/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PermitAll
+    public ResponseEntity<String> authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) {
+        //   String token = userService.getToken(uriInfo.getAbsolutePath().toString(), login, password);
+        String token = "efgesrdcxfvgbhjymnhtgfdsadfghtnjykgmbfvdcs";
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+    }
+
+
+    @ApiOperation(value = "Get all Users", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "An array of Users", response = User.class, responseContainer = "List"), @ApiResponse(code = 500, message = "Internal Server Error")})
+
+    @GetMapping("users")
+    @RolesAllowed("ADMIN")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "A User", response = User.class), @ApiResponse(code = 400, message = "Validation exception"), @ApiResponse(code = 500, message = "Internal Server Error")})
+
+    @PostMapping("users/user")
+    @RolesAllowed("ADMIN")
+    public User create(@RequestBody @ApiParam(value = "User", required = true) @Valid User user) {
+        user.setId(null);
+        return userRepository.save(user);
+    }
+
+    @ApiOperation(value = "Get User", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "A user", response = User.class), @ApiResponse(code = 404, message = "User not found"), @ApiResponse(code = 500, message = "Internal Server Error")})
+
+    @GetMapping("users/{uid}")
+    @PermitAll
+    public User getUser(@PathVariable("uid") Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent())
+            throw new PatientNotFoundException("id-" + userId);
+        return user.get();
+    }
+
+    @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 500, message = "Internal Server Error")})
+    @DeleteMapping("users/{uid}")
+    @RolesAllowed("ADMIN")
+    public void remove(@PathVariable("uid") Long userId) {
+        userRepository.deleteById(userId);
+    }
+}

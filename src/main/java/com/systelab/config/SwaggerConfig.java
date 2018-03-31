@@ -27,9 +27,9 @@ public class SwaggerConfig {
     }
     private ApiInfo metaData() {
         ApiInfo apiInfo = new ApiInfo(
-                "Spring Boot REST API",
-                "Spring Boot REST API for Patients",
-                "1.0",
+                "Seed application programming interface (API)",
+                "Restful API to manage the Seed Application to be used as an example.",
+                "V1.0",
                 "Terms of service",
                 new Contact("Alfons Serra", "https://github.com/alfonsserra/", "alfonsoserra@gmail.com"),
                 "Apache License Version 2.0",

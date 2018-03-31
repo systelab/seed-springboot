@@ -28,9 +28,9 @@ public class SwaggerConfig {
                 "Spring Boot REST API for Patients",
                 "1.0",
                 "Terms of service",
-                "alfonsoserra@gmail.com",
+                new Contact("Alfons Serra", "https://github.com/alfonsserra/", "alfonsoserra@gmail.com"),
                 "Apache License Version 2.0",
-                "https://www.apache.org/licenses/LICENSE-2.0");
+                "https://www.apache.org/licenses/LICENSE-2.0",null);
         return apiInfo;
     }
 }

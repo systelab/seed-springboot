@@ -1,5 +1,7 @@
 package com.systelab.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,6 +20,7 @@ public class Patient implements Serializable {
 
     @Id
     @GeneratedValue
+    @ApiModelProperty(notes = "The database generated patient ID")
     private Long id;
 
     @Size(min = 1, max = 255)

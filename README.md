@@ -27,6 +27,10 @@ In order to install the dependencies you must run:
 mvn install
 ```
 
+## API
+
+You will find the swagger UI at http://localhost:8080/swagger-ui.html
+
 
 [git]: https://git-scm.com/
 [maven]: https://maven.apache.org/download.cgi

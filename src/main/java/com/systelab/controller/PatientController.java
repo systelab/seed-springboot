@@ -1,13 +1,16 @@
 package com.systelab.controller;
 
 import com.systelab.model.Patient;
-import com.systelab.service.PatientService;
+import com.systelab.repository.PatientRepository;
+import com.systelab.service.PatientNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,15 +24,15 @@ import io.swagger.annotations.Authorization;
 @RequestMapping("/seed/v1")
 public class PatientController {
 
-    public static PatientService patientService = new PatientService();
-
+    @Autowired
+    private PatientRepository patientRepository;
 
     @ApiOperation(value = "Get all Patients", notes = "")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "An array of Patient", response = Patient.class, responseContainer = "List"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PermitAll
     @GetMapping("patients")
     public List<Patient> getAllPatients() {
-        return patientService.getAllPatients();
+        return patientRepository.findAll();
     }
 
     @ApiOperation(value = "Create a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
@@ -38,8 +41,7 @@ public class PatientController {
     @PermitAll
     public Patient createPatient(@RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient patient) {
         patient.setId(null);
-        patientService.create(patient);
-        return patient;
+        return patientRepository.save(patient);
     }
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
@@ -49,9 +51,12 @@ public class PatientController {
     @PutMapping("patients/{uid}")
     @PermitAll
     public Patient updatePatient(@PathVariable("uid") Long patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient patient) {
+        Optional<Patient> patientOptional = patientRepository.findById(patientId);
+        if (!patientOptional.isPresent())
+            throw new PatientNotFoundException("id-" + patientId);
+
         patient.setId(patientId);
-        Patient updatedPatient = patientService.update(patientId, patient);
-        return updatedPatient;
+        return patientRepository.save(patient);
     }
 
     @ApiOperation(value = "Get Patient", notes = "")
@@ -59,7 +64,10 @@ public class PatientController {
     @GetMapping("patients/{uid}")
     @PermitAll
     public Patient getPatient(@PathVariable("uid") Long patientId) {
-        return patientService.getPatient(patientId);
+        Optional<Patient> patient = patientRepository.findById(patientId);
+        if (!patient.isPresent())
+            throw new PatientNotFoundException("id-" + patientId);
+        return patient.get();
     }
 
     @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
@@ -67,6 +75,6 @@ public class PatientController {
     @DeleteMapping("patients/{uid}")
     @RolesAllowed("ADMIN")
     public void remove(@PathVariable("uid") Long patientId) {
-        patientService.delete(patientId);
+        patientRepository.deleteById(patientId);
     }
 }

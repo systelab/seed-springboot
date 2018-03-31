@@ -1,8 +1,10 @@
 package com.systelab.model;
 
+import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
+@Embeddable
 public class Address {
 
     private String coordinates;

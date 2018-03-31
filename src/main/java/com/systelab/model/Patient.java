@@ -1,5 +1,6 @@
 package com.systelab.model;
 
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -9,11 +10,14 @@ import java.util.Date;
 @XmlRootElement
 @XmlType(propOrder = {"id", "name", "surname", "email", "dob", "address"})
 
-
+@Entity
+@Table(name = "patient")
+@NamedQueries({@NamedQuery(name = Patient.FIND_ALL, query = "SELECT p FROM Patient p")})
 public class Patient implements Serializable {
     public static final String FIND_ALL = "Patient.findAll";
 
-
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Size(min = 1, max = 255)
@@ -26,6 +30,7 @@ public class Patient implements Serializable {
 
     private Date dob;
 
+    @Embedded
     private Address address;
 
     public Long getId() {

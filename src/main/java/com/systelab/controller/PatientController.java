@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@Api(value = "Patient")
+@Api(value = "Patient", description = "API for patient management", produces = "application/json")
 @RestController
 @RequestMapping("/seed/v1")
 public class PatientController {

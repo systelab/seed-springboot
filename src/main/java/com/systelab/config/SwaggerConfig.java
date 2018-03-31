@@ -8,6 +8,9 @@ import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.ArrayList;
+
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
@@ -30,7 +33,7 @@ public class SwaggerConfig {
                 "Terms of service",
                 new Contact("Alfons Serra", "https://github.com/alfonsserra/", "alfonsoserra@gmail.com"),
                 "Apache License Version 2.0",
-                "https://www.apache.org/licenses/LICENSE-2.0",null);
+                "https://www.apache.org/licenses/LICENSE-2.0",new ArrayList<>());
         return apiInfo;
     }
 }

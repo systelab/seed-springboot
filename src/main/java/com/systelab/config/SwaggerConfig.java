@@ -25,6 +25,7 @@ public class SwaggerConfig {
                 .build()
                 .apiInfo(metaData());
     }
+
     private ApiInfo metaData() {
         ApiInfo apiInfo = new ApiInfo(
                 "Seed application programming interface (API)",
@@ -33,7 +34,7 @@ public class SwaggerConfig {
                 "Terms of service",
                 new Contact("Alfons Serra", "https://github.com/alfonsserra/", "alfonsoserra@gmail.com"),
                 "Apache License Version 2.0",
-                "https://www.apache.org/licenses/LICENSE-2.0",new ArrayList<>());
+                "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
         return apiInfo;
     }
 }

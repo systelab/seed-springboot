@@ -1,8 +1,8 @@
 package com.systelab.controller;
 
 import com.systelab.model.patient.Patient;
-import com.systelab.repository.PatientRepository;
 import com.systelab.repository.PatientNotFoundException;
+import com.systelab.repository.PatientRepository;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,8 +14,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@Api(value = "Patient", description = "API for patient management")
-@RestController
+@Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
+@RestController()
+@CrossOrigin
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
@@ -69,7 +70,7 @@ public class PatientController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @DeleteMapping("patients/{uid}")
     @RolesAllowed("ADMIN")
-    public void remove(@PathVariable("uid") Long patientId) {
+    public void removePatient(@PathVariable("uid") Long patientId) {
         patientRepository.deleteById(patientId);
     }
 }

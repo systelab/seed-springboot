@@ -14,9 +14,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "patient")
-@NamedQueries({@NamedQuery(name = Patient.FIND_ALL, query = "SELECT p FROM Patient p")})
 public class Patient implements Serializable {
-    public static final String FIND_ALL = "Patient.findAll";
 
     @Id
     @GeneratedValue
@@ -112,7 +110,7 @@ public class Patient implements Serializable {
 
     @Override
     public String toString() {
-        if (id!=null)
+        if (id != null)
             return surname + ", " + name + " (#" + id + ")";
         else
             return surname + ", " + name;

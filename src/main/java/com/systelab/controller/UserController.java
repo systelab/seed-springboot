@@ -1,5 +1,6 @@
 package com.systelab.controller;
 
+import com.systelab.infraestructure.JWTAuthenticationTokenGenerator;
 import com.systelab.model.user.User;
 import com.systelab.repository.PatientNotFoundException;
 import com.systelab.repository.UserRepository;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.ServletContext;
 import javax.validation.Valid;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,17 +28,31 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    ServletContext servletContext;
+
+    @Autowired
+    private JWTAuthenticationTokenGenerator tokenGenerator;
+
     @ApiOperation(value = "User Login", notes = "")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "An authorization key in the header"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping(value = "users/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @PermitAll
-    public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) {
-        //   String token = userService.getToken(uriInfo.getAbsolutePath().toString(), login, password);
-        String token = "Bearer efgesrdcxfvgbhjymnhtgfdsadfghtnjykgmbfvdcs";
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
-                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
-                .build();
+    public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
+
+        final User user = userRepository.findByLoginAndPassword(login, password);
+        if (user!=null) {
+            final Instant now = Instant.now();
+
+            final String jwt = tokenGenerator.issueToken(login, user.getRole().name(), servletContext.getContextPath().toString());
+            return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
+                    .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
+                    .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
+                    .build();
+        }
+        else {
+            throw new SecurityException();
+        }
     }
 
     @ApiOperation(value = "Get all Users", notes = "", authorizations = {@Authorization(value = "Bearer")})

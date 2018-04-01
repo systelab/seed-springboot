@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    web: DEBUG
+
+jwt:
+  secret: a6e21884876f43819523c31033fa697e

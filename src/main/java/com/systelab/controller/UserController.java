@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Api(value = "User", description = "API for user management", tags = {"User"})
 @RestController
-@CrossOrigin
+@CrossOrigin()
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
@@ -32,7 +32,10 @@ public class UserController {
     public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) {
         //   String token = userService.getToken(uriInfo.getAbsolutePath().toString(), login, password);
         String token = "Bearer efgesrdcxfvgbhjymnhtgfdsadfghtnjykgmbfvdcs";
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).build();
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token)
+                .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
+                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
+                .build();
     }
 
     @ApiOperation(value = "Get all Users", notes = "", authorizations = {@Authorization(value = "Bearer")})

@@ -13,6 +13,4 @@ public class SpringSecConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable();
         httpSecurity.headers().frameOptions().disable();
     }
-
-
 }

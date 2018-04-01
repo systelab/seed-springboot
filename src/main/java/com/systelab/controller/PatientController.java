@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
-@CrossOrigin
+@CrossOrigin()
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 

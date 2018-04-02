@@ -21,10 +21,18 @@ cd seed-jee
 
 ### Install Dependencies
 
-In order to install the dependencies you must run:
+In order to install the dependencies and generate the Uber jar you must run:
 
 ```bash
-mvn install
+mvn clean install
+```
+
+### Run
+
+To launch the server, simply run with java -jar the generated jar file.
+
+```bash
+java -jar springboot-test-1.0-SNAPSHOT.jar
 ```
 
 ## API

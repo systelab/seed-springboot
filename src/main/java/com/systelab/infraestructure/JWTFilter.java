@@ -31,7 +31,11 @@ public class JWTFilter implements Filter {
         final String authHeader = request.getHeader("Authorization");
 
 
-        if (request.getRequestURL().toString().endsWith("/users/login")) {
+        if (request.getRequestURL().toString().endsWith("/users/login")
+                || request.getRequestURL().toString().endsWith("swagger-ui.html")
+                || request.getRequestURL().toString().endsWith("v2/api-docs")
+                || request.getRequestURL().toString().contains("swagger-resources")
+                || request.getRequestURL().toString().contains("webjars")) {
             chain.doFilter(req, res);
         } else {
             if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {

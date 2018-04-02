@@ -18,7 +18,7 @@ RUN mvn package
 FROM openjdk:8-jre-alpine
 
 
-COPY --from=builder /seed-springboot/target/springboot-test-1.0.jar seed-springboot.jar
+COPY --from=builder /seed-springboot/target/seed-springboot-1.0.jar seed-springboot.jar
 
 
 CMD ["java","-jar","seed-springboot.jar"]

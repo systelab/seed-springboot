@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.systelab</groupId>
-  <artifactId>springboot-test</artifactId>
+  <artifactId>seed-springboot</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 
@@ -13,7 +13,7 @@
     <version>2.0.0.RELEASE</version>
   </parent>
 
-  <name>springboot-test</name>
+  <name>seed-springboot</name>
   <url>http://maven.apache.org</url>
 
   <properties>

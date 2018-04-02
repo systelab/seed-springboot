@@ -2,20 +2,20 @@
 
 ## Getting Started
 
-To get you started you can simply clone the `springboot-test` repository and install the dependencies:
+To get you started you can simply clone the `seed-springboot` repository and install the dependencies:
 
 ### Prerequisites
 
-You need [git][git] to clone the `springboot-test` repository.
+You need [git][git] to clone the `seed-springboot` repository.
 
 You will need [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
 
-### Clone `springboot-test`
+### Clone `seed-springboot`
 
-Clone the `springboot-test` repository using git:
+Clone the `seed-springboot` repository using git:
 
 ```bash
-git clone https://github.com/systelab/springboot-test.git
+git clone https://github.com/systelab/seed-springboot.git
 cd seed-jee
 ```
 
@@ -32,7 +32,7 @@ mvn clean install
 To launch the server, simply run with java -jar the generated jar file.
 
 ```bash
-java -jar springboot-test-1.0.jar
+java -jar seed-springboot-1.0.jar
 ```
 
 ## API

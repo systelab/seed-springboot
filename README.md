@@ -32,7 +32,7 @@ mvn clean install
 To launch the server, simply run with java -jar the generated jar file.
 
 ```bash
-java -jar springboot-test-1.0-SNAPSHOT.jar
+java -jar springboot-test-1.0.jar
 ```
 
 ## API

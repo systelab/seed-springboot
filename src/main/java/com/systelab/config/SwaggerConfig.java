@@ -1,9 +1,11 @@
 package com.systelab.config;
 
+import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -23,7 +25,12 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.systelab.controller"))
                 .paths(regex("/seed/v1.*"))
                 .build()
-                .apiInfo(metaData());
+                .apiInfo(metaData())
+                .securitySchemes(Lists.newArrayList(apiKey()));
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("Bearer", "Authorization", "header");
     }
 
     private ApiInfo metaData() {

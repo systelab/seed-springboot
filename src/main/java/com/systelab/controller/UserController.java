@@ -2,7 +2,6 @@ package com.systelab.controller;
 
 import com.systelab.infraestructure.JWTAuthenticationTokenGenerator;
 import com.systelab.model.user.User;
-import com.systelab.model.user.UserRole;
 import com.systelab.repository.PatientNotFoundException;
 import com.systelab.repository.UserRepository;
 import io.swagger.annotations.*;
@@ -45,17 +44,8 @@ public class UserController {
     @PermitAll
     public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
 
-        User user = userRepository.findByLoginAndPassword(login, password);
-        if (login.equals("Systelab") && password.equals("Systelab")) {
-            user=new User();
-            user.setRole(UserRole.ADMIN);
-            user.setLogin("Systelab");
-            user.setPassword("Systelab");
-            user.setName("Systelab");
-            user.setSurname("Systelab");
-            System.out.println(bCryptPasswordEncoder.encode(user.getPassword()));
-        }
-        if (user!=null) {
+        User user = userRepository.findByLoginAndPassword(login, bCryptPasswordEncoder.encode(password));
+        if (user != null) {
             final Instant now = Instant.now();
 
             final String jwt = tokenGenerator.issueToken(login, user.getRole().name(), servletContext.getContextPath().toString());
@@ -63,8 +53,7 @@ public class UserController {
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
                     .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")
                     .build();
-        }
-        else {
+        } else {
             throw new SecurityException();
         }
     }

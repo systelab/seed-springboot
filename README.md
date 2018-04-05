@@ -2,7 +2,26 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7ce4e563c45b4d09a975d61bed7d5d50)](https://www.codacy.com/app/alfonsserra/seed-springboot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=systelab/seed-springboot&amp;utm_campaign=Badge_Grade)
 
 
-# Spring Boot Example
+# `seed-springboot` — Seed for Spring Boot Systelab projects
+
+This project is an application skeleton for a typical [Spring Boot][sboot] backend application. You can use it
+to quickly bootstrap your projects and dev environment.
+
+The seed contains a Patient Management sample application and is preconfigured to install the JEE
+framework and a bunch of development and testing tools for instant development gratification.
+
+The app doesn't do too much, just shows how to use different JEE standards and other suggested tools together:
+
+* [Bean Validation][beanvalidation].
+* [JAXB][jaxb]
+* [CDI][cdi]
+* [JPA][jpa]
+* [EJB][ejb]
+* [JAX-RS][jaxrs]
+* [JWT][jwt]
+* [CORS][cors]
+* [Swagger][swagger]
+* [Allure][allure] with [JUnit][junit]
 
 ## Getting Started
 
@@ -20,7 +39,7 @@ Clone the `seed-springboot` repository using git:
 
 ```bash
 git clone https://github.com/systelab/seed-springboot.git
-cd seed-jee
+cd seed-springboot
 ```
 
 ### Install Dependencies
@@ -43,9 +62,47 @@ java -jar seed-springboot-1.0.jar
 
 You will find the swagger UI at http://localhost:8080/swagger-ui.html
 
+## Docker
+
+### Build docker image
+
+There is an Automated Build Task in Docker Cloud in order to build the Docker Image. 
+This task, triggers a new build with every git push to your source code repository to create a 'latest' image.
+There is another build rule to trigger a new tag and create a 'version-x.y.z' image
+
+You can always manually create the image with the following command:
+
+```bash
+docker build -t systelab/seed-springboot . 
+```
+
+### Run the container
+
+```bash
+docker run -e 8080:8080 systelab/seed-springboot
+```
+
+The app will be available at http://localhost:8080/swagger-ui.html
+
+
+
 
 [git]: https://git-scm.com/
+[sboot]: https://projects.spring.io/spring-boot/
 [maven]: https://maven.apache.org/download.cgi
 [jdk-download]: http://www.oracle.com/technetwork/java/javase/downloads
+[JEE]: http://www.oracle.com/technetwork/java/javaee/tech/index.html
+[wildfly]: http://wildfly.org
+[beanvalidation]:https://docs.oracle.com/javaee/7/tutorial/bean-validation001.htm
+[jaxb]: https://docs.oracle.com/javaee/7/tutorial/jaxrs-advanced007.htm
+[cdi]: https://docs.oracle.com/javaee/7/tutorial/cdi-basic.htm
+[jpa]: https://docs.oracle.com/javaee/7/tutorial/jaxrs-advanced007.htm
+[ejb]: https://docs.oracle.com/javaee/7/tutorial/partentbeans.htm#BNBLR
+[jaxrs]: https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm#GIEPU
+[jwt]: https://jwt.io/
+[cors]: https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+[swagger]: https://swagger.io/
+[allure]: https://docs.qameta.io/allure/
+[junit]: https://junit.org/junit5/
 
 

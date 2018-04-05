@@ -21,7 +21,6 @@ public class JWTFilter implements Filter {
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override

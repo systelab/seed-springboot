@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SpringSecConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    JWTFilter adminAuthenticationFilter;
+    private JWTFilter adminAuthenticationFilter;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {

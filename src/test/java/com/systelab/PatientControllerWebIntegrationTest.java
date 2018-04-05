@@ -29,10 +29,10 @@ public class PatientControllerWebIntegrationTest {
     private int port;
 
     @Autowired
-    JWTAuthenticationTokenGenerator tokenGenerator;
+    private JWTAuthenticationTokenGenerator tokenGenerator;
 
-    TestRestTemplate restTemplate = new TestRestTemplate();
-    HttpHeaders headers = new HttpHeaders();
+    private TestRestTemplate restTemplate = new TestRestTemplate();
+    private HttpHeaders headers = new HttpHeaders();
 
     @Before
     public void login() {
@@ -41,7 +41,6 @@ public class PatientControllerWebIntegrationTest {
 
     @Test
     public void testGetAll() throws IOException {
-
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
         ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/seed/v1/patients"), HttpMethod.GET, entity, List.class);
         assertEquals(response.getBody().size(), 0);

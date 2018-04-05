@@ -30,7 +30,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    ServletContext servletContext;
+    private ServletContext servletContext;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -46,8 +46,6 @@ public class UserController {
 
         User user = userRepository.findByLoginAndPassword(login, bCryptPasswordEncoder.encode(password));
         if (user != null) {
-            final Instant now = Instant.now();
-
             final String jwt = tokenGenerator.issueToken(login, user.getRole().name(), servletContext.getContextPath().toString());
             return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt)
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "origin, content-type, accept, authorization, ETag, if-none-match")

@@ -1,8 +1,10 @@
 package com.systelab;
 
+import com.systelab.infraestructure.JWTAuthenticationTokenGenerator;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.assertEquals;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -15,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 // Check http://www.springboottutorial.com/integration-testing-for-spring-boot-rest-services
 
 @RunWith(SpringRunner.class)
@@ -24,8 +28,16 @@ public class PatientControllerWebIntegrationTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    JWTAuthenticationTokenGenerator tokenGenerator;
+
     TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
+
+    @Before
+    public void login() {
+        headers.add("Authorization", "Bearer " + tokenGenerator.issueToken("Systelab", "ADMIN", "http://localhost:" + port));
+    }
 
     @Test
     public void testGetAll() throws IOException {

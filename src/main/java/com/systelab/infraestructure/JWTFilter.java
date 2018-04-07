@@ -3,66 +3,42 @@ package com.systelab.infraestructure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class JWTFilter implements Filter {
+public class JWTFilter extends GenericFilterBean {
 
-    @Autowired
     private JWTAuthenticationTokenGenerator tokenGenerator;
 
-    @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
+    public JWTFilter(JWTAuthenticationTokenGenerator tokenGenerator) {
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Override
     public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
-        final HttpServletRequest request = (HttpServletRequest) req;
-        final HttpServletResponse response = (HttpServletResponse) res;
-        final String authHeader = request.getHeader("Authorization");
-
-
-        if (request.getRequestURL().toString().endsWith("/users/login")
-                || request.getRequestURL().toString().endsWith("swagger-ui.html")
-                || request.getRequestURL().toString().endsWith("v2/api-docs")
-                || request.getRequestURL().toString().contains("/h2")
-                || request.getRequestURL().toString().contains("swagger-resources")
-                || request.getRequestURL().toString().contains("webjars")) {
-            chain.doFilter(req, res);
-        } else {
-            if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
-                response.setStatus(HttpServletResponse.SC_OK);
-                chain.doFilter(req, res);
-            } else {
-
-                if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
-                }
-                final String token = authHeader.substring(7);
-                try {
-                    String userRole = tokenGenerator.validateToken(token);
-                } catch (Exception ex) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
-                }
-
-                chain.doFilter(req, res);
+        final String authHeader = ((HttpServletRequest) req).getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            if (tokenGenerator==null) System.out.println("tokenGenerator is null");
+            if (tokenGenerator.validateToken(authHeader.substring(7))) {
+                Authentication authentication = tokenGenerator.getAuthentication(authHeader.substring(7));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-    }
-
-    @Override
-    public void destroy() {
+        chain.doFilter(req, res);
 
     }
+
 }
 

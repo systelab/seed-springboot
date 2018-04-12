@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/systelab/seed-springboot.svg?branch=master)](https://travis-ci.org/systelab/seed-springboot)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7ce4e563c45b4d09a975d61bed7d5d50)](https://www.codacy.com/app/alfonsserra/seed-springboot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=systelab/seed-springboot&amp;utm_campaign=Badge_Grade)
-
+[![Known Vulnerabilities](https://snyk.io/test/github/systelab/seed-springboot/badge.svg?targetFile=pom.xml)](https://snyk.io/test/github/systelab/seed-springboot?targetFile=pom.xml)
 
 # `seed-springboot` — Seed for Spring Boot Systelab projects
 

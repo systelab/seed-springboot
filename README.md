@@ -10,17 +10,16 @@ to quickly bootstrap your projects and dev environment.
 The seed contains a Patient Management sample application and is preconfigured to install the JEE
 framework and a bunch of development and testing tools for instant development gratification.
 
-The app doesn't do too much, just shows how to use different JEE standards and other suggested tools together:
+The app doesn't do too much, just shows how to use different standards and other suggested tools together:
 
-* [Bean Validation][beanvalidation].
-* [JAXB][jaxb]
-* [CDI][cdi]
-* [JPA][jpa]
-* [EJB][ejb]
-* [JAX-RS][jaxrs]
+* Spring Boot
+* Spring Boot Web
+* Spring Boot Data JPA
 * [JWT][jwt]
 * [CORS][cors]
 * [Swagger][swagger]
+* Spring Boot Security
+* Spring Boot Test
 * [Allure][allure] with [JUnit][junit]
 
 ## Getting Started
@@ -92,13 +91,6 @@ The app will be available at http://localhost:8080/swagger-ui.html
 [maven]: https://maven.apache.org/download.cgi
 [jdk-download]: http://www.oracle.com/technetwork/java/javase/downloads
 [JEE]: http://www.oracle.com/technetwork/java/javaee/tech/index.html
-[wildfly]: http://wildfly.org
-[beanvalidation]:https://docs.oracle.com/javaee/7/tutorial/bean-validation001.htm
-[jaxb]: https://docs.oracle.com/javaee/7/tutorial/jaxrs-advanced007.htm
-[cdi]: https://docs.oracle.com/javaee/7/tutorial/cdi-basic.htm
-[jpa]: https://docs.oracle.com/javaee/7/tutorial/jaxrs-advanced007.htm
-[ejb]: https://docs.oracle.com/javaee/7/tutorial/partentbeans.htm#BNBLR
-[jaxrs]: https://docs.oracle.com/javaee/7/tutorial/jaxrs.htm#GIEPU
 [jwt]: https://jwt.io/
 [cors]: https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
 [swagger]: https://swagger.io/

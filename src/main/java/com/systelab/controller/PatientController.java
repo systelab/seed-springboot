@@ -1,22 +1,23 @@
 package com.systelab.controller;
 
 import com.systelab.model.patient.Patient;
-import com.systelab.model.user.UserRole;
 import com.systelab.repository.PatientNotFoundException;
 import com.systelab.repository.PatientRepository;
-import com.systelab.repository.UserNotFoundException;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.net.URI;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
@@ -29,36 +30,39 @@ public class PatientController {
 
     @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
-    }
-
-    @ApiOperation(value = "Create a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("patients/patient")
-    public Patient createPatient(@RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient patient) {
-        patient.setId(null);
-        return patientRepository.save(patient);
-    }
-
-    @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @PutMapping("patients/{uid}")
-    public Patient updatePatient(@PathVariable("uid") Long patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient patient) {
-        Optional<Patient> patientOptional = patientRepository.findById(patientId);
-        if (!patientOptional.isPresent())
-            throw new PatientNotFoundException(patientId);
-
-        patient.setId(patientId);
-        return patientRepository.save(patient);
+    public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
+        return ResponseEntity.ok(patientRepository.findAll(pageable));
     }
 
     @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients/{uid}")
-    public Patient getPatient(@PathVariable("uid") Long patientId) {
-        Optional<Patient> patient = patientRepository.findById(patientId);
-        if (!patient.isPresent())
-            throw new PatientNotFoundException(patientId);
-        return patient.get();
+    public ResponseEntity<Patient> getPatient(@PathVariable("uid") Long patientId) {
+        return this.patientRepository.findById(patientId).map(ResponseEntity::ok).orElseThrow(() -> new PatientNotFoundException(patientId));
+
     }
+
+    @ApiOperation(value = "Create a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @PostMapping("patients/patient")
+    public ResponseEntity<Patient> createPatient(@RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
+        Patient patient = this.patientRepository.save(p);
+
+        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(patient.getId()).toUri();
+        return ResponseEntity.created(uri).body(patient);
+    }
+
+    @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @PutMapping("patients/{uid}")
+    public ResponseEntity<Patient> updatePatient(@PathVariable("uid") Long patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
+        return this.patientRepository
+                .findById(patientId)
+                .map(existing -> {
+                    p.setId(patientId);
+                    Patient patient = this.patientRepository.save(p);
+                    URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+                    return ResponseEntity.created(selfLink).body(patient);
+                }).orElseThrow(() -> new PatientNotFoundException(patientId));
+    }
+
 
     @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("patients/{uid}")

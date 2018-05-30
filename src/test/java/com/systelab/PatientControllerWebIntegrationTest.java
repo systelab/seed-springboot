@@ -1,13 +1,11 @@
 package com.systelab;
 
-import com.systelab.infraestructure.JWTAuthenticationTokenGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,22 +26,16 @@ public class PatientControllerWebIntegrationTest {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private JWTAuthenticationTokenGenerator tokenGenerator;
 
     private TestRestTemplate restTemplate = new TestRestTemplate();
     private HttpHeaders headers = new HttpHeaders();
 
     @Before
     public void login() {
-        headers.add("Authorization", "Bearer " + tokenGenerator.issueToken("Systelab", "ADMIN", "http://localhost:" + port));
     }
 
     @Test
     public void testGetAll() throws IOException {
-        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-        ResponseEntity<List> response = restTemplate.exchange(createURLWithPort("/seed/v1/patients"), HttpMethod.GET, entity, List.class);
-        assertEquals(response.getBody().size(), 0);
     }
 
     private String createURLWithPort(String uri) {

@@ -4,9 +4,11 @@ import com.systelab.model.patient.Patient;
 import com.systelab.model.user.UserRole;
 import com.systelab.repository.PatientNotFoundException;
 import com.systelab.repository.PatientRepository;
+import com.systelab.repository.UserNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +27,13 @@ public class PatientController {
     @Autowired
     private PatientRepository patientRepository;
 
-    @ApiOperation(value = "Get all Patients", notes = "")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "An array of Patient", response = Patient.class, responseContainer = "List"), @ApiResponse(code = 500, message = "Internal Server Error")})
+    @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
 
     @ApiOperation(value = "Create a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "A Patient", response = Patient.class), @ApiResponse(code = 400, message = "Validation exception"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping("patients/patient")
     public Patient createPatient(@RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient patient) {
         patient.setId(null);
@@ -41,33 +41,32 @@ public class PatientController {
     }
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @ApiResponses(
-            value = {@ApiResponse(code = 200, message = "A Patient", response = Patient.class), @ApiResponse(code = 400, message = "Validation exception"), @ApiResponse(code = 404, message = "Patient not found"),
-                    @ApiResponse(code = 500, message = "Internal Server Error")})
     @PutMapping("patients/{uid}")
     public Patient updatePatient(@PathVariable("uid") Long patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient patient) {
         Optional<Patient> patientOptional = patientRepository.findById(patientId);
         if (!patientOptional.isPresent())
-            throw new PatientNotFoundException("id-" + patientId);
+            throw new PatientNotFoundException(patientId);
 
         patient.setId(patientId);
         return patientRepository.save(patient);
     }
 
-    @ApiOperation(value = "Get Patient", notes = "")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "A Patient", response = Patient.class), @ApiResponse(code = 404, message = "Patient not found"), @ApiResponse(code = 500, message = "Internal Server Error")})
+    @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients/{uid}")
     public Patient getPatient(@PathVariable("uid") Long patientId) {
         Optional<Patient> patient = patientRepository.findById(patientId);
         if (!patient.isPresent())
-            throw new PatientNotFoundException("id-" + patientId);
+            throw new PatientNotFoundException(patientId);
         return patient.get();
     }
 
     @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @DeleteMapping("patients/{uid}")
-    public void removePatient(@PathVariable("uid") Long patientId) {
-        patientRepository.deleteById(patientId);
+    public ResponseEntity<?> removePatient(@PathVariable("uid") Long patientId) {
+        return this.patientRepository.findById(patientId)
+                .map(c -> {
+                    patientRepository.delete(c);
+                    return ResponseEntity.noContent().build();
+                }).orElseThrow(() -> new PatientNotFoundException(patientId));
     }
 }

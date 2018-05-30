@@ -54,6 +54,7 @@ mvn clean install
 To launch the server, simply run with java -jar the generated jar file.
 
 ```bash
+cd target
 java -jar seed-springboot-1.0.jar
 ```
 

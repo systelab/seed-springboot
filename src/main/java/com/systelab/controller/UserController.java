@@ -69,7 +69,6 @@ public class UserController {
     @ApiOperation(value = "Get all Users", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {@ApiResponse(code = 200, message = "An array of Users", response = User.class, responseContainer = "List"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping("users")
-    @RolesAllowed("ADMIN")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -77,7 +76,6 @@ public class UserController {
     @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {@ApiResponse(code = 200, message = "A User", response = User.class), @ApiResponse(code = 400, message = "Validation exception"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @PostMapping("users/user")
-    @RolesAllowed("ADMIN")
     public User createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User user) {
         user.setId(null);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -87,7 +85,6 @@ public class UserController {
     @ApiOperation(value = "Get User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {@ApiResponse(code = 200, message = "A user", response = User.class), @ApiResponse(code = 404, message = "User not found"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @GetMapping("users/{uid}")
-    @PermitAll
     public User getUser(@PathVariable("uid") Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (!user.isPresent())
@@ -98,7 +95,6 @@ public class UserController {
     @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 500, message = "Internal Server Error")})
     @DeleteMapping("users/{uid}")
-    @RolesAllowed("ADMIN")
     public void removeUser(@PathVariable("uid") Long userId) {
         userRepository.deleteById(userId);
     }

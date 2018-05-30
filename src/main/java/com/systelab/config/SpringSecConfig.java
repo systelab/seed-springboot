@@ -37,8 +37,7 @@ public class SpringSecConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/v2/api-docs/**").permitAll()
                 .antMatchers("/seed/v1/users/login").permitAll()
-                .antMatchers("/seed/v1/**").authenticated()
-                .antMatchers("/management/**").hasAuthority("ADMIN");
+                .antMatchers("/seed/v1/**").authenticated();
 
         JWTFilter customFilter = new JWTFilter(tokenGenerator);
         httpSecurity.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);

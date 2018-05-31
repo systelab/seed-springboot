@@ -62,6 +62,9 @@ java -jar seed-springboot-1.0.jar
 
 You will find the swagger UI at http://localhost:8080/swagger-ui.html
 
+First generate a token by login as user Systelab and password Systelab. After that authorize Swagger by copying the bearer.
+
+
 ## Docker
 
 ### Build docker image

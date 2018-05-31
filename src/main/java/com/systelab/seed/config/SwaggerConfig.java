@@ -1,4 +1,4 @@
-package com.systelab.config;
+package com.systelab.seed.config;
 
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class SwaggerConfig {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.systelab.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.systelab.seed.controller"))
                 .paths(regex("/seed/v1.*"))
                 .build()
                 .apiInfo(metaData())

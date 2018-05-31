@@ -7,8 +7,10 @@ logging:
       springframework:
         web: DEBUG
 
-jwt:
-  secret: a6e21884876f43819523c31033fa697e
+security:
+  jwt:
+    client-secret: XY7kmzoNzl100
+    token-validity-seconds: 6060
 
 spring:
   datasource:
@@ -22,7 +24,6 @@ spring:
     min-evictable-idle-time-millis: 1000
     min-idle: 8
     time-between-eviction-runs-millis: 1
-
 
   h2:
     console:

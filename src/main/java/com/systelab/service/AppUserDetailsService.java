@@ -9,14 +9,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Component
+@Service(value = "userService")
 public class AppUserDetailsService implements UserDetailsService {
-      @Autowired
+
+    @Autowired
     private UserRepository userRepository;
 
     @Override
@@ -30,10 +32,8 @@ public class AppUserDetailsService implements UserDetailsService {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
-        System.out.println("WITH "+authorities.size()+" AUTHORITIES");
 
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(), authorities);
-
         return userDetails;
     }
 }

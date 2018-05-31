@@ -8,21 +8,9 @@ logging:
         web: DEBUG
 
 security:
-  oauth2:
-    resource.filter-order: 3
-
-  signing-key: MaYzkSjmkzPC57L
-  encoding-strength: 256
-  security-realm: Spring Boot JWT Example Realm
-
   jwt:
-    client-id: testjwtclientid
     client-secret: XY7kmzoNzl100
-    grant-type: password
-    scope-read: read
-    scope-write: write
-    resource-ids: testjwtresourceid
-
+    token-validity-seconds: 6060
 spring:
   datasource:
     url: jdbc:h2:file:~/seed

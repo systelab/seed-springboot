@@ -1,5 +1,7 @@
 package com.systelab.controller;
 
+import com.systelab.config.Constants;
+import com.systelab.config.TokenProvider;
 import com.systelab.model.user.User;
 import com.systelab.repository.UserNotFoundException;
 import com.systelab.repository.UserRepository;
@@ -12,6 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -30,6 +37,12 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private TokenProvider jwtTokenUtil;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @ApiOperation(value = "User Login", notes = "")
@@ -37,8 +50,11 @@ public class UserController {
     @PermitAll
     public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
 
-        User user = userRepository.findByLoginAndPassword(login, bCryptPasswordEncoder.encode(password));
-        return ResponseEntity.ok().build();
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(login, password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final String token = jwtTokenUtil.generateToken(authentication);
+        return ResponseEntity.ok().header(Constants.HEADER_STRING, "Bearer " + token).build();
     }
 
     @ApiOperation(value = "Get all Users", notes = "", authorizations = {@Authorization(value = "Bearer")})
@@ -55,6 +71,7 @@ public class UserController {
 
     @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("users/user")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
         u.setId(null);
         u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));

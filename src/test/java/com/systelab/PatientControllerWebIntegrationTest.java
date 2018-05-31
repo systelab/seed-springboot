@@ -1,5 +1,6 @@
 package com.systelab;
 
+import com.systelab.seed.App;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,10 +29,6 @@ public class PatientControllerWebIntegrationTest {
 
     @Before
     public void login() {
-    }
-
-    @Test
-    public void testGetAll() throws IOException {
     }
 
     private String createURLWithPort(String uri) {

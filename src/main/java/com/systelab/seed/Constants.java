@@ -1,4 +1,4 @@
-package com.systelab.config;
+package com.systelab.seed;
 
 public class Constants {
 

@@ -1,10 +1,10 @@
-package com.systelab.controller;
+package com.systelab.seed.controller;
 
-import com.systelab.config.Constants;
-import com.systelab.config.TokenProvider;
-import com.systelab.model.user.User;
-import com.systelab.repository.UserNotFoundException;
-import com.systelab.repository.UserRepository;
+import com.systelab.seed.Constants;
+import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.model.user.User;
+import com.systelab.seed.repository.UserNotFoundException;
+import com.systelab.seed.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

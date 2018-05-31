@@ -1,14 +1,13 @@
-package com.systelab.service;
+package com.systelab.seed.service;
 
-import com.systelab.model.user.User;
-import com.systelab.repository.UserRepository;
+import com.systelab.seed.model.user.User;
+import com.systelab.seed.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

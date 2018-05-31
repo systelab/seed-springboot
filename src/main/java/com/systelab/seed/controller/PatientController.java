@@ -1,8 +1,8 @@
-package com.systelab.controller;
+package com.systelab.seed.controller;
 
-import com.systelab.model.patient.Patient;
-import com.systelab.repository.PatientNotFoundException;
-import com.systelab.repository.PatientRepository;
+import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.repository.PatientNotFoundException;
+import com.systelab.seed.repository.PatientRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

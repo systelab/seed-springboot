@@ -1,4 +1,4 @@
-package com.systelab.model.patient;
+package com.systelab.seed.model.patient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

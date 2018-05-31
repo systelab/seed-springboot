@@ -1,4 +1,4 @@
-package com.systelab.config;
+package com.systelab.seed.config;
 
 import java.io.IOException;
 

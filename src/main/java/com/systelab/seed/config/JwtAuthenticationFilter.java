@@ -1,5 +1,6 @@
-package com.systelab.config;
+package com.systelab.seed.config;
 
+import com.systelab.seed.Constants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;

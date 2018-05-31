@@ -1,8 +1,7 @@
-package com.systelab.model.user;
+package com.systelab.seed.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

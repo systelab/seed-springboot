@@ -1,4 +1,4 @@
-package com.systelab.model.user;
+package com.systelab.seed.model.user;
 
 import javax.xml.bind.annotation.XmlEnumValue;
 

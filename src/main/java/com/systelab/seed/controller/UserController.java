@@ -83,6 +83,7 @@ public class UserController {
 
     @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> removeUser(@PathVariable("uid") Long userId) {
         return this.userRepository.findById(userId)
                 .map(c -> {

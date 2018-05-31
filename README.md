@@ -62,13 +62,8 @@ java -jar seed-springboot-1.0.jar
 
 You will find the swagger UI at http://localhost:8080/swagger-ui.html
 
-First generate a token with the following command:
+First generate a token by login as user Systelab and password Systelab. After that authorize Swagger by copying the bearer.
 
-```bash
-curl testjwtclientid:XY7kmzoNzl100@localhost:8080/oauth/token -d grant_type=password -d username=user -d password=jwtpass
-```
-
-After, put the Bearer into the Swagger page (Remember to add the Bearer prefix)
 
 ## Docker
 

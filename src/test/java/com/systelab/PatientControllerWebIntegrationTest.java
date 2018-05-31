@@ -23,12 +23,12 @@ public class PatientControllerWebIntegrationTest {
     @LocalServerPort
     private int port;
 
-
-    private TestRestTemplate restTemplate = new TestRestTemplate();
-    private HttpHeaders headers = new HttpHeaders();
-
     @Before
     public void login() {
+    }
+
+    @Test
+    public void emptyTest() {
     }
 
     private String createURLWithPort(String uri) {

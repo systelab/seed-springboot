@@ -5,14 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
 
 // Check http://www.springboottutorial.com/integration-testing-for-spring-boot-rest-services
 

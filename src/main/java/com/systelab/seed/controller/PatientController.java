@@ -16,22 +16,33 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
-@CrossOrigin()
+@CrossOrigin(origins = "*", allowedHeaders="*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
     @Autowired
     private PatientRepository patientRepository;
 
-    @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
+/* Pagination is not supported for the client.
+    @ApiOperation(value = "Get all Patients", notes = "")
     @GetMapping("patients")
     public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
         return ResponseEntity.ok(patientRepository.findAll(pageable));
+    }
+*/
+
+    @ApiOperation(value = "Get all Patients", notes = "")
+    @GetMapping("patients")
+    @PermitAll
+    public ResponseEntity<List<Patient>> getAllPatients() {
+        return ResponseEntity.ok(patientRepository.findAll());
     }
 
     @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})

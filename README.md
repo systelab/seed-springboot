@@ -82,7 +82,7 @@ docker build -t systelab/seed-springboot .
 ### Run the container
 
 ```bash
-docker run -e 8080:8080 systelab/seed-springboot
+docker run -p 8080:8080 systelab/seed-springboot
 ```
 
 The app will be available at http://localhost:8080/swagger-ui.html

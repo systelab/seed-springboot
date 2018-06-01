@@ -29,7 +29,7 @@ import java.net.URI;
 
 @Api(value = "User", description = "API for user management", tags = {"User"})
 @RestController
-@CrossOrigin()
+@CrossOrigin(origins = "*", allowedHeaders="*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 

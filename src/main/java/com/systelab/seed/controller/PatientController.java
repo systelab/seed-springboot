@@ -36,7 +36,7 @@ public class PatientController {
     }
 */
 
-    @ApiOperation(value = "Get all Patients", notes = "")
+    @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
     @PermitAll
     public ResponseEntity<List<Patient>> getAllPatients() {

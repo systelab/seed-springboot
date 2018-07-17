@@ -1,14 +1,10 @@
 package com.systelab.seed.controller;
 
-import com.systelab.seed.Constants;
-import com.systelab.seed.config.TokenProvider;
-import com.systelab.seed.model.user.User;
-import com.systelab.seed.repository.UserNotFoundException;
-import com.systelab.seed.repository.UserRepository;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Authorization;
+import java.net.URI;
+
+import javax.annotation.security.PermitAll;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +16,27 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import javax.annotation.security.PermitAll;
-import javax.validation.Valid;
-import java.net.URI;
+import com.systelab.seed.Constants;
+import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.model.user.User;
+import com.systelab.seed.repository.UserNotFoundException;
+import com.systelab.seed.repository.UserRepository;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 
 @Api(value = "User", description = "API for user management", tags = {"User"})
 @RestController
@@ -71,7 +82,7 @@ public class UserController {
 
     @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("users/user")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
         u.setId(null);
         u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
@@ -83,11 +94,11 @@ public class UserController {
 
     @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> removeUser(@PathVariable("uid") Long userId) {
         return this.userRepository.findById(userId)
-                .map(c -> {
-                    userRepository.delete(c);
+                .map(u -> {
+                    userRepository.delete(u);
                     return ResponseEntity.noContent().build();
                 }).orElseThrow(() -> new UserNotFoundException(userId));
     }

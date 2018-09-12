@@ -1,4 +1,6 @@
 language: java
+jdk:
+  - openjdk8
 sudo: false
 env:
   - _JAVA_OPTIONS="-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true"

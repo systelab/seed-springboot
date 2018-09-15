@@ -50,12 +50,11 @@
       <version>1.4.197</version>
       <scope>runtime</scope>
     </dependency>
-
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>1.18.2</version>
     </dependency>
-
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger2</artifactId>
@@ -71,6 +70,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
+      <version>5.0.8.RELEASE</version>
       <scope>test</scope>
     </dependency>    
   </dependencies>

@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
@@ -28,19 +29,11 @@ public class PatientController {
     @Autowired
     private PatientRepository patientRepository;
 
-/* Pagination is not supported for the client.
-    @ApiOperation(value = "Get all Patients", notes = "")
-    @GetMapping("patients")
-    public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
-        return ResponseEntity.ok(patientRepository.findAll(pageable));
-    }
-*/
-
     @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
     @PermitAll
-    public ResponseEntity<List<Patient>> getAllPatients() {
-        return ResponseEntity.ok(patientRepository.findAll());
+    public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
+        return ResponseEntity.ok(patientRepository.findAll(pageable));
     }
 
     @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})

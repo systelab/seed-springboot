@@ -3,6 +3,7 @@ package com.systelab.seed.controller;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientNotFoundException;
 import com.systelab.seed.repository.PatientRepository;
+import com.systelab.seed.service.MedicalRecordNumberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -22,12 +23,15 @@ import java.net.URI;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
-@CrossOrigin(origins = "*", allowedHeaders="*", exposedHeaders = "Authorization", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private MedicalRecordNumberService medicalRecordNumberService;
 
     @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
@@ -46,11 +50,14 @@ public class PatientController {
     @ApiOperation(value = "Create a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("patients/patient")
     public ResponseEntity<Patient> createPatient(@RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
+        if (p.getMedicalNumber() == null || p.getMedicalNumber().equals("")) {
+            p.setMedicalNumber(medicalRecordNumberService.getMedicalRecordNumber());
+        }
         Patient patient = this.patientRepository.save(p);
-
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(patient.getId()).toUri();
         return ResponseEntity.created(uri).body(patient);
     }
+
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("patients/{uid}")

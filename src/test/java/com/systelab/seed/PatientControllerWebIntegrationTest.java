@@ -1,6 +1,5 @@
-package com.systelab;
+package com.systelab.seed;
 
-import com.systelab.seed.App;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

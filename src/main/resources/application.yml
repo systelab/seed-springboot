@@ -1,3 +1,8 @@
+info:
+  app:
+    name: Spring Boot Systelab
+    description: Seed for Spring Boot projects
+    version: 1.0
 server:
   port: 8080
 
@@ -6,6 +11,12 @@ logging:
     org:
       springframework:
         web: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 security:
   jwt:

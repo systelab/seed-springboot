@@ -1,0 +1,20 @@
+version: "2"
+services:
+  backend1:
+    image: systelab/seed-springboot:latest
+    ports:
+      - "8080:8080"
+  identity:
+    image: systelab/identity:latest
+    ports:
+      - "9090:9090"
+  cadvisor:
+    container_name: cadvisor
+    image: google/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8081:8080"

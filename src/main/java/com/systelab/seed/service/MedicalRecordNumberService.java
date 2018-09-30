@@ -1,19 +1,26 @@
 package com.systelab.seed.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import feign.RequestLine;
+import feign.hystrix.HystrixFeign;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+@FeignClient(name = "identity")
+interface IdentityClient {
+
+    @RequestLine("GET /identity/v1/medical-record-number")
+    public String getMedicalRecordNumber();
+}
 
 @Service
 public class MedicalRecordNumberService {
-    @HystrixCommand(fallbackMethod = "defaultMedicalRecordNumber")
+
     public String getMedicalRecordNumber() {
-        return new RestTemplate()
-                .getForObject("http://identity:9090/identity/v1/medical-record-number",
-                        String.class);
+        IdentityClient client = HystrixFeign.builder().target(IdentityClient.class, "http://localhost:9090",MedicalRecordNumberService::defaultMedicalRecordNumber);
+        return client.getMedicalRecordNumber();
     }
 
-    private String defaultMedicalRecordNumber() {
+    private static String defaultMedicalRecordNumber() {
         return "UNDEFINED";
     }
 

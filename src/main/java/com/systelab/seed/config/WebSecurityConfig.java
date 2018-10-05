@@ -1,7 +1,5 @@
 package com.systelab.seed.config;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
@@ -53,8 +53,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v2/api-docs/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/webjars/springfox-swagger-ui/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/proxy.stream/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/hystrix/**").permitAll()
+                .antMatchers("/health/**").permitAll()
+
                 .antMatchers("/seed/v1/users/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/seed/v1/**").permitAll()
                 .anyRequest().authenticated()

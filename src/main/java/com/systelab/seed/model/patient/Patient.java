@@ -33,6 +33,9 @@ public class Patient implements Serializable {
     @Size(min = 1, max = 255)
     private String name;
 
+    @Size(max = 255)
+    private String medicalNumber;
+
     private String email;
 
     private Date dob;

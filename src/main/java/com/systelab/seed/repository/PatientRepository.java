@@ -6,10 +6,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, UUID> {
 
-    Optional<Patient> findById(@Param("id") Long id);
+    Optional<Patient> findById(@Param("id") UUID id);
 
 }

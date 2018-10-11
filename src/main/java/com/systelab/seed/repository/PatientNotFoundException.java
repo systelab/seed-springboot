@@ -3,16 +3,19 @@ package com.systelab.seed.repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.UUID;
+
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class PatientNotFoundException extends RuntimeException {
-    private final Long id;
 
-    public PatientNotFoundException(Long id) {
-        super("patient-not-found-" + id);
-        this.id = id;
+    private final String id;
+
+    public PatientNotFoundException(UUID id) {
+        super("patient-not-found-" + id.toString());
+        this.id = id.toString();
     }
 
-    public Long getPatientId() {
+    public String getPatientId() {
         return id;
     }
 }

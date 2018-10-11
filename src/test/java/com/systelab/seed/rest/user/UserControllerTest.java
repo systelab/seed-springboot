@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -64,7 +65,6 @@ public class UserControllerTest {
     @MockBean
     private AuthenticationManager authenticationManager;    
 
-
     @Before
     public void setup() {
         mvc = MockMvcBuilders
@@ -72,14 +72,13 @@ public class UserControllerTest {
                 .apply(springSecurity())
                 .build();
     }
-    
 
     @Test
     @WithMockUser(roles = "USER")
-    public void testFindUsersAuthorittzation() throws Exception {
+    public void testFindUsersAuthoritzation() throws Exception {
     	//Mock Data to generate some users
-		List<User> users = Arrays.asList(new User(1L, "Ivano", "Balic","Balic","Best"),
-		new User(2L, "Jackson", "Richardson","Jackson","Rastas"));
+		List<User> users = Arrays.asList(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Ivano", "Balic","Balic","Best"),
+		new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Jackson", "Richardson","Jackson","Rastas"));
 		Page<User> pageofUser = new PageImpl<>(users);		
 		   
 		when(mockUserRepository.findAll(isA(Pageable.class))).thenReturn(pageofUser);
@@ -89,12 +88,11 @@ public class UserControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 			.andExpect(status().is2xxSuccessful())
 			.andExpect(jsonPath("$.content", hasSize(2)))
-			.andExpect(jsonPath("$.content[0].id",is(1)))
+			.andExpect(jsonPath("$.content[0].id",is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13")))
 			.andExpect(jsonPath("$.content[0].login",is("Balic")));
 
     }
 
-    
     @Test
     @WithAnonymousUser
     public void shouldGetUnauthorizedWithAnonymousUser() throws Exception {    	
@@ -106,33 +104,32 @@ public class UserControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void testFindUser() throws Exception {
-    	Optional<User> user=  Optional.of(new User(1L, "Daenerys", "Targaryen","Daenerys","Dragons"));
+    	Optional<User> user=  Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Daenerys", "Targaryen","Daenerys","Dragons"));
 		   
-		when(mockUserRepository.findById(isA(Long.class))).thenReturn(user);
+		when(mockUserRepository.findById(isA(UUID.class))).thenReturn(user);
 		
-	     mvc.perform(get("/seed/v1/users/{id}",1L)
+	     mvc.perform(get("/seed/v1/users/{id}","a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
 			.header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 			.andExpect(status().is2xxSuccessful())
-			.andExpect(jsonPath("$.id",is(1)))
+			.andExpect(jsonPath("$.id",is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13")))
 			.andExpect(jsonPath("$.login",is("Daenerys")));
 
     }
     
     @Test
     @WithAnonymousUser
-    public void testFindUserUnAuthorised() throws Exception {
-    	Optional<User> user=  Optional.of(new User(1L, "Daenerys", "Targaryen","Daenerys","Dragons"));
+    public void testFindUserUnauthorized() throws Exception {
+    	Optional<User> user=  Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Daenerys", "Targaryen","Daenerys","Dragons"));
 		   
-		when(mockUserRepository.findById(isA(Long.class))).thenReturn(user);
+		when(mockUserRepository.findById(isA(UUID.class))).thenReturn(user);
 		
-	     mvc.perform(get("/seed/v1/users/{id}",1L)
+	     mvc.perform(get("/seed/v1/users/{id}","a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
 			.header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))			
 			.andExpect(status().isUnauthorized());
 
     }
-    
-    
+
     @Test
     @WithMockUser(roles = "ADMIN")
     public void testInsertUser() throws Exception {
@@ -177,11 +174,11 @@ public class UserControllerTest {
     @WithMockUser(roles = "ADMIN")
     public void testDeleteUser() throws Exception {
 
-    	Optional<User> user=  Optional.of(new User(1L, "Nikola", "Karabtic","Leonidas","Handball"));
+    	Optional<User> user=  Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Nikola", "Karabtic","Leonidas","Handball"));
 		   
-		when(mockUserRepository.findById(isA(Long.class))).thenReturn(user);
+		when(mockUserRepository.findById(isA(UUID.class))).thenReturn(user);
         
-        mvc.perform(delete("/seed/v1/users/{id}",1L)
+        mvc.perform(delete("/seed/v1/users/{id}","a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
         		.header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(status().is2xxSuccessful());
 
@@ -189,10 +186,9 @@ public class UserControllerTest {
     
     @Test
     @WithMockUser(roles = "User")
-    public void testDeleteUserUnAuthoritzated() throws Exception {
+    public void testDeleteUserUnauthorized() throws Exception {
 
-            
-        mvc.perform(delete("/seed/v1/users/{id}",1L)
+        mvc.perform(delete("/seed/v1/users/{id}","a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
         		.header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(status().isForbidden());
 

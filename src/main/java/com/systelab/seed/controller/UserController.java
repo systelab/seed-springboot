@@ -1,6 +1,7 @@
 package com.systelab.seed.controller;
 
 import java.net.URI;
+import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -76,7 +77,7 @@ public class UserController {
 
     @ApiOperation(value = "Get User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("users/{uid}")
-    public ResponseEntity<User> getUser(@PathVariable("uid") Long userId) {
+    public ResponseEntity<User> getUser(@PathVariable("uid") UUID userId) {
         return this.userRepository.findById(userId).map(ResponseEntity::ok).orElseThrow(() -> new UserNotFoundException(userId));
     }
 
@@ -95,7 +96,7 @@ public class UserController {
     @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<?> removeUser(@PathVariable("uid") Long userId) {
+    public ResponseEntity<?> removeUser(@PathVariable("uid") UUID userId) {
         return this.userRepository.findById(userId)
                 .map(u -> {
                     userRepository.delete(u);

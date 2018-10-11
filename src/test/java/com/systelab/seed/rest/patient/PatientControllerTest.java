@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,8 +62,8 @@ public class PatientControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void testGetAllPatient() throws Exception {
-        Patient patientA = createPatient("A", 1L);
-        Patient patientB = createPatient("B", 2L);
+        Patient patientA = createPatient("A");
+        Patient patientB = createPatient("B");
         List<Patient> patients = Arrays.asList(patientA,
                 patientB);
 
@@ -74,30 +75,29 @@ public class PatientControllerTest {
                 .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.content[0].id", is(1)))
-                .andExpect(jsonPath("$.content[1].id", is(2)))
+                .andExpect(jsonPath("$.content[1].id", is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13")))
                 .andExpect(jsonPath("$.content[0].name", is("patientA")));
     }
 
     @Test
     @WithMockUser(roles = "USER")
     public void testGetPatient() throws Exception {
-        Optional<Patient> patient = Optional.of(createPatient("A", 1L));
+        Optional<Patient> patient = Optional.of(createPatient("A"));
 
-        when(mockPatientRepository.findById(isA(Long.class))).thenReturn(patient);
+        when(mockPatientRepository.findById(isA(UUID.class))).thenReturn(patient);
 
-        mvc.perform(get("/seed/v1/patients/{id}", 1L)
+        mvc.perform(get("/seed/v1/patients/{id}", "a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
                 .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.id", is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13")))
                 .andExpect(jsonPath("$.surname", is("surnameA")));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     public void testInsertPatient() throws Exception {
-        Patient patient = createPatient("A", 1L);
+        Patient patient = createPatient("A");
 
         when(mockPatientRepository.save(any())).thenReturn(patient);
 
@@ -111,10 +111,10 @@ public class PatientControllerTest {
     @Test
     @WithMockUser(roles = "User")
     public void testDeletePatient() throws Exception {
-        Optional<Patient> patient = Optional.of(createPatient("A", 1L));
-        when(mockPatientRepository.findById(isA(Long.class))).thenReturn(patient);
+        Optional<Patient> patient = Optional.of(createPatient("A"));
+        when(mockPatientRepository.findById(isA(UUID.class))).thenReturn(patient);
 
-        mvc.perform(delete("/seed/v1/patients/{1}", 1L)
+        mvc.perform(delete("/seed/v1/patients/{1}", "a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
                 .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
                 .andExpect(status().is2xxSuccessful());
 
@@ -125,9 +125,9 @@ public class PatientControllerTest {
         return mapper.writeValueAsString(patient);
     }
 
-    private Patient createPatient(String patientName, Long id) {
+    private Patient createPatient(String patientName) {
         Patient patient = new Patient();
-        patient.setId(id);
+        patient.setId(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"));
         patient.setName("patient" + patientName);
         patient.setSurname("surname" + patientName);
         patient.setEmail("patient" + patientName + "@systelab.com");

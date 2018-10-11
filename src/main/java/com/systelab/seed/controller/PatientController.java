@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.UUID;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
@@ -42,7 +43,7 @@ public class PatientController {
 
     @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients/{uid}")
-    public ResponseEntity<Patient> getPatient(@PathVariable("uid") Long patientId) {
+    public ResponseEntity<Patient> getPatient(@PathVariable("uid") UUID patientId) {
         return this.patientRepository.findById(patientId).map(ResponseEntity::ok).orElseThrow(() -> new PatientNotFoundException(patientId));
 
     }
@@ -61,7 +62,7 @@ public class PatientController {
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("patients/{uid}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable("uid") Long patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
+    public ResponseEntity<Patient> updatePatient(@PathVariable("uid") UUID patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
         return this.patientRepository
                 .findById(patientId)
                 .map(existing -> {
@@ -75,7 +76,7 @@ public class PatientController {
 
     @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("patients/{uid}")
-    public ResponseEntity<?> removePatient(@PathVariable("uid") Long patientId) {
+    public ResponseEntity<?> removePatient(@PathVariable("uid") UUID patientId) {
         return this.patientRepository.findById(patientId)
                 .map(c -> {
                     patientRepository.delete(c);

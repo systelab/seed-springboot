@@ -19,6 +19,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+
+    <spring.security.test.version>5.1.0.RELEASE</spring.security.test.version>
+    <h2.version>1.4.197</h2.version>
+    <jjwt.version>0.9.1</jjwt.version>
+    <lombok.version>1.18.2</lombok.version>
   </properties>
 
   <dependencies>
@@ -56,7 +61,7 @@
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt</artifactId>
-      <version>0.9.1</version>
+      <version>${jjwt.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -66,13 +71,13 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.197</version>
+      <version>${h2.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.2</version>
+      <version>${lombok.version}</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -89,9 +94,17 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
-      <version>5.0.8.RELEASE</version>
+      <version>${spring.security.test.version}</version>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
+
+    <!-- Fix execution issue under a Java9+ environment -->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>

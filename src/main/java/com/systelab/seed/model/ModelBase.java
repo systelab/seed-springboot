@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlTransient;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -25,9 +26,11 @@ public abstract class ModelBase {
     protected UUID id;
 
     @CreationTimestamp
+    @XmlTransient
     protected Timestamp creationTime;
 
     @UpdateTimestamp
+    @XmlTransient
     protected Timestamp updateTime;
 
 }

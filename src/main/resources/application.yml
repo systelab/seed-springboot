@@ -24,10 +24,13 @@ security:
     token-validity-seconds: 6060
 
 spring:
+  main:
+    #Avoid DataSource issue #1142 overriding bean definition
+    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:h2:file:~/seed
     username: sa
-    password: 
+    password:
     driver-class-name: org.h2.Driver
     max-active: 10
     max-idle: 8

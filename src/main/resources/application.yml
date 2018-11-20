@@ -43,3 +43,24 @@ spring:
     console:
       enabled: true
       path: /h2
+
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+
+bucket4j:
+  enabled: true
+  filters:
+  - cache-name: buckets
+    filter-method: servlet
+    filter-order: -10
+    url: .*
+    metrics:
+      tags:
+      - key: IP
+        expression: "getRemoteAddr()"
+    rate-limits:
+    - bandwidths:
+      - capacity: 10000
+        time: 1
+        unit: minutes

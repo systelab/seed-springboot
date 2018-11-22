@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

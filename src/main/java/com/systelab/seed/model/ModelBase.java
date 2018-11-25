@@ -1,5 +1,6 @@
 package com.systelab.seed.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,7 +11,6 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.xml.bind.annotation.XmlTransient;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -26,11 +26,11 @@ public abstract class ModelBase {
     protected UUID id;
 
     @CreationTimestamp
-    @XmlTransient
+    @JsonIgnore
     protected Timestamp creationTime;
 
     @UpdateTimestamp
-    @XmlTransient
+    @JsonIgnore
     protected Timestamp updateTime;
 
 }

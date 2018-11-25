@@ -10,14 +10,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.Date;
-
-
-@XmlRootElement
-@XmlType(propOrder = {"id", "creationTime", "updateTime", "name", "surname", "medicalNumber", "email", "dob", "address"})
 
 @Entity
 @Data

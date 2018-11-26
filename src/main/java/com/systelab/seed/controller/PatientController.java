@@ -10,7 +10,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +40,11 @@ public class PatientController {
     @GetMapping("patients")
     @PermitAll
     public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
-        return ResponseEntity.ok(patientRepository.findAll(pageable));
+        final PageRequest page = PageRequest.of(
+                pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.ASC, "surname", "name"
+        );
+
+        return ResponseEntity.ok(patientRepository.findAll(page));
     }
 
     @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})

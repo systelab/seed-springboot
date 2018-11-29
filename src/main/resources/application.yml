@@ -5,6 +5,14 @@ info:
     version: 1.0
 server:
   port: 8080
+  # Enable response compression
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-responsize-size: 1024
+  # Enable HTTP/2 support, if the current environment supports it
+  http2:
+    enabled: true
 
 logging:
   level:
@@ -39,28 +47,15 @@ spring:
     min-idle: 8
     time-between-eviction-runs-millis: 1
 
+  resources:
+    cache:
+      cachecontrol:
+        # Maximum time the response should be cached (in seconds)
+        max-age: 120
+        # The cache must re-validate stale resources with the server. Any expired resources must not be used without re-validating.
+        must-revalidate: true
+
   h2:
     console:
       enabled: true
       path: /h2
-
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
-
-bucket4j:
-  enabled: true
-  filters:
-  - cache-name: buckets
-    filter-method: servlet
-    filter-order: -10
-    url: .*
-    metrics:
-      tags:
-      - key: IP
-        expression: "getRemoteAddr()"
-    rate-limits:
-    - bandwidths:
-      - capacity: 10000
-        time: 1
-        unit: minutes

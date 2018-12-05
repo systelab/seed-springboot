@@ -58,13 +58,27 @@ cd target
 java -jar seed-springboot-1.0.jar
 ```
 
+### Certificate
+
+A self signed certificate is provided in order to show use how to setup the application.
+
+The certificate was generated with the following commands:
+
+```bash
+keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass password -validity 365 -keysize 2048
+keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.p12 -deststoretype pkcs12
+```
+
+> Do not use the certificate provided in production and never put any secret in your application.yml file.
+
+
 ## API
 
-You will find the swagger UI at http://localhost:8080/swagger-ui.html
+You will find the swagger UI at https://localhost/swagger-ui.html and http://localhost:8080/swagger-ui.html 
 
 First generate a token by login as user Systelab and password Systelab. After that authorize Swagger by copying the bearer.
 
-Head to http://localhost:8080/hystrix and setup the URL http://localhost:8080/actuator/hystrix.stream in order to get the Hystrix Dashboard.
+Head to https://localhost/hystrix and setup the URL https://localhost/actuator/hystrix.stream in order to get the Hystrix Dashboard.
 
 ## Docker
 
@@ -83,10 +97,10 @@ docker build -t systelab/seed-springboot .
 ### Run the container
 
 ```bash
-docker run -p 8080:8080 systelab/seed-springboot
+docker run -p 443:443 -p 8080:8080 systelab/seed-springboot
 ```
 
-The app will be available at http://localhost:8080/swagger-ui.html
+The app will be available at https://localhost/swagger-ui.html
 
 
 

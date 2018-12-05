@@ -74,11 +74,11 @@ keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.p12 -de
 
 ## API
 
-You will find the swagger UI at https://localhost/swagger-ui.html and http://localhost:8080/swagger-ui.html 
+You will find the swagger UI at https://localhost:8443/swagger-ui.html and http://localhost:8080/swagger-ui.html 
 
 First generate a token by login as user Systelab and password Systelab. After that authorize Swagger by copying the bearer.
 
-Head to https://localhost/hystrix and setup the URL https://localhost/actuator/hystrix.stream in order to get the Hystrix Dashboard.
+Head to https://localhost:8443/hystrix and setup the URL https://localhost:8443/actuator/hystrix.stream in order to get the Hystrix Dashboard.
 
 ## Docker
 
@@ -100,7 +100,7 @@ docker build -t systelab/seed-springboot .
 docker run -p 443:443 -p 8080:8080 systelab/seed-springboot
 ```
 
-The app will be available at https://localhost/swagger-ui.html
+The app will be available at https://localhost:8443/swagger-ui.html
 
 
 

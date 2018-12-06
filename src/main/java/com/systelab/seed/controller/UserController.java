@@ -83,7 +83,7 @@ public class UserController {
 
     @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("users/user")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
         u.setId(null);
         u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
@@ -95,7 +95,7 @@ public class UserController {
 
     @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> removeUser(@PathVariable("uid") UUID userId) {
         return this.userRepository.findById(userId)
                 .map(u -> {

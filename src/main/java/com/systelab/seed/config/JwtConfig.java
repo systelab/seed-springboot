@@ -6,10 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "http-server")
+@ConfigurationProperties(prefix = "security.jwt")
 @Getter
 @Setter
-public class NonSecureHttpServerConfig {
+public class JwtConfig {
 
-    private int port;
+    private String clientSecret;
+    private int tokenValiditySeconds;
 }

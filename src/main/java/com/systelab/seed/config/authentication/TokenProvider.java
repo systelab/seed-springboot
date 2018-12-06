@@ -14,9 +14,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 
 
 @Configuration
@@ -28,8 +28,9 @@ public class TokenProvider implements Serializable {
     @Value("${security.jwt.token-validity-seconds}")
     private Long tokenValiditySeconds;
 
-    public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+    public Optional<String> getUsernameFromToken(String token) {
+        String username = getClaimFromToken(token, Claims::getSubject);
+        return username != null ? Optional.of(username) : Optional.empty();
     }
 
     public Date getExpirationDateFromToken(String token) {
@@ -62,15 +63,15 @@ public class TokenProvider implements Serializable {
                 .claim(Constants.AUTHORITIES_KEY, authorities)
                 .signWith(SignatureAlgorithm.HS256, clientSecret)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() +tokenValiditySeconds*1000))
+                .setExpiration(new Date(System.currentTimeMillis() + tokenValiditySeconds * 1000))
                 .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (
-              username.equals(userDetails.getUsername())
-                    && !isTokenExpired(token));
+
+        return getUsernameFromToken(token)
+                .map(username -> username.equals(userDetails.getUsername()) && !isTokenExpired(token))
+                .orElse(false);
     }
 
     public UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth, final UserDetails userDetails) {

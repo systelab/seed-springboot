@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 "Restful API to manage the Seed Application to be used as an example.",
                 "V1.0",
                 "Terms of service",
-                new Contact("Alfons Serra", "https://github.com/alfonsserra/", "alfonsoserra@gmail.com"),
+                new Contact("Systelab", "https://github.com/systelab/", "systelab@werfen.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
         return apiInfo;

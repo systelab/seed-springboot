@@ -1,5 +1,7 @@
 package com.systelab.seed.config;
 
+import com.systelab.seed.config.authentication.JwtAuthenticationEntryPoint;
+import com.systelab.seed.config.authentication.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

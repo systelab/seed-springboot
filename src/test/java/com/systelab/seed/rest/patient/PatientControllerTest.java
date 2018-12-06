@@ -2,7 +2,7 @@ package com.systelab.seed.rest.patient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.patient.Address;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientRepository;

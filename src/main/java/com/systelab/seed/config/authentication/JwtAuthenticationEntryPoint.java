@@ -1,4 +1,4 @@
-package com.systelab.seed.config;
+package com.systelab.seed.config.authentication;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

@@ -1,6 +1,6 @@
 package com.systelab.seed;
 
-import com.systelab.seed.config.NonSecureHttpServerConfigurationProperties;
+import com.systelab.seed.config.NonSecureHttpServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 public class App {
 
     @Autowired
-    NonSecureHttpServerConfigurationProperties properties;
+    NonSecureHttpServerConfig properties;
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);

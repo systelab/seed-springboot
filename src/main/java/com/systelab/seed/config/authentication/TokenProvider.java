@@ -1,4 +1,4 @@
-package com.systelab.seed.config;
+package com.systelab.seed.config.authentication;
 
 import com.systelab.seed.Constants;
 import io.jsonwebtoken.*;

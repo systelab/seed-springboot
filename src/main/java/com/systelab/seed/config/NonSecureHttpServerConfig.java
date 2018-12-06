@@ -6,10 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "http-server")
-public class NonSecureHttpServerConfigurationProperties {
+public class NonSecureHttpServerConfig {
 
     private int port;
-    // standard getters and setters
 
     public int getPort() {
         return port;

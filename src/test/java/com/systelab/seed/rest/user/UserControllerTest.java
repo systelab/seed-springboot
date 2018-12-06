@@ -38,7 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.model.user.UserRole;
 import com.systelab.seed.repository.UserRepository;

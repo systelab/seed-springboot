@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.systelab.seed.Constants;
-import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.repository.UserNotFoundException;
 import com.systelab.seed.repository.UserRepository;

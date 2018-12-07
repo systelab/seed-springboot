@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 public class App {
 
     @Autowired
-    NonSecureHttpServerConfig properties;
+    private NonSecureHttpServerConfig properties;
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);

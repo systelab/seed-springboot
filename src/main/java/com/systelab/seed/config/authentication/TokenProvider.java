@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class TokenProvider implements Serializable {
 
     @Autowired
-    JwtConfig properties;
+    private JwtConfig properties;
 
     public Optional<String> getUsernameFromToken(String token) {
         return Optional.ofNullable(getAllClaimsFromToken(token).getSubject());

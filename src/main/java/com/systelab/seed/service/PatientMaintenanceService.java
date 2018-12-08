@@ -12,7 +12,7 @@ import java.util.Calendar;
 @Service
 public class PatientMaintenanceService {
 
-    Logger logger = LoggerFactory.getLogger(PatientMaintenanceService.class);
+    private Logger logger = LoggerFactory.getLogger(PatientMaintenanceService.class);
 
     @Autowired
     private PatientRepository patientRepository;

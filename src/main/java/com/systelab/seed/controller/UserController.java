@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.systelab.seed.Constants;
-import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.repository.UserNotFoundException;
 import com.systelab.seed.repository.UserRepository;
@@ -83,7 +83,7 @@ public class UserController {
 
     @ApiOperation(value = "Create a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("users/user")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
         u.setId(null);
         u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
@@ -95,7 +95,7 @@ public class UserController {
 
     @ApiOperation(value = "Delete a User", notes = "", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> removeUser(@PathVariable("uid") UUID userId) {
         return this.userRepository.findById(userId)
                 .map(u -> {

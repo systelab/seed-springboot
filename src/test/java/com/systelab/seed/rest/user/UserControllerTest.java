@@ -38,7 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.config.TokenProvider;
+import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.model.user.UserRole;
 import com.systelab.seed.repository.UserRepository;
@@ -74,7 +74,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(authorities = "ADMIN")
     public void testFindUsersAuthoritzation() throws Exception {
     	//Mock Data to generate some users
 		List<User> users = Arrays.asList(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Ivano", "Balic","Balic","Best"),
@@ -102,7 +102,7 @@ public class UserControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void testFindUser() throws Exception {
     	Optional<User> user=  Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Daenerys", "Targaryen","Daenerys","Dragons"));
 		   
@@ -131,7 +131,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities = "ADMIN")
     public void testInsertUser() throws Exception {
 
     	User user = new User();
@@ -152,7 +152,7 @@ public class UserControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = "User")
+    @WithMockUser(authorities = "User")
     public void testInsertUserUnauthorized() throws Exception {
 
         User user = new User();
@@ -171,7 +171,7 @@ public class UserControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(authorities="ADMIN")
     public void testDeleteUser() throws Exception {
 
     	Optional<User> user=  Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Nikola", "Karabtic","Leonidas","Handball"));
@@ -185,7 +185,7 @@ public class UserControllerTest {
     }
     
     @Test
-    @WithMockUser(roles = "User")
+    @WithMockUser(authorities = "User")
     public void testDeleteUserUnauthorized() throws Exception {
 
         mvc.perform(delete("/seed/v1/users/{id}","a98b8fe5-7cc5-4348-8f99-4860f5b84b13")

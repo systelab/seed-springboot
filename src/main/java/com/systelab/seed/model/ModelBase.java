@@ -33,4 +33,6 @@ public abstract class ModelBase {
     @JsonIgnore
     protected Timestamp updateTime;
 
+    protected Boolean active = Boolean.TRUE;
+
 }

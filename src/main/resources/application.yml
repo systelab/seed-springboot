@@ -36,9 +36,9 @@ spring:
     #Avoid DataSource issue #1142 overriding bean definition
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:h2:file:~/seed
-    username: sa
-    password:
+    url: jdbc:h2:file:./seed;DB_CLOSE_ON_EXIT=FALSE;IFEXISTS=TRUE;DB_CLOSE_DELAY=-1;    
+    username: F1r3b1rd
+    password: QL3oooNex!6ener4!10n
     driver-class-name: org.h2.Driver
     max-active: 10
     max-idle: 8

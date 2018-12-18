@@ -1,32 +1,28 @@
 package com.systelab.seed.model.patient;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import org.hibernate.envers.Audited;
+
 import com.systelab.seed.model.ModelBase;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
-
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
-
-@Entity
-@EntityListeners(AuditingEntityListener.class)
 @Data
-@EqualsAndHashCode(callSuper = true)
+@Entity
+@Audited
+@Builder 
+@EqualsAndHashCode(callSuper = true) 
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "patient")

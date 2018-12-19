@@ -13,7 +13,6 @@ import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditQuery;
 import org.junit.Before;
@@ -114,14 +113,6 @@ public class PatientRepositoryRevisionsTest {
                 .satisfies(rev -> assertThat(rev.getEntity()).extracting(Patient::getId, Patient::getName, Patient::getSurname)
                         .containsExactly(patient.getId(), null, null));
     }
-
-    private int getTotalRevisionsById(Optional<Revision<Integer, Patient>> revision) {
-
-        int beforeUpdate = revision.get()
-                .getRevisionNumber()
-                .orElse(-1);
-        return beforeUpdate;
-    }
     
 
     @Test
@@ -144,18 +135,13 @@ public class PatientRepositoryRevisionsTest {
 
         repository.delete(patient);
 
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        AuditReader auditReader = AuditReaderFactory.get(entityManager);
-
-        AuditQuery q = auditReader.createQuery()
-                .forRevisionsOfEntity(Patient.class, false, true);
+        AuditQuery q = getPatientAuditQuery();
 
         List<Object[]> result = q.getResultList();
 
         Object[] tuple = result.get(result.size() - 1);
 
         Patient deletedPatient = (Patient) tuple[0];
-        DefaultRevisionEntity revision = (DefaultRevisionEntity) tuple[1];
         RevisionType revisionType = (RevisionType) tuple[2];
 
         assertEquals(revisionType, RevisionType.DEL);
@@ -164,6 +150,62 @@ public class PatientRepositoryRevisionsTest {
         assertNull(deletedPatient.getSurname());
     }
 
+    @Test
+    public void checkRevisionTypeWhenModifying() {
+
+        patient.setName("New Name");
+        repository.save(patient);
+
+        AuditQuery q = getPatientAuditQuery();
+
+        List<Object[]> result = q.getResultList();
+
+        Object[] tuple = result.get(result.size() - 1);
+
+        Patient modifiedPatient = (Patient) tuple[0];
+        RevisionType revisionType = (RevisionType) tuple[2];
+
+        assertEquals(revisionType, RevisionType.MOD);
+        assertThat(modifiedPatient.getName()).isEqualTo("New Name");
+    }
+
+    @Test
+    public void checkRevisionTypeWhenCreating() {
+
+        repository.save(Patient.builder()
+                .name("Created Patient Name")
+                .surname("Created Patient Surname")
+                .build());
+
+        AuditQuery q = getPatientAuditQuery();
+
+        List<Object[]> result = q.getResultList();
+
+        Object[] tuple = result.get(result.size() - 1);
+
+        Patient createdPatient = (Patient) tuple[0];
+        RevisionType revisionType = (RevisionType) tuple[2];
+
+        assertEquals(revisionType, RevisionType.ADD);
+        assertThat(createdPatient.getName()).isEqualTo("Created Patient Name");
+    }
+
+    private AuditQuery getPatientAuditQuery() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+
+        AuditQuery q = auditReader.createQuery()
+                .forRevisionsOfEntity(Patient.class, false, true);
+        return q;
+    }
+
+    private int getTotalRevisionsById(Optional<Revision<Integer, Patient>> revision) {
+
+        int beforeUpdate = revision.get()
+                .getRevisionNumber()
+                .orElse(-1);
+        return beforeUpdate;
+    }
 
 
     private void setAdminAuthentication() {

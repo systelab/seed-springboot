@@ -4,12 +4,17 @@ info:
     description: Seed for Spring Boot projects
     version: 1.0
 server:
-  port: 8080
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-alias: selfsigned
+    key-store-type: PKCS12
+    key-store-password: password
   # Enable response compression
   compression:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
-    min-responsize-size: 1024
+    min-response-size: 1024
   # Enable HTTP/2 support, if the current environment supports it
   http2:
     enabled: true
@@ -19,6 +24,10 @@ logging:
     org:
       springframework:
         web: DEBUG
+
+
+http-server:
+  port: 8080
 
 management:
   endpoints:
@@ -32,6 +41,8 @@ security:
     token-validity-seconds: 6060
 
 spring:
+  application:
+    name: seed-springboot
   main:
     #Avoid DataSource issue #1142 overriding bean definition
     allow-bean-definition-overriding: true
@@ -80,3 +91,9 @@ bucket4j:
             - capacity: 10000
               time: 1
               unit: minutes
+
+patient:
+  maintenance:
+    cron:
+      # Check https://www.baeldung.com/cron-expressions
+      expression: "0/20 * * * * *"

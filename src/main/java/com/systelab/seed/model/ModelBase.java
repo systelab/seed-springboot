@@ -60,4 +60,6 @@ public abstract class ModelBase {
     @Version
     private Integer version;
 
+    protected Boolean active = Boolean.TRUE;
+
 }

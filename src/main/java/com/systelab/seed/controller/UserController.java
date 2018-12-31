@@ -23,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
@@ -49,7 +48,6 @@ public class UserController {
 
     @ApiOperation(value = "User Login")
     @PostMapping(value = "users/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @PermitAll
     public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
 
         final Authentication authentication = authenticationManager.authenticate(

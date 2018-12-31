@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
@@ -41,7 +40,6 @@ public class PatientController {
 
     @ApiOperation(value = "Get all Patients", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
-    @PermitAll
     public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
         final PageRequest page = PageRequest.of(
                 pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.ASC, "surname", "name"

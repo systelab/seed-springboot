@@ -14,8 +14,12 @@ public class PatientMaintenanceService {
 
     private Logger logger = LoggerFactory.getLogger(PatientMaintenanceService.class);
 
+    private final PatientRepository patientRepository;
+
     @Autowired
-    private PatientRepository patientRepository;
+    public PatientMaintenanceService(PatientRepository patientRepository) {
+        this.patientRepository = patientRepository;
+    }
 
     @Scheduled(cron = "${patient.maintenance.cron.expression}")
     public void schedulePurgeOlderRecordsTask() {

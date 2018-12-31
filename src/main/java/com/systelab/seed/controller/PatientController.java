@@ -30,13 +30,16 @@ import java.util.UUID;
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
+    private final MedicalRecordNumberService medicalRecordNumberService;
 
     @Autowired
-    private MedicalRecordNumberService medicalRecordNumberService;
+    public PatientController(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService) {
+        this.patientRepository = patientRepository;
+        this.medicalRecordNumberService = medicalRecordNumberService;
+    }
 
-    @ApiOperation(value = "Get all Patients", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Get all Patients", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients")
     @PermitAll
     public ResponseEntity<Page<Patient>> getAllPatients(Pageable pageable) {
@@ -47,14 +50,14 @@ public class PatientController {
         return ResponseEntity.ok(patientRepository.findAll(page));
     }
 
-    @ApiOperation(value = "Get Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Get Patient", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("patients/{uid}")
     public ResponseEntity<Patient> getPatient(@PathVariable("uid") UUID patientId) {
         return this.patientRepository.findById(patientId).map(ResponseEntity::ok).orElseThrow(() -> new PatientNotFoundException(patientId));
 
     }
 
-    @ApiOperation(value = "Create a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Create a Patient", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("patients/patient")
     public ResponseEntity<Patient> createPatient(@RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
         if (p.getMedicalNumber() == null || p.getMedicalNumber().equals("")) {
@@ -66,7 +69,7 @@ public class PatientController {
     }
 
 
-    @ApiOperation(value = "Create or Update (idempotent) an existing Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Create or Update (idempotent) an existing Patient", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("patients/{uid}")
     public ResponseEntity<Patient> updatePatient(@PathVariable("uid") UUID patientId, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
         return this.patientRepository
@@ -80,7 +83,7 @@ public class PatientController {
     }
 
 
-    @ApiOperation(value = "Delete a Patient", notes = "", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Delete a Patient", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("patients/{uid}")
     public ResponseEntity<?> removePatient(@PathVariable("uid") UUID patientId) {
         return this.patientRepository.findById(patientId)

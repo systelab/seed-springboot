@@ -77,7 +77,7 @@ public class UserController {
         u.setPassword(passwordEncoder.encode(u.getPassword()));
         User user = this.userRepository.save(u);
 
-        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(user.getId()).toUri();
+        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/users/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(user);
     }
 

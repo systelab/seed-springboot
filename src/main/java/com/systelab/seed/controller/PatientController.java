@@ -62,7 +62,7 @@ public class PatientController {
             p.setMedicalNumber(medicalRecordNumberService.getMedicalRecordNumber());
         }
         Patient patient = this.patientRepository.save(p);
-        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/{id}").buildAndExpand(patient.getId()).toUri();
+        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/patients/{id}").buildAndExpand(patient.getId()).toUri();
         return ResponseEntity.created(uri).body(patient);
     }
 

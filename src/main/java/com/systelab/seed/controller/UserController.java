@@ -1,6 +1,5 @@
 package com.systelab.seed.controller;
 
-import com.systelab.seed.Constants;
 import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
 import com.systelab.seed.repository.UserNotFoundException;
@@ -12,6 +11,7 @@ import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,7 +54,7 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(login, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok().header(Constants.HEADER_STRING, "Bearer " + token).build();
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
     }
 
     @ApiOperation(value = "Get all Users", authorizations = {@Authorization(value = "Bearer")})

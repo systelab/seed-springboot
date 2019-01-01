@@ -1,9 +1,9 @@
 package com.systelab.seed.config.authentication;
 
-import com.systelab.seed.Constants;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +24,8 @@ import java.util.Optional;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    public static final String TOKEN_PREFIX = "Bearer ";
+
     @Resource(name = "userService")
     private UserDetailsService userDetailsService;
 
@@ -36,9 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(Constants.HEADER_STRING);
-        if (header != null && header.startsWith(Constants.TOKEN_PREFIX)) {
-            String authToken = header.replace(Constants.TOKEN_PREFIX, "");
+        String header = req.getHeader(HttpHeaders.AUTHORIZATION);
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
+            String authToken = header.replace(TOKEN_PREFIX, "");
             this.checkToken(authToken, new WebAuthenticationDetailsSource().buildDetails(req));
         } else {
             logger.warn("Couldn't find bearer. Header will be ignore.");

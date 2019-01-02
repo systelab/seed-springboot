@@ -159,6 +159,7 @@ public class UserControllerTest {
         user.setLogin("login");
         user.setName("name");
         user.setSurname("surname");
+        user.setPassword("password");
         user.setRole(UserRole.USER);    
        
         when(mockUserRepository.save(any())).thenReturn(user);   

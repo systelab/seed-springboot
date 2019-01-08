@@ -21,18 +21,22 @@ import java.util.UUID;
 @AllArgsConstructor
 public class User extends ModelBase {
 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "user_surname")
     private String surname;
 
+    @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "user_name")
     private String name;
 
+    @NotNull
     @Size(min = 1, max = 10)
     @Column(name = "user_login", length = 10, nullable = false, unique = true)
     private String login;
 
+    @NotNull
     @Size(min = 1, max = 256)
     @Column(name = "user_password", length = 256, nullable = false)
     private String password;

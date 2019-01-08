@@ -1,6 +1,5 @@
 package com.systelab.seed.config.authentication;
 
-import com.systelab.seed.Constants;
 import com.systelab.seed.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,8 +23,14 @@ import java.util.stream.Collectors;
 @Configuration
 public class TokenProvider implements Serializable {
 
+    public static final String AUTHORITIES_KEY = "scopes";
+
+    private final JwtConfig properties;
+
     @Autowired
-    private JwtConfig properties;
+    public TokenProvider(JwtConfig properties) {
+        this.properties = properties;
+    }
 
     public Optional<String> getUsernameFromToken(String token) {
         return Optional.ofNullable(getAllClaimsFromToken(token).getSubject());
@@ -54,7 +59,7 @@ public class TokenProvider implements Serializable {
                 .collect(Collectors.joining(","));
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(Constants.AUTHORITIES_KEY, authorities)
+                .claim(AUTHORITIES_KEY, authorities)
                 .signWith(SignatureAlgorithm.HS256, properties.getClientSecret())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + properties.getTokenValiditySeconds() * 1000))
@@ -70,7 +75,7 @@ public class TokenProvider implements Serializable {
     public UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth, final UserDetails userDetails) {
         final Claims claims = getAllClaimsFromToken(token);
         final Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(Constants.AUTHORITIES_KEY).toString().split(","))
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
         return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);

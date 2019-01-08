@@ -1,9 +1,7 @@
 package com.systelab.seed.controller;
 
-import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
-import com.systelab.seed.repository.UserNotFoundException;
-import com.systelab.seed.repository.UserRepository;
+import com.systelab.seed.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -15,16 +13,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.security.Principal;
 import java.util.UUID;
 
 @Api(value = "User", description = "API for user management", tags = {"User"})
@@ -33,62 +28,59 @@ import java.util.UUID;
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final AuthenticationManager authenticationManager;
-    private final TokenProvider tokenProvider;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository, AuthenticationManager authenticationManager, TokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
-        this.passwordEncoder = passwordEncoder;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @ApiOperation(value = "User Login")
     @PostMapping(value = "users/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + this.userService.authenticateUserAndGetToken(login, password)).build();
+    }
 
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(login, password));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+    @ApiOperation(value = "Change Password", authorizations = {@Authorization(value = "Bearer")})
+    @PostMapping("/password")
+    public ResponseEntity<User> changePassword(@RequestParam("oldpassword") String oldPassword, @RequestParam("newpassword") String newPassword, Principal principal) {
+        return ResponseEntity.ok(this.userService.changePassword(oldPassword, newPassword, principal));
     }
 
     @ApiOperation(value = "Get all Users", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("users")
     public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
-        return ResponseEntity.ok(userRepository.findAll(pageable));
+        return ResponseEntity.ok(this.userService.getAllUsers(pageable));
     }
 
     @ApiOperation(value = "Get User", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("users/{uid}")
-    public ResponseEntity<User> getUser(@PathVariable("uid") UUID userId) {
-        return this.userRepository.findById(userId).map(ResponseEntity::ok).orElseThrow(() -> new UserNotFoundException(userId));
+    public ResponseEntity<User> getUser(@PathVariable("uid") UUID id) {
+        return ResponseEntity.ok(this.userService.getUser(id));
     }
 
     @ApiOperation(value = "Create a User", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("users/user")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody @ApiParam(value = "User", required = true) @Valid User u) {
-        u.setId(null);
-        u.setPassword(passwordEncoder.encode(u.getPassword()));
-        User user = this.userRepository.save(u);
-
+        User user = this.userService.createUser(u);
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/users/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(user);
+    }
+
+    @ApiOperation(value = "Update a User", authorizations = {@Authorization(value = "Bearer")})
+    @PutMapping("users/{uid}")
+    public ResponseEntity<?> updateUser(@PathVariable("uid") UUID id, @Valid @RequestBody @ApiParam(value = "User", required = true) User u) {
+        User user = this.userService.updateUser(id, u);
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+        return ResponseEntity.created(selfLink).body(user);
     }
 
     @ApiOperation(value = "Delete a User", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> removeUser(@PathVariable("uid") UUID userId) {
-        return this.userRepository.findById(userId)
-                .map(u -> {
-                    userRepository.delete(u);
-                    return ResponseEntity.noContent().build();
-                }).orElseThrow(() -> new UserNotFoundException(userId));
+    public ResponseEntity<?> deleteUser(@PathVariable("uid") UUID id) {
+        this.userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

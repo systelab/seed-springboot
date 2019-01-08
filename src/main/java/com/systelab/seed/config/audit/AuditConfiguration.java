@@ -1,4 +1,4 @@
-package com.systelab.seed.audit.config;
+package com.systelab.seed.config.audit;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

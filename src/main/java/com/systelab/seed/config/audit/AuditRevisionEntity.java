@@ -1,4 +1,4 @@
-package com.systelab.seed.audit.config;
+package com.systelab.seed.config.audit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

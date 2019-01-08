@@ -1,4 +1,6 @@
-package com.systelab.seed.audit.config;
+package com.systelab.seed.config.audit;
+
+import java.util.Optional;
 
 import org.hibernate.envers.RevisionListener;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -13,18 +15,23 @@ public class AuditRevisionListener implements RevisionListener {
     public void newRevision(Object revisionEntity) {
 
         AuditRevisionEntity auditRevisionEntity = (AuditRevisionEntity) revisionEntity;
-        SecurityContext context = SecurityContextHolder.getContext();
-        
-        if (context != null) {
-            Authentication auth = SecurityContextHolder.getContext()
-                    .getAuthentication();
+        Optional<SecurityContext> context = Optional.of(SecurityContextHolder.getContext());
 
-            if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
+        if (context.isPresent()) {
+
+            Optional<Authentication> optAuth = Optional.of(SecurityContextHolder.getContext()
+                    .getAuthentication());
+
+            if (optAuth.isPresent() && !(optAuth.get() instanceof AnonymousAuthenticationToken)) {
+
+                Authentication auth = optAuth.get();
+
                 auditRevisionEntity.setUsername(auth.getName());
+                Optional<?> optAuthDetails = Optional.of(auth.getDetails());
 
-                if (auth.getDetails() != null && auth.getDetails() instanceof WebAuthenticationDetails) {
+                if (optAuthDetails.isPresent() && optAuthDetails.get() instanceof WebAuthenticationDetails) {
 
-                    WebAuthenticationDetails userDetails = (WebAuthenticationDetails) auth.getDetails();
+                    WebAuthenticationDetails userDetails = (WebAuthenticationDetails) optAuthDetails.get();
                     auditRevisionEntity.setIpAddress(userDetails.getRemoteAddress());
                 }
             }

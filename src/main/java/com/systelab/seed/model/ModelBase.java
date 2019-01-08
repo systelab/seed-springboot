@@ -1,8 +1,15 @@
 package com.systelab.seed.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import java.sql.Timestamp;
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,16 +19,10 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 @MappedSuperclass
 @Data
@@ -42,10 +43,10 @@ public abstract class ModelBase {
     protected Timestamp creationTime;
 
     @LastModifiedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @UpdateTimestamp
     @JsonIgnore
-    protected Timestamp updateTime;
+    protected Timestamp modificationTime;
     
     @CreatedBy
     @Column(nullable = false, updatable = false)

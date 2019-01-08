@@ -13,7 +13,6 @@ import org.hibernate.envers.Audited;
 import com.systelab.seed.model.ModelBase;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Audited
-@Builder 
 @EqualsAndHashCode(callSuper = true) 
 @NoArgsConstructor
 @AllArgsConstructor

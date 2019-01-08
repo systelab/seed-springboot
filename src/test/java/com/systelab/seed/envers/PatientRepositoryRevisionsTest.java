@@ -31,7 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.audit.config.AuditRevisionEntity;
+import com.systelab.seed.config.audit.AuditRevisionEntity;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientRepository;
 
@@ -52,10 +52,7 @@ public class PatientRepositoryRevisionsTest {
 
         setAdminAuthentication();       
         repository.deleteAll();
-        patient = repository.save(Patient.builder()
-                .name("My Name")
-                .surname("My Surname")
-                .build());
+        patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null));
     }
         
     @Test        
@@ -172,10 +169,7 @@ public class PatientRepositoryRevisionsTest {
     @Test
     public void checkRevisionTypeWhenCreating() {
 
-        repository.save(Patient.builder()
-                .name("Created Patient Name")
-                .surname("Created Patient Surname")
-                .build());
+        repository.save(new Patient("Created Patient Surname", "Created Patient Name", null, null, null, null));
 
         AuditQuery q = getPatientAuditQuery();
 

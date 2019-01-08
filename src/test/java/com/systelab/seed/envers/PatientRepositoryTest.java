@@ -16,8 +16,8 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.systelab.seed.audit.config.AuditConfiguration;
-import com.systelab.seed.audit.config.AuditorAwareImpl;
+import com.systelab.seed.config.audit.AuditConfiguration;
+import com.systelab.seed.config.audit.AuditorAwareImpl;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientRepository;
 import com.systelab.seed.repository.RepositoryConfiguration;
@@ -37,12 +37,7 @@ public class PatientRepositoryTest {
 
     @Before
     public void save() {
-
-        patient = em.persistAndFlush(Patient.builder()
-                .name("My Name")
-                .surname("My Surname")
-                .build()
-        );
+        patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null));
     }
 
     @Test
@@ -58,7 +53,7 @@ public class PatientRepositoryTest {
     @WithMockUser(username = "admin", roles = "MANAGER")
     public void hasAuditInformation() {
         assertThat(patient)
-                .extracting(Patient::getCreatedBy, Patient::getCreationTime, Patient::getModifiedBy, Patient::getUpdateTime, Patient::getVersion)
+                .extracting(Patient::getCreatedBy, Patient::getCreationTime, Patient::getModifiedBy, Patient::getModificationTime, Patient::getVersion)
                 .isNotNull();
     }
 }

@@ -47,9 +47,9 @@ public class PatientRepositoryTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllByAuthor() {
-        List<Patient> booksByAuthor = repository.findAll();
-        assertThat(booksByAuthor).isNotEmpty()
+    public void findAllPatients() {
+        List<Patient> patients = repository.findAll();
+        assertThat(patients).isNotEmpty()
                 .extracting(Patient::getName, Patient::getSurname)
                 .containsExactly(tuple("My Name", "My Surname"));
     }

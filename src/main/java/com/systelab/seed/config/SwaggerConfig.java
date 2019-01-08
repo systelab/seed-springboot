@@ -34,7 +34,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo metaData() {
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "Seed application programming interface (API)",
                 "Restful API to manage the Seed Application to be used as an example.",
                 "V1.0",
@@ -42,6 +42,5 @@ public class SwaggerConfig {
                 new Contact("Systelab", "https://github.com/systelab/", "systelab@werfen.com"),
                 "Apache License Version 2.0",
                 "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
-        return apiInfo;
     }
 }

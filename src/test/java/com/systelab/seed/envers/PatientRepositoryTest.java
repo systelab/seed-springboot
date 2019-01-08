@@ -20,10 +20,10 @@ import com.systelab.seed.config.audit.AuditConfiguration;
 import com.systelab.seed.config.audit.AuditorAwareImpl;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientRepository;
-import com.systelab.seed.repository.RepositoryConfiguration;
+import com.systelab.seed.config.RepositoryConfig;
 
 
-@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = { AuditorAwareImpl.class, AuditConfiguration.class, RepositoryConfiguration.class }))
+@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = { AuditorAwareImpl.class, AuditConfiguration.class, RepositoryConfig.class }))
 @RunWith(SpringRunner.class)
 public class PatientRepositoryTest {
 

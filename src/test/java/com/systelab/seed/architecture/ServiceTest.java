@@ -15,11 +15,11 @@ public class ServiceTest {
     static ArchRule servicesShouldNotDependOnControllers = noClasses()
             .that().resideInAPackage("..service..")
             .should().dependOnClassesThat().resideInAPackage("..controller..")
-            .because("we do not want services depending on controllers");
+            .because("we want our services depend on our controllers");
 
     @ArchTest
     static ArchRule servicesCouldOnlyBeAccessedByOtherServicesOrControllers = classes()
             .that().resideInAPackage("..service..")
             .should().onlyBeAccessed().byAnyPackage("..controller..", "..service..")
-            .because("we want services to be accessed only by controllers or other services");
+            .because("we want our services to be accessed only by controllers or by other services");
 }

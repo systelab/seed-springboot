@@ -29,14 +29,14 @@ public class ControllerTest {
             all(methods())
                     .that(inClassesAnnotatedWith(RestController.class)).and(arePublic())
                     .should(returnType(ResponseEntity.class))
-                    .because("we don't want to couple the client code directly to the return types of the encapsulated module");
+                    .because("we want our Rest operations to always return a ResponseEntity");
 
     @ArchTest
     static ArchRule allPublicMethodsInRestControllersShouldHaveApiOperationAnnotation =
             all(methods())
                     .that(inClassesAnnotatedWith(RestController.class)).and(arePublic())
                     .should(beAnnotated(ApiOperation.class))
-                    .because("we want all the REST operations documented with OpenApi");
+                    .because("we want our Rest operations to be always documented with OpenApi");
 
     @ArchTest
     static ArchRule allNamedControllerShouldBeAnnotatedWithSTIController = classes()
@@ -50,5 +50,5 @@ public class ControllerTest {
     static ArchRule controllersShouldNotAccessRepositories = noClasses()
             .that().resideInAPackage("..controller..")
             .should().accessClassesThat().resideInAPackage("..repository..")
-            .because("we want controller classes to do not access repository classes directly");
+            .because("we want our controller to do not access our repositories directly");
 }

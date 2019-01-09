@@ -22,7 +22,7 @@ public class RepositoryTest {
     static ArchRule allFilesInPackageRepositoryShouldBeRepositories = classes()
             .that().resideInAPackage("..repository..")
             .should().haveSimpleNameEndingWith("Repository").orShould().haveSimpleNameEndingWith("Exception")
-            .because("we want to have only repositories ro be in the repositories pacjkage");
+            .because("we want to have only repositories in the repositories package");
 
     @ArchTest
     static ArchRule repositoriesCouldOnlyBeAccessedByServices = classes()

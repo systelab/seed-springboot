@@ -1,6 +1,6 @@
 package com.systelab.seed.envers;
 
-import com.systelab.seed.config.audit.AuditConfiguration;
+import com.systelab.seed.config.audit.AuditConfig;
 import com.systelab.seed.config.audit.AuditorAwareImpl;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientRepository;
@@ -22,7 +22,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 
-@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {AuditorAwareImpl.class, AuditConfiguration.class, RepositoryConfig.class}))
+@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {AuditorAwareImpl.class, AuditConfig.class, RepositoryConfig.class}))
 @ExtendWith(SpringExtension.class)
 public class PatientRepositoryTest {
 

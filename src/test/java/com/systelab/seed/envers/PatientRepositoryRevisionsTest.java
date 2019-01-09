@@ -1,23 +1,18 @@
 package com.systelab.seed.envers;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.systelab.seed.config.audit.AuditRevisionEntity;
+import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.repository.PatientRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditQuery;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
@@ -27,16 +22,19 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.config.audit.AuditRevisionEntity;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientRepository;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest()
 public class PatientRepositoryRevisionsTest {
 
     @Autowired
@@ -47,17 +45,17 @@ public class PatientRepositoryRevisionsTest {
 
     private Patient patient;
 
-    @Before
+    @BeforeEach
     public void save() throws JsonParseException, JsonMappingException, IOException {
 
-        setAdminAuthentication();       
+        setAdminAuthentication();
         repository.deleteAll();
         patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null));
     }
-        
-    @Test        
+
+    @Test
     public void initialRevision() {
-        
+
         Revisions<Integer, Patient> revisions = repository.findRevisions(patient.getId());
 
         assertThat(revisions).isNotEmpty()
@@ -69,9 +67,9 @@ public class PatientRepositoryRevisionsTest {
                     assertThat(revisionEntity.getUsername()).isEqualTo("admin");
                 });
     }
-    
-    
-    @Test           
+
+
+    @Test
     public void updateIncreasesRevisionNumber() {
         Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
         int beforeUpdate = getTotalRevisionsById(revision);
@@ -87,7 +85,7 @@ public class PatientRepositoryRevisionsTest {
                 );
     }
 
-    @Test           
+    @Test
     public void deletedItemWillHaveRevisionRetained() {
 
         Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
@@ -101,16 +99,16 @@ public class PatientRepositoryRevisionsTest {
         Revision<Integer, Patient> initialRevision = iterator.next();
         Revision<Integer, Patient> finalRevision = iterator.next();
 
-        assertThat(initialRevision) 
+        assertThat(initialRevision)
                 .satisfies(rev -> assertThat(rev.getEntity()).extracting(Patient::getId, Patient::getName, Patient::getSurname)
                         .containsExactly(patient.getId(), patient.getName(), patient.getSurname())
-        );
+                );
 
         assertThat(finalRevision)
                 .satisfies(rev -> assertThat(rev.getEntity()).extracting(Patient::getId, Patient::getName, Patient::getSurname)
                         .containsExactly(patient.getId(), null, null));
     }
-    
+
 
     @Test
     public void showAdminRevisionInformation() {
@@ -141,10 +139,10 @@ public class PatientRepositoryRevisionsTest {
         Patient deletedPatient = (Patient) tuple[0];
         RevisionType revisionType = (RevisionType) tuple[2];
 
-        assertEquals(revisionType, RevisionType.DEL);
-        assertNull(deletedPatient.getAddress());
-        assertNull(deletedPatient.getName());
-        assertNull(deletedPatient.getSurname());
+        Assertions.assertEquals(revisionType, RevisionType.DEL);
+        Assertions.assertNull(deletedPatient.getAddress());
+        Assertions.assertNull(deletedPatient.getName());
+        Assertions.assertNull(deletedPatient.getSurname());
     }
 
     @Test
@@ -162,7 +160,7 @@ public class PatientRepositoryRevisionsTest {
         Patient modifiedPatient = (Patient) tuple[0];
         RevisionType revisionType = (RevisionType) tuple[2];
 
-        assertEquals(revisionType, RevisionType.MOD);
+        Assertions.assertEquals(revisionType, RevisionType.MOD);
         assertThat(modifiedPatient.getName()).isEqualTo("New Name");
     }
 
@@ -180,7 +178,7 @@ public class PatientRepositoryRevisionsTest {
         Patient createdPatient = (Patient) tuple[0];
         RevisionType revisionType = (RevisionType) tuple[2];
 
-        assertEquals(revisionType, RevisionType.ADD);
+        Assertions.assertEquals(revisionType, RevisionType.ADD);
         assertThat(createdPatient.getName()).isEqualTo("Created Patient Name");
     }
 
@@ -203,14 +201,14 @@ public class PatientRepositoryRevisionsTest {
 
 
     private void setAdminAuthentication() {
-        
+
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRemoteAddr("10.0.0.1");
-        
+
         WebAuthenticationDetails details = new WebAuthenticationDetails(request);
-        
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("admin", "password");              
-        authentication.setDetails(details);             
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("admin", "password");
+        authentication.setDetails(details);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

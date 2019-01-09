@@ -1,30 +1,22 @@
 package com.systelab.seed;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 // Check http://www.springboottutorial.com/integration-testing-for-spring-boot-rest-services
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest()
 public class PatientControllerWebIntegrationTest {
 
-    @LocalServerPort
-    private int port;
-
-    @Before
+    @BeforeEach
     public void login() {
     }
 
     @Test
     public void emptyTest() {
-    }
-
-    private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
     }
 }

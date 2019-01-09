@@ -7,6 +7,13 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -104,6 +111,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -134,7 +157,12 @@
             <version>${spring.security.test.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.systelab</groupId>
+            <artifactId>arch-utils</artifactId>
+            <version>v1.0.4</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Fix execution issue under a Java9+ environment -->
         <dependency>
             <groupId>javax.xml.bind</groupId>

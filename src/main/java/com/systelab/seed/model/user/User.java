@@ -17,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Audited
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
 public class User extends ModelBase {
 

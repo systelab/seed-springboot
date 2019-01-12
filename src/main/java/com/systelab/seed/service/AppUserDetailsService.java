@@ -21,10 +21,9 @@ public class AppUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String s) {
         return userRepository.findByLogin(s)
-                .map((myUser) -> new User(myUser.getLogin(), myUser.getPassword(),
-                        AuthorityUtils.createAuthorityList(myUser.getRole().toString())))
+                .map(myUser -> new User(myUser.getLogin(), myUser.getPassword(), AuthorityUtils.createAuthorityList(myUser.getRole().toString())))
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", s)));
     }
 }

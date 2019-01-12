@@ -33,7 +33,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String authenticateUserAndGetToken(String login, String password) throws SecurityException {
+    public String authenticateUserAndGetToken(String login, String password) {
 
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);

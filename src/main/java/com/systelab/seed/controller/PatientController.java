@@ -1,7 +1,6 @@
 package com.systelab.seed.controller;
 
 import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientNotFoundException;
 import com.systelab.seed.service.PatientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,9 +8,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +56,7 @@ public class PatientController {
     @ApiOperation(value = "Create or Update (idempotent) an existing Patient", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("patients/{uid}")
     public ResponseEntity<Patient> updatePatient(@PathVariable("uid") UUID id, @RequestBody @ApiParam(value = "Patient", required = true) @Valid Patient p) {
-        Patient patient=this.patientService.updatePatient(id,p);
+        Patient patient = this.patientService.updatePatient(id, p);
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(patient);
     }
@@ -67,7 +64,7 @@ public class PatientController {
 
     @ApiOperation(value = "Delete a Patient", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("patients/{uid}")
-    public ResponseEntity<?> removePatient(@PathVariable("uid") UUID id) {
+    public ResponseEntity removePatient(@PathVariable("uid") UUID id) {
         this.patientService.removePatient(id);
         return ResponseEntity.noContent().build();
     }

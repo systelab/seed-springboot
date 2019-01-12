@@ -25,11 +25,11 @@ public class TokenProvider implements Serializable {
 
     public static final String AUTHORITIES_KEY = "scopes";
 
-    private final JwtConfig properties;
+    private final JwtConfig jwtConfig;
 
     @Autowired
-    public TokenProvider(JwtConfig properties) {
-        this.properties = properties;
+    public TokenProvider(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
     }
 
     public Optional<String> getUsernameFromToken(String token) {
@@ -42,7 +42,7 @@ public class TokenProvider implements Serializable {
 
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(properties.getClientSecret())
+                .setSigningKey(jwtConfig.getClientSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -60,9 +60,9 @@ public class TokenProvider implements Serializable {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .signWith(SignatureAlgorithm.HS256, properties.getClientSecret())
+                .signWith(SignatureAlgorithm.HS256, jwtConfig.getClientSecret())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + properties.getTokenValiditySeconds() * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenValidityInSeconds() * 1000))
                 .compact();
     }
 
@@ -72,7 +72,7 @@ public class TokenProvider implements Serializable {
                 .orElse(false);
     }
 
-    public UsernamePasswordAuthenticationToken getAuthentication(final String token, final Authentication existingAuth, final UserDetails userDetails) {
+    public UsernamePasswordAuthenticationToken getAuthentication(final String token, final UserDetails userDetails) {
         final Claims claims = getAllClaimsFromToken(token);
         final Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))

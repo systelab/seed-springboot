@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 @Service
 public class PatientMaintenanceService {
@@ -23,9 +23,7 @@ public class PatientMaintenanceService {
 
     @Scheduled(cron = "${patient.maintenance.cron.expression}")
     public void schedulePurgeOlderRecordsTask() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -1);
-        this.patientRepository.setActiveForUpdatedBefore(cal.getTime());
+        this.patientRepository.setActiveForUpdatedBefore(LocalDateTime.now().minusYears(1));
         logger.info("Patients DB purged!");
     }
 }

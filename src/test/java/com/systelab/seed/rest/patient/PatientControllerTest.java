@@ -22,7 +22,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -127,7 +131,7 @@ public class PatientControllerTest {
         patient.setName("patient" + patientName);
         patient.setSurname("surname" + patientName);
         patient.setEmail("patient" + patientName + "@systelab.com");
-        patient.setDob(new Date());
+        patient.setDob(LocalDate.now().minusYears(40));
         Address address = new Address();
         address.setCity("city" + patientName);
         address.setCoordinates("coordinates" + patientName);

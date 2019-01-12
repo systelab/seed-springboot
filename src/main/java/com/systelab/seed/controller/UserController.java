@@ -37,7 +37,7 @@ public class UserController {
 
     @ApiOperation(value = "User Login")
     @PostMapping(value = "users/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) throws SecurityException {
+    public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) {
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + this.userService.authenticateUserAndGetToken(login, password)).build();
     }
 
@@ -70,7 +70,7 @@ public class UserController {
 
     @ApiOperation(value = "Update a User", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("users/{uid}")
-    public ResponseEntity<?> updateUser(@PathVariable("uid") UUID id, @Valid @RequestBody @ApiParam(value = "User", required = true) User u) {
+    public ResponseEntity<User> updateUser(@PathVariable("uid") UUID id, @Valid @RequestBody @ApiParam(value = "User", required = true) User u) {
         User user = this.userService.updateUser(id, u);
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(user);
@@ -79,7 +79,7 @@ public class UserController {
     @ApiOperation(value = "Delete a User", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("users/{uid}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> deleteUser(@PathVariable("uid") UUID id) {
+    public ResponseEntity deleteUser(@PathVariable("uid") UUID id) {
         this.userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

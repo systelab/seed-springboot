@@ -10,12 +10,11 @@ import org.hibernate.envers.RevisionEntity;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
-
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
+@Entity
 @RevisionEntity(AuditRevisionListener.class)
 public class AuditRevisionEntity extends DefaultRevisionEntity {
 

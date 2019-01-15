@@ -1,18 +1,16 @@
 package com.systelab.seed.config.audit;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
-public class AuditorAwareImpl implements AuditorAware<String> {
+public class SpringSecurityAuditorAware implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        
-    	String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-    	return Optional.of(userName);
+        return Optional.of(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

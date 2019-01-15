@@ -4,21 +4,19 @@ import com.systelab.seed.model.ModelBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.util.UUID;
 
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
+@Entity
+@Audited
+@Table(name = "users")
 public class User extends ModelBase {
 
     @NotNull

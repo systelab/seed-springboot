@@ -1,31 +1,27 @@
 package com.systelab.seed.model.patient;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.systelab.seed.model.ModelBase;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.envers.Audited;
-
-import com.systelab.seed.model.ModelBase;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import java.util.Date;
 
 @Data
 @Entity
 @Audited
-@EqualsAndHashCode(callSuper = true) 
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "patient")
-public class Patient extends ModelBase implements Serializable {
+public class Patient extends ModelBase {
 
     @NotNull
     @Size(min = 1, max = 255)

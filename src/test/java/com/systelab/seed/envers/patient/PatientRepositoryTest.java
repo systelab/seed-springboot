@@ -1,4 +1,4 @@
-package com.systelab.seed.envers;
+package com.systelab.seed.envers.patient;
 
 import com.systelab.seed.config.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.model.patient.Patient;

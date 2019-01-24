@@ -1,8 +1,9 @@
-package com.systelab.seed.envers;
+package com.systelab.seed.envers.patient;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.systelab.seed.config.audit.AuditRevisionEntity;
+import com.systelab.seed.envers.helper.AuthenticationHelper;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.repository.PatientRepository;
 import org.hibernate.envers.AuditReader;
@@ -48,7 +49,7 @@ public class PatientRepositoryRevisionsTest {
     @BeforeEach
     public void save() throws JsonParseException, JsonMappingException, IOException {
 
-        setAdminAuthentication();
+    	AuthenticationHelper.mockAdminAuthentication();
         repository.deleteAll();
         patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null));
     }
@@ -197,18 +198,5 @@ public class PatientRepositoryRevisionsTest {
                 .getRevisionNumber()
                 .orElse(-1);
         return beforeUpdate;
-    }
-
-
-    private void setAdminAuthentication() {
-
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setRemoteAddr("10.0.0.1");
-
-        WebAuthenticationDetails details = new WebAuthenticationDetails(request);
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("admin", "password");
-        authentication.setDetails(details);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+    }   
 }

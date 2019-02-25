@@ -30,7 +30,7 @@
         <spring.security.test.version>5.1.1.RELEASE</spring.security.test.version>
         <spring.cloud.version>2.0.2.RELEASE</spring.cloud.version>
         <springfox.swagger.version>2.8.0</springfox.swagger.version>
-        <h2.version>1.4.197</h2.version>
+        <h2.version>1.4.198</h2.version>
         <jjwt.version>0.9.1</jjwt.version>
         <lombok.version>1.18.2</lombok.version>
     </properties>

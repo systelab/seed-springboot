@@ -1,18 +1,21 @@
 package com.systelab.seed.model.patient;
 
-import com.systelab.seed.model.ModelBase;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.hibernate.envers.Audited;
+import java.time.LocalDate;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
+
+import org.hibernate.envers.Audited;
+
+import com.systelab.seed.model.ModelBase;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
@@ -36,7 +39,7 @@ public class Patient extends ModelBase {
 
     private String email;
 
-    private Date dob;
+    private LocalDate dob;
 
     @Embedded
     private Address address;

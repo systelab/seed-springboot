@@ -1,11 +1,15 @@
 package com.systelab.seed.envers.patient;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.config.audit.AuditRevisionEntity;
-import com.systelab.seed.envers.helper.AuthenticationHelper;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
@@ -19,20 +23,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.systelab.seed.config.audit.AuditRevisionEntity;
+import com.systelab.seed.envers.helper.AuthenticationHelper;
+import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.repository.PatientRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
@@ -51,7 +49,7 @@ public class PatientRepositoryRevisionsTest {
 
     	AuthenticationHelper.mockAdminAuthentication();
         repository.deleteAll();
-        patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null));
+        patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null, null));
     }
 
     @Test
@@ -168,7 +166,7 @@ public class PatientRepositoryRevisionsTest {
     @Test
     public void checkRevisionTypeWhenCreating() {
 
-        repository.save(new Patient("Created Patient Surname", "Created Patient Name", null, null, null, null));
+        repository.save(new Patient("Created Patient Surname", "Created Patient Name", null, null, null, null, null));
 
         AuditQuery q = getPatientAuditQuery();
 

@@ -1,8 +1,9 @@
 package com.systelab.seed.service;
 
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientNotFoundException;
-import com.systelab.seed.repository.PatientRepository;
+import java.util.UUID;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,18 +11,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import com.systelab.seed.model.allergy.Allergy;
+import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.model.patient.PatientAllergy;
+import com.systelab.seed.repository.PatientNotFoundException;
+import com.systelab.seed.repository.PatientRepository;
 
 @Service
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final AllergyService allergyService;
+ 
     private final MedicalRecordNumberService medicalRecordNumberService;
 
     @Autowired
-    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService) {
+    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService, AllergyService allergyService) {
         this.patientRepository = patientRepository;
+        this.allergyService = allergyService;
         this.medicalRecordNumberService = medicalRecordNumberService;
+        
     }
 
     public Page<Patient> getAllPatients(Pageable pageable) {
@@ -55,4 +64,20 @@ public class PatientService {
                     return existing;
                 }).orElseThrow(() -> new PatientNotFoundException(id));
     }
+
+    public Patient addAlergyToPatient(UUID patientId, UUID allergyId, @Valid PatientAllergy patientAllergytoAdd) {
+
+        Patient patient = this.getPatient(patientId);
+        Allergy allergy = this.allergyService.getAllergy(allergyId);
+
+        PatientAllergy patientAllergy = new PatientAllergy(patient, allergy, patientAllergytoAdd.getNote());
+        patientAllergy.setAssertedDate(patientAllergytoAdd.getAssertedDate());
+        patientAllergy.setLastOcurrence(patientAllergytoAdd.getLastOcurrence());
+
+        patient.getAllergies().add(patientAllergy);
+
+        return this.patientRepository.save(patient);
+    }
+
+    
 }

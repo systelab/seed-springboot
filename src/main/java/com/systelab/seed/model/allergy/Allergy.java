@@ -1,11 +1,9 @@
-package com.systelab.seed.model.patient;
+package com.systelab.seed.model.allergy;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -15,6 +13,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.envers.Audited;
 
 import com.systelab.seed.model.ModelBase;
+import com.systelab.seed.model.patient.PatientAllergy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,28 +26,21 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "patient")
-public class Patient extends ModelBase {
+@Table(name = "allergy")
+public class Allergy extends ModelBase {
 
     @NotNull
     @Size(min = 1, max = 255)
-    private String surname;
+    public String name;
 
     @NotNull
     @Size(min = 1, max = 255)
-    private String name;
+    public String signs;
 
-    @Size(max = 255)
-    private String medicalNumber;
+    @Size(min = 1, max = 255)
+    public String symptoms;
 
-    private String email;
-
-    private Date dob;
-
-    @Embedded
-    private Address address;
-
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private Set<PatientAllergy> allergies = new HashSet<PatientAllergy>();
+    @OneToMany(mappedBy = "allergy", cascade = CascadeType.ALL)
+    private Set<PatientAllergy> patients = new HashSet<PatientAllergy>();
 
 }

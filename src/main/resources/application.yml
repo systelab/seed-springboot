@@ -96,4 +96,4 @@ patient:
   maintenance:
     cron:
       # Check https://www.baeldung.com/cron-expressions
-      expression: "0/20 * * * * *"
+      expression: "0 0 6 1 1 ?"

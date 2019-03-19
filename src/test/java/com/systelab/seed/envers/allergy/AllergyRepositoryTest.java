@@ -20,9 +20,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.systelab.seed.config.RepositoryConfig;
 import com.systelab.seed.config.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.model.allergy.Allergy;
-import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.patient.PatientAllergy;
-import com.systelab.seed.repository.PatientRepository;
+import com.systelab.seed.repository.AllergyRepository;
 
 
 @DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))
@@ -33,38 +32,29 @@ public class AllergyRepositoryTest {
     private TestEntityManager em;
 
     @Autowired
-    private PatientRepository repository;
+    private AllergyRepository repository;
 
-    private Patient patient;
+    private Allergy allergy;
 
     @BeforeEach
     public void save() {
-        patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<>()));
+        allergy = em.persistAndFlush(new Allergy("the Allergy", "the signs", "the sympthoms", new HashSet<PatientAllergy>()));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllPatients() {
-        List<Patient> patients = repository.findAll();
-        assertThat(patients).isNotEmpty()
-                .extracting(Patient::getName, Patient::getSurname)
-                .containsExactly(tuple("My Name", "My Surname"));
+    public void findAllAllergies() {
+        List<Allergy> allergies = repository.findAll();
+        assertThat(allergies).isNotEmpty()
+                .extracting(Allergy::getName, Allergy::getSigns)
+                .containsExactly(tuple("the Allergy", "the signs"));
     }
-    @Test
-    @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAPatient() {
-        
-        Allergy theAllergy = em.persistAndFlush(new Allergy("alergia A ", "los signos ", "los sintomas ", null));
-        PatientAllergy patinetAllergy = new PatientAllergy(patient, theAllergy, "la nota del noto");
-        patient.getAllergies().add(patinetAllergy);
-        em.persistAndFlush(patient);
-    }
-
+    
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
     public void hasAuditInformation() {
-        assertThat(patient)
-                .extracting(Patient::getCreatedBy, Patient::getCreationTime, Patient::getModifiedBy, Patient::getModificationTime, Patient::getVersion)
+        assertThat(allergy)
+                .extracting(Allergy::getCreatedBy, Allergy::getCreationTime, Allergy::getModifiedBy, Allergy::getModificationTime, Allergy::getVersion)
                 .isNotNull();
-    }
+    }   
 }

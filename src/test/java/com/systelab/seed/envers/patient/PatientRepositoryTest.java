@@ -1,9 +1,12 @@
 package com.systelab.seed.envers.patient;
 
-import com.systelab.seed.config.audit.SpringSecurityAuditorAware;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientRepository;
-import com.systelab.seed.config.RepositoryConfig;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
+
+import java.util.HashSet;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,11 +17,11 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
+import com.systelab.seed.config.RepositoryConfig;
+import com.systelab.seed.config.audit.SpringSecurityAuditorAware;
+import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.model.patient.PatientAllergy;
+import com.systelab.seed.repository.PatientRepository;
 
 
 @DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))
@@ -35,7 +38,7 @@ public class PatientRepositoryTest {
 
     @BeforeEach
     public void save() {
-        patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, null));
+        patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
     }
 
     @Test

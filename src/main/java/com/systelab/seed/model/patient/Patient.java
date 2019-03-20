@@ -1,8 +1,9 @@
 package com.systelab.seed.model.patient;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -43,7 +44,7 @@ public class Patient extends ModelBase {
 
     private String email;
 
-    private Date dob;
+    private LocalDate dob;
 
     @Embedded
     private Address address;

@@ -44,10 +44,9 @@ public class AllergyRepositoryRevisionsTest {
     @BeforeEach
     public void save() throws JsonParseException, JsonMappingException, IOException {
 
-    	AuthenticationHelper.mockAdminAuthentication();
+        AuthenticationHelper.mockAdminAuthentication();
         repository.deleteAll();
-        allergy = repository.save(new Allergy("AllergyA", "signsA", "sympthoms", null));
-       // allergy = repository.save(new Allergy("AllergyA", "signsA", null));
+        allergy = repository.save(new Allergy("AllergyA", "signsA", "sympthoms"));
     }
 
     @Test
@@ -65,22 +64,17 @@ public class AllergyRepositoryRevisionsTest {
                 });
     }
 
-
-
     private AuditQuery getPatientAuditQuery() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
-        AuditQuery q = auditReader.createQuery()
-                .forRevisionsOfEntity(Patient.class, false, true);
+        AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Patient.class, false, true);
         return q;
     }
 
     private int getTotalRevisionsById(Optional<Revision<Integer, Patient>> revision) {
 
-        int beforeUpdate = revision.get()
-                .getRevisionNumber()
-                .orElse(-1);
+        int beforeUpdate = revision.get().getRevisionNumber().orElse(-1);
         return beforeUpdate;
-    }   
+    }
 }

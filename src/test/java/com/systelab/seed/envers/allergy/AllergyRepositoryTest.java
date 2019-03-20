@@ -50,11 +50,12 @@ public class AllergyRepositoryTest {
                 .extracting(Patient::getName, Patient::getSurname)
                 .containsExactly(tuple("My Name", "My Surname"));
     }
+
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
     public void findAPatient() {
-        
-        Allergy theAllergy = em.persistAndFlush(new Allergy("alergia A ", "los signos ", "los sintomas ", null));
+
+        Allergy theAllergy = em.persistAndFlush(new Allergy("alergia A ", "los signos ", "los sintomas "));
         PatientAllergy patinetAllergy = new PatientAllergy(patient, theAllergy, "la nota del noto");
         patient.getAllergies().add(patinetAllergy);
         em.persistAndFlush(patient);

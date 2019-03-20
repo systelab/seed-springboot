@@ -32,7 +32,6 @@ public class PatientAllergy extends ModelBase implements Serializable {
 
     @ManyToOne
     @JoinColumn
-    @JsonIgnore
     private Allergy allergy;
 
     private LocalDate lastOcurrence;

@@ -82,9 +82,7 @@ public class AllergyControllerTest {
         patientAllergies.add(new PatientAllergy(patientA, allergyA, "note Allergy A patient A"));
         
         patientAllergies.add(new PatientAllergy(patientB, allergyA, "note Allergy A patient B"));
-        
-        allergyA.setPatients(patientAllergies);        
-        
+
         List<Allergy> allergies = Arrays.asList(allergyA, allergyB);
         
         Page<Allergy> pageofAllergy = new PageImpl<>(allergies);

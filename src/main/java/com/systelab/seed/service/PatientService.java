@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientAllergyRepository;
 import com.systelab.seed.repository.PatientNotFoundException;
 import com.systelab.seed.repository.PatientRepository;
 
@@ -21,8 +20,7 @@ public class PatientService {
     private final MedicalRecordNumberService medicalRecordNumberService;
 
     @Autowired
-    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService, AllergyService allergyService,
-            PatientAllergyRepository pateintAllergyRepository) {
+    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService) {
         this.patientRepository = patientRepository;
         this.medicalRecordNumberService = medicalRecordNumberService;
 

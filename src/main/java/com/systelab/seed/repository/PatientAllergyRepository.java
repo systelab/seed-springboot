@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.systelab.seed.model.patient.PatientAllergy;
 
 @Repository
-public interface PateintAllergyRepository extends JpaRepository<PatientAllergy, UUID>, RevisionRepository<PatientAllergy, UUID, Integer> {
+public interface PatientAllergyRepository extends JpaRepository<PatientAllergy, UUID>, RevisionRepository<PatientAllergy, UUID, Integer> {
 
 }

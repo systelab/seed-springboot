@@ -13,18 +13,18 @@ import org.springframework.stereotype.Service;
 import com.systelab.seed.model.allergy.Allergy;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.patient.PatientAllergy;
-import com.systelab.seed.repository.PateintAllergyRepository;
+import com.systelab.seed.repository.PatientAllergyRepository;
 import com.systelab.seed.repository.PatientNotFoundException;
 
 @Service
 public class PatientAllergyService {
 
     private final PatientService patientService;
-    private final PateintAllergyRepository pateintAllergyRepository;
+    private final PatientAllergyRepository pateintAllergyRepository;
     private final AllergyService allergyService;
 
     @Autowired
-    public PatientAllergyService(PatientService patientService, AllergyService allergyService, PateintAllergyRepository pateintAllergyRepository) {
+    public PatientAllergyService(PatientService patientService, AllergyService allergyService, PatientAllergyRepository pateintAllergyRepository) {
         this.patientService = patientService;
         this.allergyService = allergyService;
         this.pateintAllergyRepository = pateintAllergyRepository;

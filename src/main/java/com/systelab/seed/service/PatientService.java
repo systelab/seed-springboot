@@ -18,18 +18,13 @@ import com.systelab.seed.repository.PatientRepository;
 public class PatientService {
 
     private final PatientRepository patientRepository;
-    private final PatientAllergyRepository pateintAllergyRepository;
-    private final AllergyService allergyService;
-
     private final MedicalRecordNumberService medicalRecordNumberService;
 
     @Autowired
     public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService, AllergyService allergyService,
             PatientAllergyRepository pateintAllergyRepository) {
         this.patientRepository = patientRepository;
-        this.allergyService = allergyService;
         this.medicalRecordNumberService = medicalRecordNumberService;
-        this.pateintAllergyRepository = pateintAllergyRepository;
 
     }
 

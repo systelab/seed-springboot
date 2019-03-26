@@ -74,12 +74,12 @@ public class AllergyRepositoryRevisionsTest {
         Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
         int beforeUpdate = getTotalRevisionsById(revision);
 
-        allergy.setName("New Allergys name");
+        allergy.setName("New Allergy name");
         repository.save(allergy);
 
         Optional<Revision<Integer, Allergy>> revisionAfterUpdate = repository.findLastChangeRevision(allergy.getId());
         assertThat(revisionAfterUpdate).isPresent().hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(beforeUpdate))
-                .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(Allergy::getName).isEqualTo("New Allergys name"));
+                .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(Allergy::getName).isEqualTo("New Allergy name"));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class AllergyRepositoryRevisionsTest {
     @Test
     public void checkRevisionTypeWhenCreating() {
 
-        repository.save(new Allergy("Created Assay name", "Created Assay sign", "Created Assay symptom"));
+        repository.save(new Allergy("Created Allergy name", "Created Allergy sign", "Created Allergy symptom"));
 
         AuditQuery q = getAllergyAuditQuery();
 
@@ -173,7 +173,7 @@ public class AllergyRepositoryRevisionsTest {
         RevisionType revisionType = (RevisionType) tuple[2];
 
         Assertions.assertEquals(revisionType, RevisionType.ADD);
-        assertThat(createdAllergy.getName()).isEqualTo("Created Assay name");
+        assertThat(createdAllergy.getName()).isEqualTo("Created Allergy name");
     }
 
     private AuditQuery getAllergyAuditQuery() {

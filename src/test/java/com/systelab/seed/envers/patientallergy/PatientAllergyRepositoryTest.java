@@ -42,7 +42,7 @@ public class PatientAllergyRepositoryTest {
     @BeforeEach
     public void save() {
         patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
-        allergy = em.persistAndFlush(new Allergy("the Allergy", "the signs", "the sympthoms"));
+        allergy = em.persistAndFlush(new Allergy("the allergy", "the signs", "the symptoms"));
         
         patientAllergy = em.persistAndFlush(new PatientAllergy(patient, allergy, "the note"));
     }

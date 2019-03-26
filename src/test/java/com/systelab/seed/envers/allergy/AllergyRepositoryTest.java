@@ -35,14 +35,14 @@ public class AllergyRepositoryTest {
 
     @BeforeEach
     public void save() {
-        allergy = em.persistAndFlush(new Allergy("the Allergy", "the signs", "the sympthoms"));
+        allergy = em.persistAndFlush(new Allergy("the allergy", "the signs", "the symptoms"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
     public void findAllAllergies() {
         List<Allergy> allergies = repository.findAll();
-        assertThat(allergies).isNotEmpty().extracting(Allergy::getName, Allergy::getSigns).containsExactly(tuple("the Allergy", "the signs"));
+        assertThat(allergies).isNotEmpty().extracting(Allergy::getName, Allergy::getSigns).containsExactly(tuple("the allergy", "the signs"));
     }
 
     @Test

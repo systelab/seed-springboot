@@ -176,7 +176,7 @@ public class PatientAllergyRepositoryRevisionsTest {
     }
     
     private Allergy createAllergy() {
-        return allergyRepository.save(new Allergy("the Allergy", "the signs", "the sympthoms"));
+        return allergyRepository.save(new Allergy("the allergy", "the signs", "the symptoms"));
     }
 
     private Patient createPatient() {

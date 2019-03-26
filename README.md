@@ -30,7 +30,7 @@ To get you started you can simply clone the `seed-springboot` repository and ins
 
 You need [git][git] to clone the `seed-springboot` repository.
 
-You will need [Java™ SE Development Kit 8][jdk-download] and [Maven][maven].
+You will need [OpenJDK 11][jdk-download] and [Maven][maven].
 
 ### Clone `seed-springboot`
 
@@ -108,7 +108,7 @@ The app will be available at https://localhost:8443/swagger-ui.html
 [git]: https://git-scm.com/
 [sboot]: https://projects.spring.io/spring-boot/
 [maven]: https://maven.apache.org/download.cgi
-[jdk-download]: http://www.oracle.com/technetwork/java/javase/downloads
+[jdk-download]: https://adoptopenjdk.net/
 [JEE]: http://www.oracle.com/technetwork/java/javaee/tech/index.html
 [jwt]: https://jwt.io/
 [cors]: https://en.wikipedia.org/wiki/Cross-origin_resource_sharing

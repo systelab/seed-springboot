@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -15,6 +14,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.envers.Audited;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.model.ModelBase;
 
 import lombok.AllArgsConstructor;
@@ -49,6 +49,7 @@ public class Patient extends ModelBase {
     @Embedded
     private Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private Set<PatientAllergy> allergies = new HashSet<PatientAllergy>();
 

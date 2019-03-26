@@ -48,7 +48,7 @@ public class PatientAllergyController {
         return ResponseEntity.ok(this.patientAllergyService.getAllergiesFromPatient(id));
     }
 
-    @ApiOperation(value = "Update an alergy to a Patient", authorizations = { @Authorization(value = "Bearer") })
+    @ApiOperation(value = "Update an allergy to a Patient", authorizations = { @Authorization(value = "Bearer") })
     @PutMapping("{patientUid}/allergies/{allergyUid}")
     public ResponseEntity<PatientAllergy> updatePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId,
             @RequestBody @ApiParam(value = "patientAllergy", required = true) @Valid PatientAllergy patientAllergy) {
@@ -59,7 +59,7 @@ public class PatientAllergyController {
 
     @ApiOperation(value = "Add an Allergy to a Patient", authorizations = { @Authorization(value = "Bearer") })
     @PostMapping("{uid}/allergies/allergy")
-    public ResponseEntity<PatientAllergy> addAllergyAddToPatient(@PathVariable("uid") UUID id,
+    public ResponseEntity<PatientAllergy> addPatientAllergy(@PathVariable("uid") UUID id,
             @RequestBody @ApiParam(value = "allergy", required = true) @Valid PatientAllergy pa) {
         PatientAllergy patient = this.patientAllergyService.createAllergyToPatient(id, pa);
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/patients/{id}").buildAndExpand(patient.getId()).toUri();
@@ -68,7 +68,7 @@ public class PatientAllergyController {
 
     @ApiOperation(value = "Delete an Allergy from a Patient", authorizations = { @Authorization(value = "Bearer") })
     @DeleteMapping("{patientUid}/allergies/{allergyUid}")
-    public ResponseEntity removeAllergyFromPatient(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId) {
+    public ResponseEntity removePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId) {
         this.patientAllergyService.removeAllergyFromPatient(patientId, allergyId);
         return ResponseEntity.noContent().build();
     }

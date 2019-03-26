@@ -35,7 +35,7 @@ public class PatientAllergy extends ModelBase implements Serializable {
     @JoinColumn
     private Allergy allergy;
 
-    private LocalDate lastOcurrence;
+    private LocalDate lastOccurrence;
     private LocalDate assertedDate;
 
     @Size(min = 1, max = 255)

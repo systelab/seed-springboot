@@ -52,7 +52,7 @@ public class PatientAllergyController {
     @PutMapping("{patientUid}/allergies/{allergyUid}")
     public ResponseEntity<PatientAllergy> updatePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId,
             @RequestBody @ApiParam(value = "patientAllergy", required = true) @Valid PatientAllergy patientAllergy) {
-        PatientAllergy patient = this.patientAllergyService.updateAlergyToPatient(patientId, allergyId, patientAllergy);
+        PatientAllergy patient = this.patientAllergyService.updateAllergyToPatient(patientId, allergyId, patientAllergy);
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(patient);
     }
@@ -69,7 +69,7 @@ public class PatientAllergyController {
     @ApiOperation(value = "Delete an Allergy from a Patient", authorizations = { @Authorization(value = "Bearer") })
     @DeleteMapping("{patientUid}/allergies/{allergyUid}")
     public ResponseEntity removeAllergyFromPatient(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId) {
-        this.patientAllergyService.removeAlleryFromPatient(patientId, allergyId);
+        this.patientAllergyService.removeAllergyFromPatient(patientId, allergyId);
         return ResponseEntity.noContent().build();
     }
 

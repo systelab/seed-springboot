@@ -19,5 +19,4 @@ FROM openjdk:11.0.2-jdk
 
 COPY --from=builder /seed-springboot/target/seed-springboot-1.0.jar seed-springboot.jar
 
-
 CMD ["java","-jar","seed-springboot.jar"]

@@ -166,7 +166,7 @@
             <version>v1.0.4</version>
             <scope>test</scope>
         </dependency>
-                <!-- Fix execution issue under a Java9+ environment -->
+        <!-- Fix execution issue under a Java9+ environment -->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>

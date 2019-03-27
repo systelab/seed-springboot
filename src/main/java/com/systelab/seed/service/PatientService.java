@@ -1,8 +1,7 @@
 package com.systelab.seed.service;
 
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientNotFoundException;
-import com.systelab.seed.repository.PatientRepository;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import com.systelab.seed.model.patient.Patient;
+import com.systelab.seed.repository.PatientNotFoundException;
+import com.systelab.seed.repository.PatientRepository;
 
 @Service
 public class PatientService {
@@ -22,6 +23,7 @@ public class PatientService {
     public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService) {
         this.patientRepository = patientRepository;
         this.medicalRecordNumberService = medicalRecordNumberService;
+
     }
 
     public Page<Patient> getAllPatients(Pageable pageable) {
@@ -41,18 +43,17 @@ public class PatientService {
     }
 
     public Patient updatePatient(UUID id, Patient p) {
-        return this.patientRepository.findById(id)
-                .map(existing -> {
-                    p.setId(id);
-                    return this.patientRepository.save(p);
-                }).orElseThrow(() -> new PatientNotFoundException(id));
+        return this.patientRepository.findById(id).map(existing -> {
+            p.setId(id);
+            return this.patientRepository.save(p);
+        }).orElseThrow(() -> new PatientNotFoundException(id));
     }
 
     public Patient removePatient(UUID id) {
-        return this.patientRepository.findById(id)
-                .map(existing -> {
-                    patientRepository.delete(existing);
-                    return existing;
-                }).orElseThrow(() -> new PatientNotFoundException(id));
+        return this.patientRepository.findById(id).map(existing -> {
+            patientRepository.delete(existing);
+            return existing;
+        }).orElseThrow(() -> new PatientNotFoundException(id));
     }
+
 }

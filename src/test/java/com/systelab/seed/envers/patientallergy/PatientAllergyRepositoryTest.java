@@ -1,4 +1,4 @@
-package com.systelab.seed.envers.patient;
+package com.systelab.seed.envers.patientallergy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -19,42 +19,48 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.systelab.seed.config.RepositoryConfig;
 import com.systelab.seed.config.audit.SpringSecurityAuditorAware;
+import com.systelab.seed.model.allergy.Allergy;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.patient.PatientAllergy;
-import com.systelab.seed.repository.PatientRepository;
+import com.systelab.seed.repository.PatientAllergyRepository;
 
 
 @DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))
 @ExtendWith(SpringExtension.class)
-public class PatientRepositoryTest {
+public class PatientAllergyRepositoryTest {
 
     @Autowired
     private TestEntityManager em;
 
     @Autowired
-    private PatientRepository repository;
+    private PatientAllergyRepository repository;
 
     private Patient patient;
+    private Allergy allergy;
+    private PatientAllergy patientAllergy;
 
     @BeforeEach
     public void save() {
         patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
+        allergy = em.persistAndFlush(new Allergy("the allergy", "the signs", "the symptoms"));
+        
+        patientAllergy = em.persistAndFlush(new PatientAllergy(patient, allergy, "the note"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllPatients() {
-        List<Patient> patients = repository.findAll();
-        assertThat(patients).isNotEmpty()
-                .extracting(Patient::getName, Patient::getSurname)
-                .containsExactly(tuple("My Name", "My Surname"));
+    public void findAllPatientAllergies() {
+        List<PatientAllergy> patientAllergies = repository.findAll();
+        assertThat(patientAllergies).isNotEmpty()
+                .extracting(PatientAllergy::getPatient, PatientAllergy::getAllergy, PatientAllergy::getNote)
+                .containsExactly(tuple(patient, allergy, "the note"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
     public void hasAuditInformation() {
-        assertThat(patient)
-                .extracting(Patient::getCreatedBy, Patient::getCreationTime, Patient::getModifiedBy, Patient::getModificationTime, Patient::getVersion)
+        assertThat(patientAllergy)
+                .extracting(PatientAllergy::getCreatedBy, PatientAllergy::getCreationTime, PatientAllergy::getModifiedBy, PatientAllergy::getModificationTime, PatientAllergy::getVersion)
                 .isNotNull();
     }
 }

@@ -61,14 +61,14 @@ public class PatientAllergyController {
     @PostMapping("{uid}/allergies/allergy")
     public ResponseEntity<PatientAllergy> addPatientAllergy(@PathVariable("uid") UUID id,
             @RequestBody @ApiParam(value = "allergy", required = true) @Valid PatientAllergy pa) {
-        PatientAllergy patient = this.patientAllergyService.createAllergyToPatient(id, pa);
+        PatientAllergy patient = this.patientAllergyService.addAllergyToPatient(id, pa);
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/patients/{id}").buildAndExpand(patient.getId()).toUri();
         return ResponseEntity.created(uri).body(patient);
     }
 
     @ApiOperation(value = "Delete an Allergy from a Patient", authorizations = { @Authorization(value = "Bearer") })
     @DeleteMapping("{patientUid}/allergies/{allergyUid}")
-    public ResponseEntity removePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId) {
+    public ResponseEntity<PatientAllergy> removePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId) {
         this.patientAllergyService.removeAllergyFromPatient(patientId, allergyId);
         return ResponseEntity.noContent().build();
     }

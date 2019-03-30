@@ -54,16 +54,19 @@ public class TokenProvider implements Serializable {
     }
 
     public String generateToken(Authentication authentication) {
-        final String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
+                .claim(AUTHORITIES_KEY, getAuthorities(authentication))
                 .signWith(SignatureAlgorithm.HS256, jwtConfig.getClientSecret())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenValidityInSeconds() * 1000))
                 .compact();
+    }
+
+    private String getAuthorities(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(","));
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

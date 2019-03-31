@@ -3,7 +3,7 @@ package com.systelab.seed.service;
 import com.systelab.seed.model.allergy.Allergy;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.patient.PatientAllergy;
-import com.systelab.seed.repository.AllergyAlreadySetException;
+import com.systelab.seed.repository.AllergyForPatientAlreadyExistException;
 import com.systelab.seed.repository.AllergyForPatientNotFoundException;
 import com.systelab.seed.repository.PatientAllergyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class PatientAllergyService {
         Allergy allergy = this.allergyService.getAllergy(patientAllergy.getAllergy().getId());
 
         if (this.patientAllergyRepository.findByPatientIdAndAllergyId(patient.getId(), allergy.getId()).isPresent()) {
-            throw new AllergyAlreadySetException(allergy.getId());
+            throw new AllergyForPatientAlreadyExistException(patient.getId(), allergy.getId());
         }
         PatientAllergy patientAllergyToAdd = new PatientAllergy(patient, allergy, patientAllergy.getNote());
         patientAllergyToAdd.setAssertedDate(patientAllergy.getAssertedDate());

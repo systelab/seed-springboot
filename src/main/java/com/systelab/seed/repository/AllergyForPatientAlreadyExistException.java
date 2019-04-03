@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.UUID;
 
-@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+@ResponseStatus(HttpStatus.CONFLICT)
 public class AllergyForPatientAlreadyExistException extends RuntimeException {
 
     private final String patientId;

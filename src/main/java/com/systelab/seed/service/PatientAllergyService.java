@@ -1,20 +1,17 @@
 package com.systelab.seed.service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.systelab.seed.model.allergy.Allergy;
 import com.systelab.seed.model.patient.Patient;
 import com.systelab.seed.model.patient.PatientAllergy;
+import com.systelab.seed.repository.AllergyForPatientAlreadyExistException;
+import com.systelab.seed.repository.AllergyForPatientNotFoundException;
 import com.systelab.seed.repository.PatientAllergyRepository;
-import com.systelab.seed.repository.PatientNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class PatientAllergyService {
@@ -24,30 +21,10 @@ public class PatientAllergyService {
     private final AllergyService allergyService;
 
     @Autowired
-    public PatientAllergyService(PatientService patientService, AllergyService allergyService, PatientAllergyRepository pateintAllergyRepository) {
+    public PatientAllergyService(PatientService patientService, AllergyService allergyService, PatientAllergyRepository patientAllergyRepository) {
         this.patientService = patientService;
         this.allergyService = allergyService;
-        this.patientAllergyRepository = pateintAllergyRepository;
-
-    }
-
-    public PatientAllergy updateAllergyToPatient(UUID patientId, UUID allergyId, @Valid PatientAllergy patientAllergytoAdd) {
-
-        Patient patient = this.patientService.getPatient(patientId);
-
-        List<PatientAllergy> patientAllergies = patient.getAllergies().stream().filter(pa -> pa.getAllergy().getId().equals(allergyId))
-                .collect(Collectors.toList());
-        if (patientAllergies.isEmpty() || patientAllergies.size() > 1) {
-            throw new PatientNotFoundException(patientId);
-        }
-
-        PatientAllergy patientAllergyToUpdate = patientAllergies.get(0);
-
-        patientAllergyToUpdate.setNote(patientAllergytoAdd.getNote());
-        patientAllergyToUpdate.setAssertedDate(patientAllergytoAdd.getAssertedDate());
-        patientAllergyToUpdate.setLastOccurrence(patientAllergytoAdd.getLastOccurrence());
-
-        return this.patientAllergyRepository.saveAndFlush(patientAllergyToUpdate);
+        this.patientAllergyRepository = patientAllergyRepository;
     }
 
     public Set<PatientAllergy> getAllergiesFromPatient(UUID patientId) {
@@ -55,43 +32,32 @@ public class PatientAllergyService {
         return patient.getAllergies();
     }
 
-    public PatientAllergy createAllergyToPatient(UUID id, @Valid PatientAllergy pa) {
+    public PatientAllergy addAllergyToPatient(UUID id, @Valid PatientAllergy patientAllergy) {
         Patient patient = this.patientService.getPatient(id);
-        Allergy allergy = this.allergyService.getAllergy(pa.getAllergy().getId());
+        Allergy allergy = this.allergyService.getAllergy(patientAllergy.getAllergy().getId());
 
-        List<PatientAllergy> patientAllergiesFiltered = patient.getAllergies().stream()
-                .filter(pastream -> pastream.getAllergy().getId().equals(allergy.getId())).collect(Collectors.toList());
-
-        if (!patientAllergiesFiltered.isEmpty()) {
-            throw new PatientNotFoundException(id);
+        if (this.patientAllergyRepository.findByPatientIdAndAllergyId(patient.getId(), allergy.getId()).isPresent()) {
+            throw new AllergyForPatientAlreadyExistException(patient.getId(), allergy.getId());
         }
-
-        PatientAllergy patientAllergyToAdd = new PatientAllergy(patient, allergy, pa.getNote());
-        patientAllergyToAdd.setAssertedDate(pa.getAssertedDate());
-        patientAllergyToAdd.setLastOccurrence(pa.getLastOccurrence());
-
-        patient.getAllergies().add(patientAllergyToAdd);
-
+        PatientAllergy patientAllergyToAdd = new PatientAllergy(patient, allergy, patientAllergy.getNote());
+        patientAllergyToAdd.setAssertedDate(patientAllergy.getAssertedDate());
+        patientAllergyToAdd.setLastOccurrence(patientAllergy.getLastOccurrence());
         return this.patientAllergyRepository.save(patientAllergyToAdd);
     }
 
-    public void removeAllergyFromPatient(UUID patientId, UUID allergyId) {
-
-        Patient patient = this.patientService.getPatient(patientId);
-
-        List<PatientAllergy> patientAllergies = patient.getAllergies().stream().filter(pa -> pa.getAllergy().getId().equals(allergyId))
-                .collect(Collectors.toList());
-        if (patientAllergies.isEmpty() || patientAllergies.size() > 1) {
-            throw new PatientNotFoundException(patientId);
-        }
-
-        Set<PatientAllergy> newPateintAllergies = patient.getAllergies().stream().filter(pa -> !(pa.getAllergy().getId().equals(allergyId)))
-                .collect(Collectors.toSet());
-        patient.setAllergies(newPateintAllergies);
-        PatientAllergy patientAllergyToDelte = patientAllergies.get(0);
-
-        this.patientAllergyRepository.delete(patientAllergyToDelte);
-
+    public PatientAllergy updateAllergyToPatient(UUID patientId, UUID allergyId, @Valid PatientAllergy patientAllergy) {
+        return this.patientAllergyRepository.findByPatientIdAndAllergyId(patientId, allergyId).map(existing -> {
+            existing.setNote(patientAllergy.getNote());
+            existing.setAssertedDate(patientAllergy.getAssertedDate());
+            existing.setLastOccurrence(patientAllergy.getLastOccurrence());
+            return this.patientAllergyRepository.saveAndFlush(existing);
+        }).orElseThrow(() -> new AllergyForPatientNotFoundException(patientId, allergyId));
     }
 
+    public PatientAllergy removeAllergyFromPatient(UUID patientId, UUID allergyId) {
+        return this.patientAllergyRepository.findByPatientIdAndAllergyId(patientId, allergyId).map(existing -> {
+            this.patientAllergyRepository.delete(existing);
+            return existing;
+        }).orElseThrow(() -> new AllergyForPatientNotFoundException(patientId, allergyId));
+    }
 }

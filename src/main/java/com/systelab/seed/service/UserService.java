@@ -2,7 +2,7 @@ package com.systelab.seed.service;
 
 import com.systelab.seed.config.authentication.TokenProvider;
 import com.systelab.seed.model.user.User;
-import com.systelab.seed.repository.UserNotFoundException;
+import com.systelab.seed.exception.UserNotFoundException;
 import com.systelab.seed.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientNotFoundException;
+import com.systelab.seed.exception.PatientNotFoundException;
 import com.systelab.seed.repository.PatientRepository;
 
 @Service

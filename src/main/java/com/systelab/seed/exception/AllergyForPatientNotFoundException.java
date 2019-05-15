@@ -1,4 +1,4 @@
-package com.systelab.seed.repository;
+package com.systelab.seed.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

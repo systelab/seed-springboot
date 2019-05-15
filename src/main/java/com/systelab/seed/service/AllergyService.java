@@ -1,7 +1,7 @@
 package com.systelab.seed.service;
 
 import com.systelab.seed.model.allergy.Allergy;
-import com.systelab.seed.repository.AllergyNotFoundException;
+import com.systelab.seed.exception.AllergyNotFoundException;
 import com.systelab.seed.repository.AllergyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

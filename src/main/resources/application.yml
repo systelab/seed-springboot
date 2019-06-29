@@ -32,6 +32,7 @@ http-server:
 management:
   endpoints:
     web:
+      expose: prometheus
       exposure:
         include: "*"
 

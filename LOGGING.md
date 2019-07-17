@@ -65,8 +65,8 @@ That's an example of a logback-spring.xml file:
         <appender-ref ref="Console" />
     </root>
  
-    <!-- LOG "com.baeldung*" at TRACE level -->
-    <logger name="com.baeldung" level="trace" additivity="false">
+    <!-- LOG "com.systelab*" at TRACE level -->
+    <logger name="com.systelab" level="trace" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>

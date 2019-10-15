@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -44,6 +45,7 @@ public class Patient extends ModelBase {
 
     private String email;
 
+    @ApiModelProperty(value = "Date of Birth", example = "1966-11-17")
     private LocalDate dob;
 
     @Embedded

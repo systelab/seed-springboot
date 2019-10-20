@@ -2,9 +2,46 @@
 
 In SpringBoot, Actuator is used to expose operational information about the running application, like health, metrics, info, dump, or env.
 
-## Predefined Endpoints
+## Custom metric
 
-Some predefined wendopoint are:
+In order to create a custom metric, add the micrometer-registry-atlas dependency:
+
+```xml
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-atlas</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+```
+
+
+Inject the MeterRegistry registry in the constructor of your component and create the metric. For example:
+ 
+```java
+    private final Counter patientCreatedCounter;
+
+    @Autowired
+    public PatientController(MeterRegistry registry) {
+        patientCreatedCounter = Counter
+                .builder("patients")
+                .description("Number of patients created in the application")
+                .register(registry);
+    }
+```
+
+Finally update the counter:
+
+```java
+    public void someMethod() {
+        ...
+        patientCreatedCounter.increment();
+        ...
+    }
+```
+  
+## REST endpoints
+
+Some predefined actuator endpoint are:
 
 - **/actuator/auditevents**: Lists security audit-related events such as user login/logout. Also, we can filter by principal or type among others fields.
 - **/actuator/beans**: Returns all available beans in our BeanFactory. Unlike /auditevents, it doesn't support filtering.

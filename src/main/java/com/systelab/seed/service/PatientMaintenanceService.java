@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class PatientMaintenanceService {
@@ -16,6 +17,10 @@ public class PatientMaintenanceService {
 
     private final PatientRepository patientRepository;
 
+    private boolean isWorking = true;
+
+    private LocalDateTime lastExecution;
+
     @Autowired
     public PatientMaintenanceService(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
@@ -23,7 +28,23 @@ public class PatientMaintenanceService {
 
     @Scheduled(cron = "${patient.maintenance.cron.expression}")
     public void schedulePurgeOlderRecordsTask() {
-        this.patientRepository.setActiveForUpdatedBefore(LocalDateTime.now().minusYears(1));
-        logger.info("Patients DB purged!");
+        try {
+            this.patientRepository.setActiveForUpdatedBefore(LocalDateTime.now().minusYears(1));
+            logger.info("Patients DB purged!");
+            isWorking = true;
+            lastExecution = LocalDateTime.now();
+        } catch (Exception ex) {
+            logger.error("Patients DB not purged!", ex);
+            isWorking = false;
+        }
     }
+
+    public boolean isWorking() {
+        return isWorking;
+    }
+
+    public Optional<LocalDateTime> lastExecution() {
+        return Optional.ofNullable(lastExecution);
+    }
+
 }

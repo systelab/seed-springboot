@@ -1,5 +1,6 @@
 package com.systelab.seed.service;
 
+import com.systelab.seed.config.health.PatientMaintenanceServiceHealthIndicator;
 import com.systelab.seed.repository.PatientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class PatientMaintenanceService {
@@ -17,13 +17,12 @@ public class PatientMaintenanceService {
 
     private final PatientRepository patientRepository;
 
-    private boolean isWorking = true;
-
-    private LocalDateTime lastExecution;
+    private final PatientMaintenanceServiceHealthIndicator healthIndicator;
 
     @Autowired
-    public PatientMaintenanceService(PatientRepository patientRepository) {
+    public PatientMaintenanceService(PatientRepository patientRepository, PatientMaintenanceServiceHealthIndicator healthIndicator) {
         this.patientRepository = patientRepository;
+        this.healthIndicator = healthIndicator;
     }
 
     @Scheduled(cron = "${patient.maintenance.cron.expression}")
@@ -31,20 +30,11 @@ public class PatientMaintenanceService {
         try {
             this.patientRepository.setActiveForUpdatedBefore(LocalDateTime.now().minusYears(1));
             logger.info("Patients DB purged!");
-            isWorking = true;
-            lastExecution = LocalDateTime.now();
+            healthIndicator.setWorking(true);
+            healthIndicator.setLastExecution(LocalDateTime.now());
         } catch (Exception ex) {
             logger.error("Patients DB not purged!", ex);
-            isWorking = false;
+            healthIndicator.setWorking(false);
         }
     }
-
-    public boolean isWorking() {
-        return isWorking;
-    }
-
-    public Optional<LocalDateTime> lastExecution() {
-        return Optional.ofNullable(lastExecution);
-    }
-
 }

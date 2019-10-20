@@ -20,6 +20,6 @@ public class ServiceTest {
     @ArchTest
     static ArchRule servicesCouldOnlyBeAccessedByOtherServicesOrControllers = classes()
             .that().resideInAPackage("..service..")
-            .should().onlyBeAccessed().byAnyPackage("..controller..", "..service..")
+            .should().onlyBeAccessed().byAnyPackage("..controller..", "..service..", "..health..")
             .because("we want our services to be accessed only by controllers or by other services");
 }

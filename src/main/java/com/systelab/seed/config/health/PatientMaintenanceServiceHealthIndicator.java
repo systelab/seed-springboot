@@ -1,4 +1,4 @@
-package com.systelab.seed.config;
+package com.systelab.seed.config.health;
 
 import com.systelab.seed.service.PatientMaintenanceService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,5 @@
 package com.systelab.seed.controller;
 
-
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,7 +39,7 @@ public class AllergyController {
         return ResponseEntity.ok(this.allergyService.getAllAllergies(pageable));
     }
 
-    @ApiOperation(value = "Get Allergy", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Get an Allergy", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("allergies/{uid}")
     public ResponseEntity<Allergy> getAllergy(@PathVariable("uid") UUID id) {
         return ResponseEntity.ok(this.allergyService.getAllergy(id));
@@ -49,23 +47,21 @@ public class AllergyController {
 
     @ApiOperation(value = "Create an Allergy", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("allergies/allergy")
-    public ResponseEntity<Allergy> createAllergy(@RequestBody @ApiParam(value = "Allergy", required = true) @Valid Allergy a) {
-        Allergy allergy = this.allergyService.createAllergy(a);
-        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/allergies/{id}").buildAndExpand(allergy.getId()).toUri();
-        return ResponseEntity.created(uri).body(allergy);
+    public ResponseEntity<Allergy> createAllergy(@RequestBody @ApiParam(value = "Allergy", required = true) @Valid Allergy allergy) {
+        Allergy createdAllergy = this.allergyService.createAllergy(allergy);
+        URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/allergies/{id}").buildAndExpand(createdAllergy.getId()).toUri();
+        return ResponseEntity.created(uri).body(createdAllergy);
     }
-
 
     @ApiOperation(value = "Create or Update (idempotent) an existing Allergy", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("allergies/{uid}")
-    public ResponseEntity<Allergy> updateAllergy(@PathVariable("uid") UUID id, @RequestBody @ApiParam(value = "Allergy", required = true) @Valid Allergy a) {
-        Allergy allergy = this.allergyService.updateAllergy(id, a);
+    public ResponseEntity<Allergy> updateAllergy(@PathVariable("uid") UUID id, @RequestBody @ApiParam(value = "Allergy", required = true) @Valid Allergy allergy) {
+        Allergy updatedAllergy = this.allergyService.updateAllergy(id, allergy);
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-        return ResponseEntity.created(selfLink).body(allergy);
+        return ResponseEntity.created(selfLink).body(updatedAllergy);
     }
 
-
-    @ApiOperation(value = "Delete a Allergy", authorizations = {@Authorization(value = "Bearer")})
+    @ApiOperation(value = "Delete an Allergy", authorizations = {@Authorization(value = "Bearer")})
     @DeleteMapping("allergies/{uid}")
     public ResponseEntity removeAllergy(@PathVariable("uid") UUID id) {
         this.allergyService.removeAllergy(id);

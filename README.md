@@ -102,7 +102,9 @@ docker run -p 8443:8443 -p 8080:8080 systelab/seed-springboot
 
 The app will be available at https://localhost:8443/swagger-ui.html
 
+## Documentation
 
+See [Documentation](doc/README.md) section for further details about other technical specifications.
 
 
 [git]: https://git-scm.com/

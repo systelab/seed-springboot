@@ -4,6 +4,8 @@ Spring Boot has no mandatory logging dependency, except for the Commons Logging 
 
 Spring Boot has a LoggingSystem abstraction that attempts to configure logging based on the content of the classpath. If Logback is available, that usually is, as it is included by the Spring starter, it is the first choice.
 
+Logback is one of the most widely used logging frameworks and it's a replacement for its predecessor, Log4j. Logback offers a faster implementation than Log4j, provides more options for configuration, and more flexibility in archiving old log files. There is a very good guide at https://www.baeldung.com/logback. 
+
 If the only change you need to make to logging is to set the levels of various loggers, you can do so in application.properties by using the "logging.level" prefix, as shown in the following example:
 
 ```

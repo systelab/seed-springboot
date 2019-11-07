@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.systelab.seed.allergy.repository.AllergyRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
@@ -32,7 +33,6 @@ import com.systelab.seed.envers.helper.AuthenticationHelper;
 import com.systelab.seed.allergy.model.Allergy;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.allergy.model.PatientAllergy;
-import com.systelab.seed.repository.AllergyRepository;
 import com.systelab.seed.patient.allergy.repository.PatientAllergyRepository;
 import com.systelab.seed.patient.repository.PatientRepository;
 

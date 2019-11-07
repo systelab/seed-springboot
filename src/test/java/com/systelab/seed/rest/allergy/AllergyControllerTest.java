@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import com.systelab.seed.allergy.repository.AllergyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +43,6 @@ import com.systelab.seed.infrastructure.authentication.TokenProvider;
 import com.systelab.seed.allergy.model.Allergy;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.allergy.model.PatientAllergy;
-import com.systelab.seed.repository.AllergyRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
@@ -57,7 +57,6 @@ public class AllergyControllerTest {
 
     @MockBean
     private AllergyRepository mockAllergyRepository;
-
 
     @BeforeEach
     public void setup() {

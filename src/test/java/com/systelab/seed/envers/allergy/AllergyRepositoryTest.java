@@ -6,6 +6,7 @@ import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 import java.util.List;
 
+import com.systelab.seed.allergy.repository.AllergyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.systelab.seed.infrastructure.RepositoryConfig;
 import com.systelab.seed.infrastructure.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.repository.AllergyRepository;
 
 @DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = { SpringSecurityAuditorAware.class, RepositoryConfig.class }))
 @ExtendWith(SpringExtension.class)

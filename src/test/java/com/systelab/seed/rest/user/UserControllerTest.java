@@ -2,11 +2,11 @@ package com.systelab.seed.rest.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.config.authentication.TokenProvider;
-import com.systelab.seed.model.user.User;
-import com.systelab.seed.model.user.UserRole;
-import com.systelab.seed.repository.UserRepository;
-import com.systelab.seed.service.AppUserDetailsService;
+import com.systelab.seed.infrastructure.authentication.TokenProvider;
+import com.systelab.seed.user.model.User;
+import com.systelab.seed.user.model.UserRole;
+import com.systelab.seed.user.repository.UserRepository;
+import com.systelab.seed.infrastructure.authentication.service.AppUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

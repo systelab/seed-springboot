@@ -38,10 +38,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.config.authentication.TokenProvider;
-import com.systelab.seed.model.allergy.Allergy;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.model.patient.PatientAllergy;
+import com.systelab.seed.infrastructure.authentication.TokenProvider;
+import com.systelab.seed.allergy.model.Allergy;
+import com.systelab.seed.patient.model.Patient;
+import com.systelab.seed.patient.allergy.model.PatientAllergy;
 import com.systelab.seed.repository.AllergyRepository;
 
 @ExtendWith(SpringExtension.class)

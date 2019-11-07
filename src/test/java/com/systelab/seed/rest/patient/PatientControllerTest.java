@@ -39,10 +39,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.systelab.seed.config.authentication.TokenProvider;
-import com.systelab.seed.model.patient.Address;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientRepository;
+import com.systelab.seed.infrastructure.authentication.TokenProvider;
+import com.systelab.seed.patient.model.Address;
+import com.systelab.seed.patient.model.Patient;
+import com.systelab.seed.patient.repository.PatientRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()

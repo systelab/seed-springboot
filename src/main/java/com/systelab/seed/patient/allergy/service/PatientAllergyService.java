@@ -1,13 +1,11 @@
 package com.systelab.seed.patient.allergy.service;
 
 import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.patient.allergy.service.AllergyForPatientAlreadyExistException;
-import com.systelab.seed.patient.allergy.service.AllergyForPatientNotFoundException;
-import com.systelab.seed.patient.model.Patient;
+import com.systelab.seed.allergy.service.AllergyService;
 import com.systelab.seed.patient.allergy.model.PatientAllergy;
 import com.systelab.seed.patient.allergy.repository.PatientAllergyRepository;
+import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.service.PatientService;
-import com.systelab.seed.service.AllergyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

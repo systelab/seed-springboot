@@ -1,5 +1,7 @@
 package com.systelab.seed.allergy.controller;
 
+import com.systelab.seed.allergy.model.Allergy;
+import com.systelab.seed.allergy.service.AllergyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -12,9 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.service.AllergyService;
 
 import javax.validation.Valid;
 import java.net.URI;

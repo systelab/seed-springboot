@@ -1,8 +1,7 @@
-package com.systelab.seed.service;
+package com.systelab.seed.allergy.service;
 
 import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.allergy.service.AllergyNotFoundException;
-import com.systelab.seed.repository.AllergyRepository;
+import com.systelab.seed.allergy.repository.AllergyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +15,10 @@ import java.util.UUID;
 public class AllergyService {
 
     private final AllergyRepository allergyRepository;
-    
+
     @Autowired
     public AllergyService(AllergyRepository allergyRepository) {
-        this.allergyRepository = allergyRepository;        
+        this.allergyRepository = allergyRepository;
     }
 
     public Page<Allergy> getAllAllergies(Pageable pageable) {
@@ -31,7 +30,7 @@ public class AllergyService {
         return this.allergyRepository.findById(allergyId).orElseThrow(() -> new AllergyNotFoundException(allergyId));
     }
 
-    public Allergy createAllergy(Allergy allergy) {       
+    public Allergy createAllergy(Allergy allergy) {
         return this.allergyRepository.save(allergy);
     }
 

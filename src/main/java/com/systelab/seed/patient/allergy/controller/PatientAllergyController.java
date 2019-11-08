@@ -31,6 +31,7 @@ import io.swagger.annotations.Authorization;
 
 @Api(value = "Patient Allergy", description = "API for Patient Allergy management", tags = { "PatientAllergy" })
 @RestController()
+// Bad idea to have that on production
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1/patients", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientAllergyController {

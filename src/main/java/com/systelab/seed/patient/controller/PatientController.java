@@ -23,6 +23,7 @@ import java.util.UUID;
 
 @Api(value = "Patient", description = "API for patient management", tags = {"Patient"})
 @RestController()
+// Bad idea to have that on production
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {

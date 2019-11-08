@@ -90,7 +90,7 @@ public class AllergyControllerTest {
 
         mvc.perform(get("/seed/v1/allergies")
                 .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.content[1].id", is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13")))
                 .andExpect(jsonPath("$.content[0].name", is("allergyA")));
@@ -106,7 +106,7 @@ public class AllergyControllerTest {
 
         mvc.perform(get("/seed/v1/allergies/{id}", "a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
                 .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id", is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13")))
                 .andExpect(jsonPath("$.name", is("allergyA")));

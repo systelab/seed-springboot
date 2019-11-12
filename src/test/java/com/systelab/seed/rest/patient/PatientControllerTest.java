@@ -39,10 +39,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.systelab.seed.config.authentication.TokenProvider;
-import com.systelab.seed.model.patient.Address;
-import com.systelab.seed.model.patient.Patient;
-import com.systelab.seed.repository.PatientRepository;
+import com.systelab.seed.infrastructure.authentication.TokenProvider;
+import com.systelab.seed.patient.model.Address;
+import com.systelab.seed.patient.model.Patient;
+import com.systelab.seed.patient.repository.PatientRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
@@ -75,7 +75,7 @@ public class PatientControllerTest {
         when(mockPatientRepository.findAll(isA(Pageable.class))).thenReturn(pageofPatient);
 
         mvc.perform(get("/seed/v1/patients").header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.content[1].id", is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"))).andExpect(jsonPath("$.content[0].name", is("patientA")));
     }
 
@@ -87,7 +87,7 @@ public class PatientControllerTest {
         when(mockPatientRepository.findById(isA(UUID.class))).thenReturn(patient);
 
         mvc.perform(get("/seed/v1/patients/{id}", "a98b8fe5-7cc5-4348-8f99-4860f5b84b13").header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andExpect(status().is2xxSuccessful())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id", is("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"))).andExpect(jsonPath("$.surname", is("surnameA")));
     }
 

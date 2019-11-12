@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.systelab.seed.allergy.repository.AllergyRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
@@ -27,10 +28,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.config.audit.AuditRevisionEntity;
+import com.systelab.seed.infrastructure.audit.AuditRevisionEntity;
 import com.systelab.seed.envers.helper.AuthenticationHelper;
-import com.systelab.seed.model.allergy.Allergy;
-import com.systelab.seed.repository.AllergyRepository;
+import com.systelab.seed.allergy.model.Allergy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()

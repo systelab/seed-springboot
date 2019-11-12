@@ -29,7 +29,7 @@ Several examples could be found across this seed project, for example:
 @ConfigurationProperties(prefix = "security.jwt")
 @Getter
 @Setter
-public class JwtConfig implements Serializable {
+public class JwtConfig {
 
     private String clientSecret;
     private int tokenValidityInSeconds;

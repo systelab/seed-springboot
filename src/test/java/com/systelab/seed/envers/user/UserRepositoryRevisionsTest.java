@@ -17,11 +17,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.config.audit.AuditRevisionEntity;
+import com.systelab.seed.infrastructure.audit.AuditRevisionEntity;
 import com.systelab.seed.envers.helper.AuthenticationHelper;
-import com.systelab.seed.model.user.User;
-import com.systelab.seed.model.user.UserRole;
-import com.systelab.seed.repository.UserRepository;
+import com.systelab.seed.user.model.User;
+import com.systelab.seed.user.model.UserRole;
+import com.systelab.seed.user.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()

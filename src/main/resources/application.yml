@@ -9,6 +9,7 @@ server:
     key-store: classpath:keystore.p12
     key-alias: selfsigned
     key-store-type: PKCS12
+    # Bad idea to have that on production
     key-store-password: password
   # Enable response compression
   compression:

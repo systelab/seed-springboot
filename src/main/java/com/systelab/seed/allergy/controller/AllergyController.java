@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Api(value = "Allergy", description = "API for allergy management", tags = {"Allergy"})
 @RestController()
-// Bad idea to have that on production
+// Bad idea to have that in production
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AllergyController {

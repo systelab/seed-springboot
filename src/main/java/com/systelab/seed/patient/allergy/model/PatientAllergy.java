@@ -1,24 +1,21 @@
 package com.systelab.seed.patient.allergy.model;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.systelab.seed.allergy.model.Allergy;
+import com.systelab.seed.infrastructure.ModelBase;
+import com.systelab.seed.patient.model.Patient;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.systelab.seed.patient.model.Patient;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.envers.Audited;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.systelab.seed.infrastructure.ModelBase;
-import com.systelab.seed.allergy.model.Allergy;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -30,22 +27,24 @@ public class PatientAllergy extends ModelBase {
     @ManyToOne
     @JoinColumn
     @JsonIgnore
-    @ApiModelProperty(required = true)
+    @Schema(required = true)
     private Patient patient;
 
     @ManyToOne
     @JoinColumn
-    @ApiModelProperty(required = true)
+    @Schema(required = true)
     private Allergy allergy;
 
-    @ApiModelProperty(value = "Last date when the person hast the symptoms", example = "2018-05-14", required = true)
+    @Schema(description = "Last date when the person hast the symptoms", required = true, example = "2018-05-14")
+
     private LocalDate lastOccurrence;
-    @ApiModelProperty(value = "Date when the allergy was verified", example = "2007-03-23", required = true)
+    @Schema(description = "Date when the allergy was verified", required = true, example = "2007-03-23")
+
     private LocalDate assertedDate;
 
     @Size(min = 1, max = 255)
     @NotNull
-    @ApiModelProperty(value = "Relevant notes to take into consideration", example = "Some notes", required = true)
+    @Schema(description = "Relevant notes to take into consideration", required = true, example = "Some notes")
     private String note;
 
     public PatientAllergy(Patient patient, Allergy allergy, String note) {

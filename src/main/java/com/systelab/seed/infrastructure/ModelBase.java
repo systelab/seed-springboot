@@ -1,7 +1,7 @@
 package com.systelab.seed.infrastructure;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public abstract class ModelBase {
 
     @Id
-    @ApiModelProperty(notes = "Database generated ID")
+    @Schema(description = "Database generated ID")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
@@ -53,7 +53,7 @@ public abstract class ModelBase {
     @Version
     private Integer version;
 
-    @ApiModelProperty(value = "Defines is the entity is active in the database", example = "true", allowableValues = "true,false")
+    @Schema(description = "Defines is the entity is active in the database", example = "true")
     protected Boolean active = Boolean.TRUE;
 
 }

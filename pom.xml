@@ -131,16 +131,14 @@
             <version>${lombok.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.swagger.version}</version>
-            <scope>compile</scope>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.3.9</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.swagger.version}</version>
-            <scope>compile</scope>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-data-rest</artifactId>
+            <version>1.3.9</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

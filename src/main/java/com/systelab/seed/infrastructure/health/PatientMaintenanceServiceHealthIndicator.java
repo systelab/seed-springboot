@@ -4,7 +4,7 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.*;
 
 @Component
 
@@ -12,7 +12,7 @@ public class PatientMaintenanceServiceHealthIndicator implements HealthIndicator
     private final String lastUpdateTag = "last-update";
 
     private boolean working = true;
-    private LocalDateTime lastExecution = LocalDateTime.MIN;
+    private ZonedDateTime lastExecution = Instant.ofEpochMilli(Long.MIN_VALUE).atZone(ZoneOffset.UTC);
 
     @Override
     public Health health() {
@@ -30,7 +30,7 @@ public class PatientMaintenanceServiceHealthIndicator implements HealthIndicator
         this.working = working;
     }
 
-    public void setLastExecution(LocalDateTime lastExecution) {
+    public void setLastExecution(ZonedDateTime lastExecution) {
         this.lastExecution = lastExecution;
     }
 }

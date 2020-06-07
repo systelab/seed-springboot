@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,6 +21,6 @@ public interface PatientRepository extends JpaRepository<Patient, UUID>, Revisio
     @Modifying
     @Transactional
     @Query("update Patient p set p.active = FALSE where p.modificationTime < ?1")
-    int setActiveForUpdatedBefore(LocalDateTime somedate);
+    int setActiveForUpdatedBefore(ZonedDateTime somedate);
 
 }

@@ -13,7 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -32,13 +32,13 @@ public abstract class ModelBase {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     @JsonIgnore
-    protected LocalDateTime creationTime;
+    protected ZonedDateTime creationTime;
 
     @LastModifiedDate
     @Column(nullable = false)
     @UpdateTimestamp
     @JsonIgnore
-    protected LocalDateTime modificationTime;
+    protected ZonedDateTime modificationTime;
 
     @CreatedBy
     @Column(nullable = false, updatable = false)

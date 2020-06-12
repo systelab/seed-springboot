@@ -42,7 +42,6 @@ management:
 
 security:
   jwt:
-    client-secret: XY7kmzoNzl100
     token-validity-in-seconds: 6060
 
 spring:

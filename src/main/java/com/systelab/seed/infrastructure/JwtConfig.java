@@ -11,6 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class JwtConfig {
 
-    private String clientSecret;
     private int tokenValidityInSeconds;
 }

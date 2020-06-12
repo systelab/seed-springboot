@@ -34,7 +34,6 @@
         <spring.cloud.version>2.2.0.RELEASE</spring.cloud.version>
         <springfox.swagger.version>2.9.2</springfox.swagger.version>
         <h2.version>1.4.199</h2.version>
-        <jjwt.version>0.9.1</jjwt.version>
         <lombok.version>1.18.10</lombok.version>
     </properties>
 
@@ -111,8 +110,20 @@
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
+            <version>0.11.1</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

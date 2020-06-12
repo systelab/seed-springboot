@@ -1,7 +1,7 @@
 package com.systelab.seed.infrastructure;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -13,7 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -22,7 +22,7 @@ import java.util.UUID;
 public abstract class ModelBase {
 
     @Id
-    @ApiModelProperty(notes = "Database generated ID")
+    @Schema(description = "Database generated ID")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Column(columnDefinition = "BINARY(16)")
@@ -32,13 +32,13 @@ public abstract class ModelBase {
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     @JsonIgnore
-    protected LocalDateTime creationTime;
+    protected ZonedDateTime creationTime;
 
     @LastModifiedDate
     @Column(nullable = false)
     @UpdateTimestamp
     @JsonIgnore
-    protected LocalDateTime modificationTime;
+    protected ZonedDateTime modificationTime;
 
     @CreatedBy
     @Column(nullable = false, updatable = false)
@@ -53,7 +53,7 @@ public abstract class ModelBase {
     @Version
     private Integer version;
 
-    @ApiModelProperty(value = "Defines is the entity is active in the database", example = "true", allowableValues = "true,false")
+    @Schema(description = "Defines is the entity is active in the database", example = "true")
     protected Boolean active = Boolean.TRUE;
 
 }

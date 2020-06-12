@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 
 @Service
 public class PatientMaintenanceService {
@@ -29,10 +30,10 @@ public class PatientMaintenanceService {
     @Scheduled(cron = "${patient.maintenance.cron.expression}")
     public void schedulePurgeOlderRecordsTask() {
         try {
-            this.patientRepository.setActiveForUpdatedBefore(LocalDateTime.now().minusYears(1));
+            this.patientRepository.setActiveForUpdatedBefore(ZonedDateTime.now().minusYears(1));
             logger.info("Patients DB purged!");
             healthIndicator.setWorking(true);
-            healthIndicator.setLastExecution(LocalDateTime.now());
+            healthIndicator.setLastExecution(ZonedDateTime.now());
         } catch (Exception ex) {
             logger.error("Patients DB not purged!", ex);
             healthIndicator.setWorking(false);

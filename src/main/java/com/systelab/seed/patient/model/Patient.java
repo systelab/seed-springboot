@@ -1,28 +1,21 @@
 package com.systelab.seed.patient.model;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.systelab.seed.patient.allergy.model.PatientAllergy;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.envers.Audited;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.infrastructure.ModelBase;
-
+import com.systelab.seed.patient.allergy.model.PatientAllergy;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -46,7 +39,7 @@ public class Patient extends ModelBase {
 
     private String email;
 
-    @ApiModelProperty(value = "Date of Birth", example = "1966-11-17")
+    @Schema(description = "Date of Birth", example = "1966-11-17")
     private LocalDate dob;
 
     @Embedded

@@ -1,46 +1,27 @@
 package com.systelab.seed.infrastructure;
 
-import com.google.common.collect.Lists;
-import org.springframework.context.annotation.Bean;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.ArrayList;
-
-import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-@EnableSwagger2
+@SecurityScheme(
+        name = "Authorization",
+        type = SecuritySchemeType.HTTP,
+        description = "JWT Token Authentication",
+        scheme = "bearer"
+)
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Seed application programming interface (API)",
+                version = "v1.0",
+                description = "Restful API to manage the Seed Application to be used as an example.",
+                license = @License(name = "Apache License Version 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"),
+                contact = @Contact(url = "https://github.com/systelab/", name = "Werfen Clinical Software", email = "systelab@werfen.com")
+        ))
 public class SwaggerConfig {
-    @Bean
-    public Docket productApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.systelab.seed"))
-                .paths(regex("/seed/v1.*"))
-                .build()
-                .apiInfo(metaData())
-                .securitySchemes(Lists.newArrayList(apiKey()));
-    }
-
-    private ApiKey apiKey() {
-        return new ApiKey("Bearer", "Authorization", "header");
-    }
-
-    private ApiInfo metaData() {
-        return new ApiInfo(
-                "Seed application programming interface (API)",
-                "Restful API to manage the Seed Application to be used as an example.",
-                "V1.0",
-                "Terms of service",
-                new Contact("Systelab", "https://github.com/systelab/", "systelab@werfen.com"),
-                "Apache License Version 2.0",
-                "https://www.apache.org/licenses/LICENSE-2.0", new ArrayList<>());
-    }
 }

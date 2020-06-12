@@ -4,7 +4,7 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,7 +35,7 @@ public class ControllerTest {
     static ArchRule allPublicMethodsInRestControllersShouldHaveApiOperationAnnotation =
             all(methods())
                     .that(inClassesAnnotatedWith(RestController.class)).and(arePublic())
-                    .should(beAnnotated(ApiOperation.class))
+                    .should(beAnnotated(Operation.class))
                     .because("we want our Rest operations to be always documented with OpenApi");
 
     @ArchTest

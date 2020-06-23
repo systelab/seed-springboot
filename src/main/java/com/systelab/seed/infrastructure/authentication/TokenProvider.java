@@ -4,6 +4,7 @@ import com.systelab.seed.infrastructure.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -26,9 +28,12 @@ public class TokenProvider {
 
     private final JwtConfig jwtConfig;
 
+    private final Key key;
+
     @Autowired
     public TokenProvider(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
+        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
     public Optional<String> getUsernameFromToken(String token) {
@@ -40,8 +45,9 @@ public class TokenProvider {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtConfig.getClientSecret())
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -53,10 +59,11 @@ public class TokenProvider {
     }
 
     public String generateToken(Authentication authentication) {
+
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, getAuthorities(authentication))
-                .signWith(SignatureAlgorithm.HS256, jwtConfig.getClientSecret())
+                .signWith(key)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenValidityInSeconds() * 1000))
                 .compact();

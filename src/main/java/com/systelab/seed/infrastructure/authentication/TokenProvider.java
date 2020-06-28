@@ -33,7 +33,11 @@ public class TokenProvider {
     @Autowired
     public TokenProvider(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
-        key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        if (jwtConfig.getClientSecret()!=null) {
+            key = Keys.hmacShaKeyFor(jwtConfig.getClientSecret().getBytes());
+        } else {
+            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        }
     }
 
     public Optional<String> getUsernameFromToken(String token) {

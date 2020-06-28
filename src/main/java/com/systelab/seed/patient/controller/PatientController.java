@@ -24,8 +24,6 @@ import java.util.UUID;
 
 @Tag(name = "Patient")
 @RestController()
-// Bad idea to have that in production
-@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 

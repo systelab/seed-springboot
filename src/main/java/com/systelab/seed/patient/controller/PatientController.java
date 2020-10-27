@@ -2,8 +2,6 @@ package com.systelab.seed.patient.controller;
 
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.service.PatientService;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -24,22 +22,14 @@ import java.util.UUID;
 
 @Tag(name = "Patient")
 @RestController()
-// Bad idea to have that in production
-@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization", allowCredentials = "true")
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientController {
 
     private final PatientService patientService;
 
-    private final Counter patientCreatedCounter;
-
     @Autowired
-    public PatientController(PatientService patientService, MeterRegistry registry) {
+    public PatientController(PatientService patientService) {
         this.patientService = patientService;
-        patientCreatedCounter = Counter
-                .builder("patients")
-                .description("Number of patients created in the application")
-                .register(registry);
     }
 
     @Operation(description = "Get all Patients")
@@ -61,7 +51,6 @@ public class PatientController {
     @SecurityRequirement(name = "Authorization")
     @PostMapping("patients/patient")
     public ResponseEntity<Patient> createPatient(@RequestBody @Parameter(description = "Patient", required = true) @Valid Patient p) {
-        patientCreatedCounter.increment();
         Patient patient = this.patientService.createPatient(p);
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/patients/{id}").buildAndExpand(patient.getId()).toUri();
         return ResponseEntity.created(uri).body(patient);

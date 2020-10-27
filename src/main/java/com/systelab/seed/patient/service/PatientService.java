@@ -3,6 +3,8 @@ package com.systelab.seed.patient.service;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.repository.PatientRepository;
 import com.systelab.seed.service.MedicalRecordNumberService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +19,16 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final MedicalRecordNumberService medicalRecordNumberService;
+    private final Counter patientCreatedCounter;
 
     @Autowired
-    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService) {
+    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService, MeterRegistry registry) {
         this.patientRepository = patientRepository;
         this.medicalRecordNumberService = medicalRecordNumberService;
-
+        patientCreatedCounter = Counter
+                .builder("patients")
+                .description("Number of patients created in the application")
+                .register(registry);
     }
 
     public Page<Patient> getAllPatients(Pageable pageable) {
@@ -38,6 +44,7 @@ public class PatientService {
         if (p.getMedicalNumber() == null || p.getMedicalNumber().equals("")) {
             p.setMedicalNumber(medicalRecordNumberService.getMedicalRecordNumber());
         }
+        patientCreatedCounter.increment();
         return this.patientRepository.save(p);
     }
 

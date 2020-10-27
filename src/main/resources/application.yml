@@ -43,6 +43,13 @@ management:
 security:
   jwt:
     token-validity-in-seconds: 6060
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
 
 spring:
   application:

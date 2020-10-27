@@ -42,7 +42,17 @@ management:
 
 security:
   jwt:
+    #Remove if you want to have a secret every time you start.
+    client-secret: 332434232CYCJV5ufitycthJJass6asDGhf
     token-validity-in-seconds: 6060
+  cors:
+    #Remove if you do not need to enable cors.
+    allowed-origins: "*"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
 
 spring:
   application:

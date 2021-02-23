@@ -21,7 +21,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Patient")
@@ -88,14 +87,12 @@ public class PatientController {
     }
 
 
-    @Operation(description = "Get Patient revisions")
+    @Operation(description = "Get Patient revisions by ID")
     @SecurityRequirement(name = "Authorization")
     @GetMapping(path = "patients/{uid}/revisions", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getRevisions(@PathVariable(name = "uid") UUID id,
-                                          @RequestParam(value = "fetchChanges", required = false) boolean fetchChanges) {
-
-        List results = revisionService.getRevisions(id, fetchChanges, Patient.class);
-        return ResponseEntity.ok(results);
+    public ResponseEntity<?> getPatientRevisionsById(@PathVariable(name = "uid") UUID id,
+                                                     @RequestParam(value = "fetchChanges", required = false) boolean fetchChanges) {
+        return ResponseEntity.ok(revisionService.getRevisionsById(id, fetchChanges, Patient.class));
     }
 
 }

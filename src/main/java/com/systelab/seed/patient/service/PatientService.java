@@ -3,17 +3,12 @@ package com.systelab.seed.patient.service;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.repository.PatientRepository;
 import com.systelab.seed.service.MedicalRecordNumberService;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.query.AuditEntity;
-import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.UUID;
 
 @Service

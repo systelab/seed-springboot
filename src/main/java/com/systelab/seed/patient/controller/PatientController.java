@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Patient")
@@ -32,6 +33,7 @@ public class PatientController {
     private final PatientService patientService;
 
     private final Counter patientCreatedCounter;
+    private Patient patient;
 
     @Autowired
     public PatientController(PatientService patientService, MeterRegistry registry) {
@@ -82,6 +84,17 @@ public class PatientController {
     public ResponseEntity removePatient(@PathVariable("uid") UUID id) {
         this.patientService.removePatient(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @Operation(description = "Get Patient revisions")
+    @SecurityRequirement(name = "Authorization")
+    @GetMapping(path = "patients/{uid}/revisions", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getRevisions(@PathVariable(name = "uid") UUID id,
+                                          @RequestParam(value = "fetchChanges", required = false) boolean fetchChanges) {
+
+        List results = patientService.getRevisions(id, fetchChanges, Patient.class);
+        return ResponseEntity.ok(results);
     }
 
 }

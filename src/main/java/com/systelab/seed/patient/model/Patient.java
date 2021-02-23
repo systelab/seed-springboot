@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Audited
+@Audited(withModifiedFlag = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

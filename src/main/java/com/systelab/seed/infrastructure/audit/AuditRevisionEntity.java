@@ -1,5 +1,6 @@
 package com.systelab.seed.infrastructure.audit;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @RevisionEntity(AuditRevisionListener.class)
 public class AuditRevisionEntity extends DefaultRevisionEntity {
 

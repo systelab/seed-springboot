@@ -1,5 +1,6 @@
 package com.systelab.seed.patient.controller;
 
+import com.systelab.envers.revision.service.RevisionService;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.service.PatientService;
 import io.micrometer.core.instrument.Counter;
@@ -29,13 +30,15 @@ import java.util.UUID;
 public class PatientController {
 
     private final PatientService patientService;
+    private final RevisionService revisionService;
 
     private final Counter patientCreatedCounter;
     private Patient patient;
 
     @Autowired
-    public PatientController(PatientService patientService, MeterRegistry registry) {
+    public PatientController(PatientService patientService, RevisionService revisionService, MeterRegistry registry) {
         this.patientService = patientService;
+        this.revisionService = revisionService;
         patientCreatedCounter = Counter
                 .builder("patients")
                 .description("Number of patients created in the application")
@@ -91,7 +94,7 @@ public class PatientController {
     public ResponseEntity<?> getRevisions(@PathVariable(name = "uid") UUID id,
                                           @RequestParam(value = "fetchChanges", required = false) boolean fetchChanges) {
 
-        List results = patientService.getRevisions(id, fetchChanges, Patient.class);
+        List results = revisionService.getRevisions(id, fetchChanges, Patient.class);
         return ResponseEntity.ok(results);
     }
 

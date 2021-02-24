@@ -32,7 +32,6 @@ public class PatientController {
     private final RevisionService revisionService;
 
     private final Counter patientCreatedCounter;
-    private Patient patient;
 
     @Autowired
     public PatientController(PatientService patientService, RevisionService revisionService, MeterRegistry registry) {

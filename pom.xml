@@ -32,6 +32,7 @@
 
         <spring.security.test.version>5.2.1.RELEASE</spring.security.test.version>
         <spring.cloud.version>2.2.0.RELEASE</spring.cloud.version>
+        <spring.ldap.version>2.2.0.RELEASE</spring.ldap.version>
         <h2.version>1.4.199</h2.version>
         <lombok.version>1.18.10</lombok.version>
     </properties>
@@ -155,6 +156,18 @@
             <artifactId>spring-security-test</artifactId>
             <version>${spring.security.test.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.systelab</groupId>

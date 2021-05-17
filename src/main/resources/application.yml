@@ -71,6 +71,11 @@ spring:
     min-evictable-idle-time-millis: 1000
     min-idle: 8
     time-between-eviction-runs-millis: 1
+  ldap:
+    embedded:
+      ldif: classpath:ldap-server.ldif
+      port: 8389
+      base-dn: dc=springframework,dc=org
 
   resources:
     cache:

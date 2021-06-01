@@ -72,6 +72,14 @@ spring:
     min-idle: 8
     time-between-eviction-runs-millis: 1
 
+
+  jpa:
+    properties:
+      org:
+        hibernate:
+          envers:
+            track_entities_changed_in_revision: true
+
   resources:
     cache:
       cachecontrol:

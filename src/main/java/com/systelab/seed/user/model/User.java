@@ -15,7 +15,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @Entity
-@Audited
+@Audited(withModifiedFlag = true)
 @Table(name = "users")
 public class User extends ModelBase {
 

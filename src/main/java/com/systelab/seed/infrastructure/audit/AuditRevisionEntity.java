@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.DefaultRevisionEntity;
+import org.hibernate.envers.DefaultTrackingModifiedEntitiesRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @RevisionEntity(AuditRevisionListener.class)
-public class AuditRevisionEntity extends DefaultRevisionEntity {
+public class AuditRevisionEntity extends DefaultTrackingModifiedEntitiesRevisionEntity {
 
 	@NotBlank
     private String username;

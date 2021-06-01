@@ -1,6 +1,7 @@
 package com.systelab.seed.patient.allergy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.systelab.seed.allergy.model.Allergy;
 import com.systelab.seed.infrastructure.ModelBase;
 import com.systelab.seed.patient.model.Patient;
@@ -21,7 +22,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @Entity
-@Audited
+@Audited(withModifiedFlag = true)
 public class PatientAllergy extends ModelBase {
 
     @ManyToOne

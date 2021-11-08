@@ -17,12 +17,12 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.systelab.seed.infrastructure.config.RepositoryConfig;
-import com.systelab.seed.infrastructure.audit.SpringSecurityAuditorAware;
-import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.patient.model.Patient;
-import com.systelab.seed.patient.allergy.model.PatientAllergy;
-import com.systelab.seed.patient.allergy.repository.PatientAllergyRepository;
+import com.systelab.seed.core.config.RepositoryConfig;
+import com.systelab.seed.core.audit.SpringSecurityAuditorAware;
+import com.systelab.seed.features.allergy.model.Allergy;
+import com.systelab.seed.features.patient.model.Patient;
+import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
+import com.systelab.seed.features.patient.allergy.repository.PatientAllergyRepository;
 
 
 @DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))

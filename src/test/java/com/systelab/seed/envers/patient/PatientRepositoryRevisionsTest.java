@@ -27,10 +27,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.infrastructure.audit.AuditRevisionEntity;
+import com.systelab.seed.core.audit.AuditRevisionEntity;
 import com.systelab.seed.envers.helper.AuthenticationHelper;
-import com.systelab.seed.patient.model.Patient;
-import com.systelab.seed.patient.repository.PatientRepository;
+import com.systelab.seed.features.patient.model.Patient;
+import com.systelab.seed.features.patient.repository.PatientRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()

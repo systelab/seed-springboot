@@ -37,10 +37,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.systelab.seed.infrastructure.security.config.TokenProvider;
-import com.systelab.seed.patient.model.Address;
-import com.systelab.seed.patient.model.Patient;
-import com.systelab.seed.patient.repository.PatientRepository;
+import com.systelab.seed.core.security.config.TokenProvider;
+import com.systelab.seed.features.patient.model.Address;
+import com.systelab.seed.features.patient.model.Patient;
+import com.systelab.seed.features.patient.repository.PatientRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PatientControllerTest {

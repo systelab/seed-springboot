@@ -23,7 +23,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "patient")
+@Table(name = "patients")
 public class Patient extends ModelBase {
 
     @NotNull

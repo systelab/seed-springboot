@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "allergy")
+@Table(name = "allergies")
 public class Allergy extends ModelBase {
 
     @NotNull

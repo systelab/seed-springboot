@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revisions;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -25,6 +26,7 @@ import com.systelab.seed.features.user.repository.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
+@Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserRepositoryRevisionsTest {
 
     @Autowired

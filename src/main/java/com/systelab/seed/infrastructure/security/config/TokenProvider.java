@@ -1,6 +1,6 @@
-package com.systelab.seed.infrastructure.authentication;
+package com.systelab.seed.infrastructure.security.config;
 
-import com.systelab.seed.infrastructure.JwtConfig;
+import com.systelab.seed.infrastructure.security.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

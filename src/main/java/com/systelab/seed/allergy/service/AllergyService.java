@@ -2,7 +2,7 @@ package com.systelab.seed.allergy.service;
 
 import com.systelab.seed.allergy.model.Allergy;
 import com.systelab.seed.allergy.repository.AllergyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,15 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class AllergyService {
 
     private final AllergyRepository allergyRepository;
-
-    @Autowired
-    public AllergyService(AllergyRepository allergyRepository) {
-        this.allergyRepository = allergyRepository;
-    }
 
     public Page<Allergy> getAllAllergies(Pageable pageable) {
         final PageRequest page = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.ASC, "name");

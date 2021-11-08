@@ -39,7 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.infrastructure.authentication.TokenProvider;
+import com.systelab.seed.infrastructure.security.config.TokenProvider;
 import com.systelab.seed.allergy.model.Allergy;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.allergy.model.PatientAllergy;

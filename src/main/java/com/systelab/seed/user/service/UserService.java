@@ -1,9 +1,9 @@
 package com.systelab.seed.user.service;
 
-import com.systelab.seed.infrastructure.authentication.TokenProvider;
+import com.systelab.seed.infrastructure.security.config.TokenProvider;
 import com.systelab.seed.user.model.User;
 import com.systelab.seed.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
@@ -23,14 +24,6 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserService(UserRepository userRepository, AuthenticationManager authenticationManager, TokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.authenticationManager = authenticationManager;
-        this.tokenProvider = tokenProvider;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public String authenticateUserAndGetToken(String login, String password) {
 

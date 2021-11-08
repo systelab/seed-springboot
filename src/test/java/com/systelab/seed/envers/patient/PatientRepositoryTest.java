@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.systelab.seed.infrastructure.RepositoryConfig;
+import com.systelab.seed.infrastructure.config.RepositoryConfig;
 import com.systelab.seed.infrastructure.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.allergy.model.PatientAllergy;

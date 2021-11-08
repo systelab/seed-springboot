@@ -2,7 +2,7 @@ package com.systelab.seed.patient.allergy.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.infrastructure.ModelBase;
+import com.systelab.seed.infrastructure.model.ModelBase;
 import com.systelab.seed.patient.model.Patient;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

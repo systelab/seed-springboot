@@ -1,4 +1,4 @@
-package com.systelab.seed.infrastructure;
+package com.systelab.seed.infrastructure.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

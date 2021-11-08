@@ -1,4 +1,4 @@
-package com.systelab.seed.infrastructure;
+package com.systelab.seed.infrastructure.security.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

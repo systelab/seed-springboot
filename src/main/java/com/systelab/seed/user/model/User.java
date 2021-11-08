@@ -1,6 +1,6 @@
 package com.systelab.seed.user.model;
 
-import com.systelab.seed.infrastructure.ModelBase;
+import com.systelab.seed.infrastructure.model.ModelBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

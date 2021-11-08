@@ -4,7 +4,7 @@ import com.systelab.seed.infrastructure.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.user.model.User;
 import com.systelab.seed.user.model.UserRole;
 import com.systelab.seed.user.repository.UserRepository;
-import com.systelab.seed.infrastructure.RepositoryConfig;
+import com.systelab.seed.infrastructure.config.RepositoryConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

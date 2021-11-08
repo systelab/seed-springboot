@@ -1,6 +1,6 @@
 package com.systelab.seed.allergy.model;
 
-import com.systelab.seed.infrastructure.ModelBase;
+import com.systelab.seed.infrastructure.model.ModelBase;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

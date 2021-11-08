@@ -6,26 +6,20 @@ import com.systelab.seed.patient.allergy.model.PatientAllergy;
 import com.systelab.seed.patient.allergy.repository.PatientAllergyRepository;
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.Set;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class PatientAllergyService {
 
     private final PatientService patientService;
     private final PatientAllergyRepository patientAllergyRepository;
     private final AllergyService allergyService;
-
-    @Autowired
-    public PatientAllergyService(PatientService patientService, AllergyService allergyService, PatientAllergyRepository patientAllergyRepository) {
-        this.patientService = patientService;
-        this.allergyService = allergyService;
-        this.patientAllergyRepository = patientAllergyRepository;
-    }
 
     public Set<PatientAllergy> getAllergiesFromPatient(UUID patientId) {
         Patient patient = this.patientService.getPatient(patientId);

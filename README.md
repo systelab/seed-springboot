@@ -78,8 +78,6 @@ You will find the swagger UI at https://localhost:8443/swagger-ui.html and http:
 
 First generate a token by login as user Systelab and password Systelab. After that authorize Swagger by copying the bearer.
 
-Head to https://localhost:8443/hystrix and setup the URL https://localhost:8443/actuator/hystrix.stream in order to get the Hystrix Dashboard.
-
 ## Docker
 
 ### Build docker image

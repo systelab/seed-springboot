@@ -1,8 +1,9 @@
-package com.systelab.seed.infrastructure.authentication;
+package com.systelab.seed.infrastructure.security.authentication.service.filter;
 
+import com.systelab.seed.infrastructure.security.config.TokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -30,11 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     private final TokenProvider tokenProvider;
-
-    @Autowired
-    public JwtAuthenticationFilter(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {

@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springdoc.data.rest.converters.PageableAsQueryParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -21,16 +21,12 @@ import java.net.URI;
 import java.util.UUID;
 
 @Tag(name = "Allergy")
+@RequiredArgsConstructor
 @RestController()
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AllergyController {
 
     private final AllergyService allergyService;
-
-    @Autowired
-    public AllergyController(AllergyService allergyService) {
-        this.allergyService = allergyService;
-    }
 
     @Operation(description = "Get all Allergies")
     @PageableAsQueryParam

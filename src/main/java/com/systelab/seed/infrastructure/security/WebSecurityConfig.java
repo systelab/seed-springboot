@@ -1,8 +1,8 @@
-package com.systelab.seed.infrastructure;
+package com.systelab.seed.infrastructure.security;
 
-import com.systelab.seed.infrastructure.authentication.JwtAuthenticationEntryPoint;
-import com.systelab.seed.infrastructure.authentication.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.systelab.seed.infrastructure.security.authentication.service.filter.JwtAuthenticationFilter;
+import com.systelab.seed.infrastructure.security.authentication.JwtAuthenticationEntryPoint;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -21,12 +22,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
     private final JwtAuthenticationFilter authenticationFilter;
-
-    @Autowired
-    public WebSecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtAuthenticationFilter authenticationFilter) {
-        this.unauthorizedHandler = unauthorizedHandler;
-        this.authenticationFilter = authenticationFilter;
-    }
 
     @Override
     @Bean

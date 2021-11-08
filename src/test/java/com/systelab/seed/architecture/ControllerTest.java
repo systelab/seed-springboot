@@ -4,18 +4,17 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import static com.systelab.architecture.rules.ClassesTransformers.methods;
-import static com.systelab.architecture.rules.methods.MethodConditionUtilities.beAnnotated;
-import static com.systelab.architecture.rules.methods.MethodConditionUtilities.returnType;
-import static com.systelab.architecture.rules.methods.MethodPredicateUtilities.arePublic;
-import static com.systelab.architecture.rules.methods.MethodPredicateUtilities.inClassesAnnotatedWith;
+
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
-@AnalyzeClasses(packages = "com.systelab.seed", importOptions = ImportOption.DontIncludeTests.class)
+@AnalyzeClasses(packages = "com.systelab.seed", importOptions = ImportOption.DoNotIncludeTests.class)
 public class ControllerTest {
 
     @ArchTest
@@ -25,17 +24,22 @@ public class ControllerTest {
             .because("we want to have only controllers and dtos in the controllers package");
 
     @ArchTest
-    static ArchRule allPublicMethodsInRestControllersShouldReturnResponseEntity =
-            all(methods())
-                    .that(inClassesAnnotatedWith(RestController.class)).and(arePublic())
-                    .should(returnType(ResponseEntity.class))
-                    .because("we want our Rest operations to always return a ResponseEntity");
+    static ArchRule allPublicMethodsInRestControllersShouldReturnResponseEntity = ArchRuleDefinition.methods()
+            .that().arePublic()
+            .and().areDeclaredInClassesThat().areAnnotatedWith(RestController.class)
+            .and().areNotAnnotatedWith(EventListener.class)
+            .should().haveRawReturnType(ResponseEntity.class)
+            .orShould().haveRawReturnType(SseEmitter.class)
+            .because("we want our Rest operations to always return a ResponseEntity or a SseEmitter");
+
 
     @ArchTest
     static ArchRule allPublicMethodsInRestControllersShouldHaveApiOperationAnnotation =
-            all(methods())
-                    .that(inClassesAnnotatedWith(RestController.class)).and(arePublic())
-                    .should(beAnnotated(Operation.class))
+            ArchRuleDefinition.methods()
+                    .that().arePublic()
+                    .and().areDeclaredInClassesThat().areAnnotatedWith(RestController.class)
+                    .and().areNotAnnotatedWith(EventListener.class)
+                    .should().beAnnotatedWith(Operation.class)
                     .because("we want our Rest operations to be always documented with OpenApi");
 
     @ArchTest

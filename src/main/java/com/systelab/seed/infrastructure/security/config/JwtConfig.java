@@ -1,4 +1,4 @@
-package com.systelab.seed.infrastructure;
+package com.systelab.seed.infrastructure.security.config;
 
 import lombok.Getter;
 import lombok.Setter;

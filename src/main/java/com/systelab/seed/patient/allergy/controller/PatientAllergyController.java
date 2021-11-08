@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +19,12 @@ import java.util.Set;
 import java.util.UUID;
 
 @Tag(name = "PatientAllergy")
+@RequiredArgsConstructor
 @RestController()
 @RequestMapping(value = "/seed/v1/patients", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PatientAllergyController {
 
     private final PatientAllergyService patientAllergyService;
-
-    @Autowired
-    public PatientAllergyController(PatientAllergyService patientAllergyService) {
-        this.patientAllergyService = patientAllergyService;
-    }
 
     @Operation(description = "Get Allergies from Patient")
     @SecurityRequirement(name = "Authorization")

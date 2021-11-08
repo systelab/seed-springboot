@@ -2,7 +2,6 @@ package com.systelab.seed.patient.service;
 
 import com.systelab.seed.patient.model.Patient;
 import com.systelab.seed.patient.repository.PatientRepository;
-import com.systelab.seed.service.MedicalRecordNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,12 +15,10 @@ import java.util.UUID;
 public class PatientService {
 
     private final PatientRepository patientRepository;
-    private final MedicalRecordNumberService medicalRecordNumberService;
 
     @Autowired
-    public PatientService(PatientRepository patientRepository, MedicalRecordNumberService medicalRecordNumberService) {
+    public PatientService(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;
-        this.medicalRecordNumberService = medicalRecordNumberService;
 
     }
 
@@ -35,9 +32,6 @@ public class PatientService {
     }
 
     public Patient createPatient(Patient p) {
-        if (p.getMedicalNumber() == null || p.getMedicalNumber().equals("")) {
-            p.setMedicalNumber(medicalRecordNumberService.getMedicalRecordNumber());
-        }
         return this.patientRepository.save(p);
     }
 

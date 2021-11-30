@@ -6,7 +6,7 @@ import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 import java.util.List;
 
-import com.systelab.seed.allergy.repository.AllergyRepository;
+import com.systelab.seed.features.allergy.repository.AllergyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,9 +17,9 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.systelab.seed.infrastructure.RepositoryConfig;
-import com.systelab.seed.infrastructure.audit.SpringSecurityAuditorAware;
-import com.systelab.seed.allergy.model.Allergy;
+import com.systelab.seed.core.config.RepositoryConfig;
+import com.systelab.seed.core.audit.SpringSecurityAuditorAware;
+import com.systelab.seed.features.allergy.model.Allergy;
 
 @DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = { SpringSecurityAuditorAware.class, RepositoryConfig.class }))
 @ExtendWith(SpringExtension.class)

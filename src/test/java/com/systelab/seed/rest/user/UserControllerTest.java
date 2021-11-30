@@ -2,11 +2,11 @@ package com.systelab.seed.rest.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.systelab.seed.infrastructure.authentication.TokenProvider;
-import com.systelab.seed.user.model.User;
-import com.systelab.seed.user.model.UserRole;
-import com.systelab.seed.user.repository.UserRepository;
-import com.systelab.seed.infrastructure.authentication.service.AppUserDetailsService;
+import com.systelab.seed.core.security.config.TokenProvider;
+import com.systelab.seed.features.user.model.User;
+import com.systelab.seed.features.user.model.UserRole;
+import com.systelab.seed.features.user.repository.UserRepository;
+import com.systelab.seed.core.security.authentication.service.AppUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
+@Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserControllerTest {
 
     private MockMvc mvc;

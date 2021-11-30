@@ -8,7 +8,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-@AnalyzeClasses(packages = "com.systelab.seed", importOptions = ImportOption.DontIncludeTests.class)
+@AnalyzeClasses(packages = "com.systelab.seed", importOptions = ImportOption.DoNotIncludeTests.class)
 public class ServiceTest {
 
     @ArchTest

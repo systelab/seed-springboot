@@ -10,7 +10,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import com.systelab.seed.allergy.repository.AllergyRepository;
+import com.systelab.seed.features.allergy.repository.AllergyRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
@@ -24,20 +24,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.Revisions;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.systelab.seed.infrastructure.audit.AuditRevisionEntity;
+import com.systelab.seed.core.audit.AuditRevisionEntity;
 import com.systelab.seed.envers.helper.AuthenticationHelper;
-import com.systelab.seed.allergy.model.Allergy;
-import com.systelab.seed.patient.model.Patient;
-import com.systelab.seed.patient.allergy.model.PatientAllergy;
-import com.systelab.seed.patient.allergy.repository.PatientAllergyRepository;
-import com.systelab.seed.patient.repository.PatientRepository;
+import com.systelab.seed.features.allergy.model.Allergy;
+import com.systelab.seed.features.patient.model.Patient;
+import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
+import com.systelab.seed.features.patient.allergy.repository.PatientAllergyRepository;
+import com.systelab.seed.features.patient.repository.PatientRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
+@Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class PatientAllergyRepositoryRevisionsTest {
 
     @Autowired

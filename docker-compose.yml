@@ -5,10 +5,6 @@ services:
     ports:
       - "8080:8080"
       - "8443:8443"
-  identity:
-    image: systelab/identity:latest
-    ports:
-      - "9090:9090"
   cadvisor:
     container_name: cadvisor
     image: google/cadvisor

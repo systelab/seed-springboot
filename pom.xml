@@ -30,7 +30,7 @@
         <lombok.version>1.18.12</lombok.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <swagger-annotations.version>1.6.2</swagger-annotations.version>
-        <springdoc-openapi.version>1.5.8</springdoc-openapi.version>
+        <springdoc-openapi.version>1.5.9</springdoc-openapi.version>
         <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
         <archunit-junit5.version>0.18.0</archunit-junit5.version>
 

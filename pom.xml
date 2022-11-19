@@ -27,11 +27,11 @@
 
         <spring.security.test.version>5.5.2</spring.security.test.version>
         <h2.version>1.4.200</h2.version>
-        <lombok.version>1.18.12</lombok.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <swagger-annotations.version>1.6.2</swagger-annotations.version>
-        <springdoc-openapi.version>1.5.8</springdoc-openapi.version>
-        <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
+        <lombok.version>1.18.24</lombok.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <swagger-annotations.version>2.2.7</swagger-annotations.version>
+        <springdoc-openapi.version>1.6.12</springdoc-openapi.version>
+        <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
         <archunit-junit5.version>0.18.0</archunit-junit5.version>
 
     </properties>
@@ -81,11 +81,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-envers</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
-            <artifactId>bucket4j-spring-boot-starter</artifactId>
-            <version>0.1.15</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
@@ -141,7 +136,7 @@
             <version>${springdoc-openapi.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.swagger</groupId>
+            <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger-annotations.version}</version>
         </dependency>
@@ -171,7 +166,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.5.1</version>
+            <version>1.10.1</version>
         </dependency>
     </dependencies>
 

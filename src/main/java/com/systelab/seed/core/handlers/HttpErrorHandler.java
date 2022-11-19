@@ -11,7 +11,6 @@ public class HttpErrorHandler implements ErrorController {
      *
      * @deprecated
      */
-    @Override
     public String getErrorPath() {
         return "";
     }

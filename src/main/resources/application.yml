@@ -47,7 +47,9 @@ security:
     token-validity-in-seconds: 6060
   cors:
     #Remove if you do not need to enable cors.
-    allowed-origins: "*"
+    allowed-origins:
+      - "http://localhost:4200"
+      - "http://127.0.0.1:8080"
     allowed-methods: "*"
     allowed-headers: "*"
     exposed-headers: "Authorization,Link,X-Total-Count"
@@ -94,23 +96,6 @@ spring:
   cache:
     jcache:
       config: classpath:ehcache.xml
-
-bucket4j:
-  enabled: true
-  filters:
-    - cache-name: buckets
-      filter-method: servlet
-      filter-order: -10
-      url: .*
-      metrics:
-        tags:
-          - key: IP
-            expression: "getRemoteAddr()"
-      rate-limits:
-        - bandwidths:
-            - capacity: 10000
-              time: 1
-              unit: minutes
 
 patient:
   maintenance:

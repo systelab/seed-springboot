@@ -35,16 +35,12 @@ public class PatientAllergy extends ModelBase {
     @JoinColumn
     private Allergy allergy;
 
-    @Schema(description = "Last date when the person hast the symptoms", example = "2018-05-14")
-
     private LocalDate lastOccurrence;
-    @Schema(description = "Date when the allergy was verified", example = "2007-03-23")
 
     private LocalDate assertedDate;
 
     @Size(min = 1, max = 255)
     @NotNull
-    @Schema(description = "Relevant notes to take into consideration", example = "Some notes")
     private String note;
 
     public PatientAllergy(Patient patient, Allergy allergy, String note) {

@@ -39,7 +39,6 @@ public class Patient extends ModelBase {
 
     private String email;
 
-    @Schema(description = "Date of Birth", example = "1966-11-17")
     private LocalDate dob;
 
     @Embedded

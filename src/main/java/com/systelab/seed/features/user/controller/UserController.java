@@ -1,5 +1,8 @@
 package com.systelab.seed.features.user.controller;
 
+import com.systelab.seed.features.user.controller.dto.UserMapper;
+import com.systelab.seed.features.user.controller.dto.UserRequestDTO;
+import com.systelab.seed.features.user.controller.dto.UserResponseDTO;
 import com.systelab.seed.features.user.model.User;
 import com.systelab.seed.features.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +34,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Operation(description = "User Login")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {@Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)})
@@ -42,42 +46,42 @@ public class UserController {
     @Operation(description = "Change Password")
     @SecurityRequirement(name = "Authorization")
     @PostMapping("/password")
-    public ResponseEntity<User> changePassword(@RequestParam("oldpassword") String oldPassword, @RequestParam("newpassword") String newPassword, Principal principal) {
-        return ResponseEntity.ok(this.userService.changePassword(oldPassword, newPassword, principal));
+    public ResponseEntity<UserResponseDTO> changePassword(@RequestParam("oldpassword") String oldPassword, @RequestParam("newpassword") String newPassword, Principal principal) {
+        return ResponseEntity.ok(userMapper.toResponseDTO(this.userService.changePassword(oldPassword, newPassword, principal)));
     }
 
     @Operation(description = "Get all Users")
     @SecurityRequirement(name = "Authorization")
     @PageableAsQueryParam
     @GetMapping("users")
-    public ResponseEntity<Page<User>> getAllUsers(@Parameter(hidden = true) Pageable pageable) {
-        return ResponseEntity.ok(this.userService.getAllUsers(pageable));
+    public ResponseEntity<Page<UserResponseDTO>> getAllUsers(@Parameter(hidden = true) Pageable pageable) {
+        return ResponseEntity.ok(this.userService.getAllUsers(pageable).map(userMapper::toResponseDTO));
     }
 
     @Operation(description = "Get User")
     @SecurityRequirement(name = "Authorization")
     @GetMapping("users/{uid}")
-    public ResponseEntity<User> getUser(@PathVariable("uid") UUID id) {
-        return ResponseEntity.ok(this.userService.getUser(id));
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable("uid") UUID id) {
+        return ResponseEntity.ok(userMapper.toResponseDTO(this.userService.getUser(id)));
     }
 
     @Operation(description = "Create a User")
     @SecurityRequirement(name = "Authorization")
     @PostMapping("users/user")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody @Parameter(description = "User", required = true) @Valid User u) {
-        User user = this.userService.createUser(u);
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Parameter(description = "User", required = true) @Valid UserRequestDTO dto) {
+        User user = this.userService.createUser(userMapper.fromRequestDTO(dto));
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/users/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).body(user);
+        return ResponseEntity.created(uri).body(userMapper.toResponseDTO(user));
     }
 
     @Operation(description = "Update a User")
     @SecurityRequirement(name = "Authorization")
     @PutMapping("users/{uid}")
-    public ResponseEntity<User> updateUser(@PathVariable("uid") UUID id, @Valid @RequestBody @Parameter(description = "User", required = true) User u) {
-        User user = this.userService.updateUser(id, u);
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable("uid") UUID id, @Valid @RequestBody @Parameter(description = "User", required = true) UserRequestDTO dto) {
+        User user = this.userService.updateUser(id, userMapper.fromRequestDTO(dto));
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-        return ResponseEntity.created(selfLink).body(user);
+        return ResponseEntity.created(selfLink).body(userMapper.toResponseDTO(user));
     }
 
     @Operation(description = "Delete a User")

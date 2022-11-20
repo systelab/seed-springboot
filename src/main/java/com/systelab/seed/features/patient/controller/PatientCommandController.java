@@ -4,18 +4,16 @@ import com.systelab.seed.features.patient.controller.dto.PatientMapper;
 import com.systelab.seed.features.patient.controller.dto.PatientRequestDTO;
 import com.systelab.seed.features.patient.controller.dto.PatientResponseDTO;
 import com.systelab.seed.features.patient.model.Patient;
-import com.systelab.seed.features.patient.service.PatientService;
+import com.systelab.seed.features.patient.service.command.PatientCreationCommandService;
+import com.systelab.seed.features.patient.service.command.PatientDeleteCommandService;
+import com.systelab.seed.features.patient.service.command.PatientUpdateCommandService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +27,23 @@ import java.util.UUID;
 @Tag(name = "Patient")
 @RestController()
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PatientController {
+public class PatientCommandController {
 
-    private final PatientService patientService;
+    private final PatientCreationCommandService patientCreationCommandService;
+    private final PatientUpdateCommandService patientUpdateCommandService;
+    private final PatientDeleteCommandService patientDeleteCommandService;
     private final PatientMapper patientMapper;
 
     private final Counter patientCreatedCounter;
 
     @Autowired
-    public PatientController(PatientService patientService, PatientMapper patientMapper, MeterRegistry registry) {
-        this.patientService = patientService;
+    public PatientCommandController(PatientCreationCommandService patientCreationCommandService,
+                                    PatientUpdateCommandService patientUpdateCommandService,
+                                    PatientDeleteCommandService patientDeleteCommandService,
+                                    PatientMapper patientMapper, MeterRegistry registry) {
+        this.patientCreationCommandService = patientCreationCommandService;
+        this.patientUpdateCommandService = patientUpdateCommandService;
+        this.patientDeleteCommandService = patientDeleteCommandService;
         this.patientMapper = patientMapper;
         patientCreatedCounter = Counter
                 .builder("patients")
@@ -46,27 +51,12 @@ public class PatientController {
                 .register(registry);
     }
 
-    @Operation(description = "Get all Patients")
-    @PageableAsQueryParam
-    @SecurityRequirement(name = "Authorization")
-    @GetMapping("patients")
-    public ResponseEntity<Page<PatientResponseDTO>> getAllPatients(@Parameter(hidden = true) Pageable pageable) {
-        return ResponseEntity.ok(this.patientService.getAllPatients(pageable).map(patientMapper::toResponseDTO));
-    }
-
-    @Operation(description = "Get Patient")
-    @SecurityRequirement(name = "Authorization")
-    @GetMapping("patients/{uid}")
-    public ResponseEntity<PatientResponseDTO> getPatient(@PathVariable("uid") UUID id) {
-        return ResponseEntity.ok(patientMapper.toResponseDTO(this.patientService.getPatient(id)));
-    }
-
     @Operation(description = "Create a Patient")
     @SecurityRequirement(name = "Authorization")
     @PostMapping("patients/patient")
     public ResponseEntity<PatientResponseDTO> createPatient(@RequestBody @Parameter(description = "Patient", required = true) @Valid PatientRequestDTO dto) {
         patientCreatedCounter.increment();
-        Patient patient = this.patientService.createPatient(patientMapper.fromRequestDTO(dto));
+        Patient patient = this.patientCreationCommandService.createPatient(patientMapper.fromRequestDTO(dto));
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/patients/{id}").buildAndExpand(patient.getId()).toUri();
         return ResponseEntity.created(uri).body(patientMapper.toResponseDTO(patient));
     }
@@ -75,7 +65,7 @@ public class PatientController {
     @SecurityRequirement(name = "Authorization")
     @PutMapping("patients/{uid}")
     public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable("uid") UUID id, @RequestBody @Parameter(description = "Patient", required = true) @Valid PatientRequestDTO dto) {
-        Patient patient = this.patientService.updatePatient(id, patientMapper.fromRequestDTO(dto));
+        Patient patient = this.patientUpdateCommandService.updatePatient(id, patientMapper.fromRequestDTO(dto));
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(patientMapper.toResponseDTO(patient));
     }
@@ -84,7 +74,7 @@ public class PatientController {
     @SecurityRequirement(name = "Authorization")
     @DeleteMapping("patients/{uid}")
     public ResponseEntity removePatient(@PathVariable("uid") UUID id) {
-        this.patientService.removePatient(id);
+        this.patientDeleteCommandService.removePatient(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -4,16 +4,13 @@ import com.systelab.seed.features.user.controller.dto.UserMapper;
 import com.systelab.seed.features.user.controller.dto.UserRequestDTO;
 import com.systelab.seed.features.user.controller.dto.UserResponseDTO;
 import com.systelab.seed.features.user.model.User;
-import com.systelab.seed.features.user.service.UserService;
+import com.systelab.seed.features.user.service.command.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.converters.models.PageableAsQueryParam;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,38 +28,27 @@ import java.util.UUID;
 @Tag(name = "User")
 @RestController
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+public class UserCommandController {
 
-    private final UserService userService;
+    private final UserCreationCommandService userCreationCommandService;
+    private final UserUpdateCommandService userUpdateCommandService;
+    private final UserDeleteCommandService userDeleteCommandService;
+    private final UserChangePasswordCommandService userChangePasswordCommandService;
+    private final UserLoginCommandService userLoginCommandService;
     private final UserMapper userMapper;
 
     @Operation(description = "User Login")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = {@Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)})
     @PostMapping(value = "users/login", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity authenticateUser(@RequestParam("login") String login, @RequestParam("password") String password) {
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + this.userService.authenticateUserAndGetToken(login, password)).build();
+        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + this.userLoginCommandService.authenticateUserAndGetToken(login, password)).build();
     }
 
     @Operation(description = "Change Password")
     @SecurityRequirement(name = "Authorization")
     @PostMapping("/password")
     public ResponseEntity<UserResponseDTO> changePassword(@RequestParam("oldpassword") String oldPassword, @RequestParam("newpassword") String newPassword, Principal principal) {
-        return ResponseEntity.ok(userMapper.toResponseDTO(this.userService.changePassword(oldPassword, newPassword, principal)));
-    }
-
-    @Operation(description = "Get all Users")
-    @SecurityRequirement(name = "Authorization")
-    @PageableAsQueryParam
-    @GetMapping("users")
-    public ResponseEntity<Page<UserResponseDTO>> getAllUsers(@Parameter(hidden = true) Pageable pageable) {
-        return ResponseEntity.ok(this.userService.getAllUsers(pageable).map(userMapper::toResponseDTO));
-    }
-
-    @Operation(description = "Get User")
-    @SecurityRequirement(name = "Authorization")
-    @GetMapping("users/{uid}")
-    public ResponseEntity<UserResponseDTO> getUser(@PathVariable("uid") UUID id) {
-        return ResponseEntity.ok(userMapper.toResponseDTO(this.userService.getUser(id)));
+        return ResponseEntity.ok(userMapper.toResponseDTO(this.userChangePasswordCommandService.changePassword(oldPassword, newPassword, principal)));
     }
 
     @Operation(description = "Create a User")
@@ -70,7 +56,7 @@ public class UserController {
     @PostMapping("users/user")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Parameter(description = "User", required = true) @Valid UserRequestDTO dto) {
-        User user = this.userService.createUser(userMapper.fromRequestDTO(dto));
+        User user = this.userCreationCommandService.createUser(userMapper.fromRequestDTO(dto));
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/users/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(userMapper.toResponseDTO(user));
     }
@@ -79,7 +65,7 @@ public class UserController {
     @SecurityRequirement(name = "Authorization")
     @PutMapping("users/{uid}")
     public ResponseEntity<UserResponseDTO> updateUser(@PathVariable("uid") UUID id, @Valid @RequestBody @Parameter(description = "User", required = true) UserRequestDTO dto) {
-        User user = this.userService.updateUser(id, userMapper.fromRequestDTO(dto));
+        User user = this.userUpdateCommandService.updateUser(id, userMapper.fromRequestDTO(dto));
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(userMapper.toResponseDTO(user));
     }
@@ -89,7 +75,7 @@ public class UserController {
     @DeleteMapping("users/{uid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity deleteUser(@PathVariable("uid") UUID id) {
-        this.userService.deleteUser(id);
+        this.userDeleteCommandService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,5 @@
 package com.systelab.seed.core.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,23 +30,19 @@ public abstract class ModelBase {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    @JsonIgnore
     protected ZonedDateTime creationTime;
 
     @LastModifiedDate
     @Column(nullable = false)
     @UpdateTimestamp
-    @JsonIgnore
     protected ZonedDateTime modificationTime;
 
     @CreatedBy
     @Column(nullable = false, updatable = false)
-    @JsonIgnore
     private String createdBy;
 
     @LastModifiedBy
     @Column(nullable = false)
-    @JsonIgnore
     private String modifiedBy;
 
     @Version

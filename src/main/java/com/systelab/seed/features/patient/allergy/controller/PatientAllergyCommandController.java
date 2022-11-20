@@ -4,7 +4,9 @@ import com.systelab.seed.features.patient.allergy.controller.dto.PatientAllergyM
 import com.systelab.seed.features.patient.allergy.controller.dto.PatientAllergyRequestDTO;
 import com.systelab.seed.features.patient.allergy.controller.dto.PatientAllergyResponseDTO;
 import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
-import com.systelab.seed.features.patient.allergy.service.PatientAllergyService;
+import com.systelab.seed.features.patient.allergy.service.command.PatientAllergyCreationCommandService;
+import com.systelab.seed.features.patient.allergy.service.command.PatientAllergyDeleteCommandService;
+import com.systelab.seed.features.patient.allergy.service.command.PatientAllergyUpdateCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,24 +28,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RestController()
 @RequestMapping(value = "/seed/v1/patients", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PatientAllergyController {
+public class PatientAllergyCommandController {
 
-    private final PatientAllergyService patientAllergyService;
+    private final PatientAllergyCreationCommandService patientAllergyCreationCommandService;
+    private final PatientAllergyUpdateCommandService patientAllergyUpdateCommandService;
+    private final PatientAllergyDeleteCommandService patientAllergyDeleteCommandService;
     private final PatientAllergyMapper patientAllergyMapper;
-
-    @Operation(description = "Get Allergies from Patient")
-    @SecurityRequirement(name = "Authorization")
-    @GetMapping("{uid}/allergies")
-    public ResponseEntity<Set<PatientAllergyResponseDTO>> getPatientAllergies(@PathVariable("uid") UUID id) {
-        return ResponseEntity.ok(this.patientAllergyService.getAllergiesFromPatient(id).stream().map(patientAllergyMapper::toResponseDTO).collect(Collectors.toSet()));
-    }
 
     @Operation(description = "Update an allergy to a Patient")
     @SecurityRequirement(name = "Authorization")
     @PutMapping("{patientUid}/allergies/{allergyUid}")
     public ResponseEntity<PatientAllergyResponseDTO> updatePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId,
                                                                @RequestBody @Parameter(description = "patientAllergy", required = true) @Valid PatientAllergyRequestDTO dto) {
-        PatientAllergy allergies = this.patientAllergyService.updateAllergyToPatient(patientId, allergyId, patientAllergyMapper.fromRequestDTO(dto));
+        PatientAllergy allergies = this.patientAllergyUpdateCommandService.updateAllergyToPatient(patientId, allergyId, patientAllergyMapper.fromRequestDTO(dto));
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(patientAllergyMapper.toResponseDTO(allergies));
     }
@@ -53,7 +50,7 @@ public class PatientAllergyController {
     @PostMapping("{uid}/allergies/allergy")
     public ResponseEntity<PatientAllergyResponseDTO> addPatientAllergy(@PathVariable("uid") UUID id,
                                                             @RequestBody @Parameter(description = "allergy", required = true) @Valid PatientAllergyRequestDTO dto) {
-        PatientAllergy allergies = this.patientAllergyService.addAllergyToPatient(id, patientAllergyMapper.fromRequestDTO(dto));
+        PatientAllergy allergies = this.patientAllergyCreationCommandService.addAllergyToPatient(id, patientAllergyMapper.fromRequestDTO(dto));
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/patients/{id}").buildAndExpand(allergies.getId()).toUri();
         return ResponseEntity.created(uri).body(patientAllergyMapper.toResponseDTO(allergies));
     }
@@ -62,7 +59,7 @@ public class PatientAllergyController {
     @SecurityRequirement(name = "Authorization")
     @DeleteMapping("{patientUid}/allergies/{allergyUid}")
     public ResponseEntity<PatientAllergyResponseDTO> removePatientAllergy(@PathVariable("patientUid") UUID patientId, @PathVariable("allergyUid") UUID allergyId) {
-        this.patientAllergyService.removeAllergyFromPatient(patientId, allergyId);
+        this.patientAllergyDeleteCommandService.removeAllergyFromPatient(patientId, allergyId);
         return ResponseEntity.noContent().build();
     }
 

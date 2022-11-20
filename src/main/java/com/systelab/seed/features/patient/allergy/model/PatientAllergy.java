@@ -1,6 +1,5 @@
 package com.systelab.seed.features.patient.allergy.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.features.allergy.model.Allergy;
 import com.systelab.seed.core.model.ModelBase;
 import com.systelab.seed.features.patient.model.Patient;
@@ -28,7 +27,6 @@ public class PatientAllergy extends ModelBase {
 
     @ManyToOne
     @JoinColumn
-    @JsonIgnore
     private Patient patient;
 
     @ManyToOne

@@ -47,6 +47,6 @@ public class Patient extends ModelBase {
 
     @JsonIgnore
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
-    private Set<PatientAllergy> allergies = new HashSet<PatientAllergy>();
+    private Set<PatientAllergy> allergies = new HashSet<>();
 
 }

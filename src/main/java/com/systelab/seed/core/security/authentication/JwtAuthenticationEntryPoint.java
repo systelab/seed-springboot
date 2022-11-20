@@ -11,7 +11,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final static String UNAUTHORIZED = "Unauthorized";
+    private static final String UNAUTHORIZED = "Unauthorized";
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,

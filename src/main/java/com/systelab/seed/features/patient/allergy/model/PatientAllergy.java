@@ -29,24 +29,22 @@ public class PatientAllergy extends ModelBase {
     @ManyToOne
     @JoinColumn
     @JsonIgnore
-    @Schema(required = true)
     private Patient patient;
 
     @ManyToOne
     @JoinColumn
-    @Schema(required = true)
     private Allergy allergy;
 
-    @Schema(description = "Last date when the person hast the symptoms", required = true, example = "2018-05-14")
+    @Schema(description = "Last date when the person hast the symptoms", example = "2018-05-14")
 
     private LocalDate lastOccurrence;
-    @Schema(description = "Date when the allergy was verified", required = true, example = "2007-03-23")
+    @Schema(description = "Date when the allergy was verified", example = "2007-03-23")
 
     private LocalDate assertedDate;
 
     @Size(min = 1, max = 255)
     @NotNull
-    @Schema(description = "Relevant notes to take into consideration", required = true, example = "Some notes")
+    @Schema(description = "Relevant notes to take into consideration", example = "Some notes")
     private String note;
 
     public PatientAllergy(Patient patient, Allergy allergy, String note) {

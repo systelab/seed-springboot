@@ -74,20 +74,13 @@ spring:
     min-idle: 8
     time-between-eviction-runs-millis: 1
   jpa:
+    defer-datasource-initialization: true
     show-sql: false
     properties:
       hibernate:
         jdbc:
           time_zone: UTC
         format_sql: true
-  resources:
-    cache:
-      cachecontrol:
-        # Maximum time the response should be cached (in seconds)
-        max-age: 120
-        # The cache must re-validate stale resources with the server. Any expired resources must not be used without re-validating.
-        must-revalidate: true
-
   h2:
     console:
       enabled: true
@@ -96,6 +89,12 @@ spring:
   cache:
     jcache:
       config: classpath:ehcache.xml
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 120
+          must-revalidate: true
 
 patient:
   maintenance:

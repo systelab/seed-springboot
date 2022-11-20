@@ -10,13 +10,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
+        <version>2.7.5</version>
     </parent>
 
     <name>seed-springboot</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <spring-boot.version>2.4.5</spring-boot.version>
+        <spring-boot.version>2.7.5</spring-boot.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -25,8 +25,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-        <spring.security.test.version>5.5.2</spring.security.test.version>
-        <h2.version>2.1.214</h2.version>
         <lombok.version>1.18.24</lombok.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <swagger-annotations.version>2.2.7</swagger-annotations.version>
@@ -117,7 +115,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -143,7 +140,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
-            <version>${spring.security.test.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -166,7 +162,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.10.1</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

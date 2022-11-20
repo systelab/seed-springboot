@@ -24,16 +24,16 @@ public class Allergy extends ModelBase {
 
     @NotNull
     @Size(min = 1, max = 255)
-    @Schema(description = "Allergy name", required = true, example = "Kiwi")
+    @Schema(description = "Allergy name", example = "Kiwi")
     public String name;
 
     @NotNull
     @Size(min = 1, max = 255)
-    @Schema(description = "Objective evidence of disease", required = true, example = "Bloody nose")
+    @Schema(description = "Objective evidence of disease", example = "Bloody nose")
     public String signs;
 
     @Size(min = 1, max = 255)
-    @Schema(description = "Subjective evidence of disease", required = true, example = "Anxiety, pain and fatigue")
+    @Schema(description = "Subjective evidence of disease", example = "Anxiety, pain and fatigue")
     public String symptoms;
 
 }

@@ -1,15 +1,17 @@
 package com.systelab.seed.features.allergy.controller;
 
+import com.systelab.seed.features.allergy.controller.dto.AllergyMapper;
+import com.systelab.seed.features.allergy.controller.dto.AllergyRequestDTO;
+import com.systelab.seed.features.allergy.controller.dto.AllergyResponseDTO;
 import com.systelab.seed.features.allergy.model.Allergy;
-import com.systelab.seed.features.allergy.service.AllergyService;
+import com.systelab.seed.features.allergy.service.command.AllergyCreationCommandService;
+import com.systelab.seed.features.allergy.service.command.AllergyDeleteCommandService;
+import com.systelab.seed.features.allergy.service.command.AllergyUpdateCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.converters.models.PageableAsQueryParam;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,48 +26,36 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController()
 @RequestMapping(value = "/seed/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AllergyController {
+public class AllergyCommandController {
 
-    private final AllergyService allergyService;
-
-    @Operation(description = "Get all Allergies")
-    @PageableAsQueryParam
-    @SecurityRequirement(name = "Authorization")
-    @GetMapping("allergies")
-    public ResponseEntity<Page<Allergy>> getAllAllergies(@Parameter(hidden = true) Pageable pageable) {
-        return ResponseEntity.ok(this.allergyService.getAllAllergies(pageable));
-    }
-
-    @Operation(description = "Get an Allergy")
-    @SecurityRequirement(name = "Authorization")
-    @GetMapping("allergies/{uid}")
-    public ResponseEntity<Allergy> getAllergy(@PathVariable("uid") UUID id) {
-        return ResponseEntity.ok(this.allergyService.getAllergy(id));
-    }
+    private final AllergyCreationCommandService allergyCreationCommandService;
+    private final AllergyUpdateCommandService allergyUpdateCommandService;
+    private final AllergyDeleteCommandService allergyDeleteCommandService;
+    private final AllergyMapper allergyMapper;
 
     @Operation(description = "Create an Allergy")
     @SecurityRequirement(name = "Authorization")
     @PostMapping("allergies/allergy")
-    public ResponseEntity<Allergy> createAllergy(@RequestBody @Parameter(description = "Allergy", required = true) @Valid Allergy allergy) {
-        Allergy createdAllergy = this.allergyService.createAllergy(allergy);
+    public ResponseEntity<AllergyResponseDTO> createAllergy(@RequestBody @Parameter(description = "Allergy", required = true) @Valid AllergyRequestDTO dto) {
+        Allergy createdAllergy = this.allergyCreationCommandService.createAllergy(allergyMapper.fromRequestDTO(dto));
         URI uri = MvcUriComponentsBuilder.fromController(getClass()).path("/allergies/{id}").buildAndExpand(createdAllergy.getId()).toUri();
-        return ResponseEntity.created(uri).body(createdAllergy);
+        return ResponseEntity.created(uri).body(allergyMapper.toResponseDTO(createdAllergy));
     }
 
     @Operation(description = "Create or Update (idempotent) an existing Allergy")
     @SecurityRequirement(name = "Authorization")
     @PutMapping("allergies/{uid}")
-    public ResponseEntity<Allergy> updateAllergy(@PathVariable("uid") UUID id, @RequestBody @Parameter(description = "Allergy", required = true) @Valid Allergy allergy) {
-        Allergy updatedAllergy = this.allergyService.updateAllergy(id, allergy);
+    public ResponseEntity<AllergyResponseDTO> updateAllergy(@PathVariable("uid") UUID id, @RequestBody @Parameter(description = "Allergy", required = true) @Valid AllergyRequestDTO dto) {
+        Allergy updatedAllergy = this.allergyUpdateCommandService.updateAllergy(id, allergyMapper.fromRequestDTO(dto));
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-        return ResponseEntity.created(selfLink).body(updatedAllergy);
+        return ResponseEntity.created(selfLink).body(allergyMapper.toResponseDTO(updatedAllergy));
     }
 
     @Operation(description = "Delete an Allergy")
     @SecurityRequirement(name = "Authorization")
     @DeleteMapping("allergies/{uid}")
     public ResponseEntity removeAllergy(@PathVariable("uid") UUID id) {
-        this.allergyService.removeAllergy(id);
+        this.allergyDeleteCommandService.removeAllergy(id);
         return ResponseEntity.noContent().build();
     }
 }

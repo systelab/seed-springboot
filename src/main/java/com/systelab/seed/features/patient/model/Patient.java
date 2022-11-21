@@ -1,9 +1,7 @@
 package com.systelab.seed.features.patient.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.systelab.seed.core.model.ModelBase;
 import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,13 +37,11 @@ public class Patient extends ModelBase {
 
     private String email;
 
-    @Schema(description = "Date of Birth", example = "1966-11-17")
     private LocalDate dob;
 
     @Embedded
     private Address address;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private Set<PatientAllergy> allergies = new HashSet<>();
 

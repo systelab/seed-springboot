@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -36,17 +35,17 @@ public class WebSecurityConfig {
         http.csrf().disable();
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .antMatchers("/h2/**").permitAll()
-                        .antMatchers("/actuator/**").permitAll()
-                        .antMatchers("/v3/api-docs/**").permitAll()
-                        .antMatchers("/swagger-ui.html").permitAll()
-                        .antMatchers("/swagger-ui/**").permitAll()
-                        .antMatchers("/swagger-resources/**").permitAll()
-                        .antMatchers("/favicon.ico").permitAll()
-                        .antMatchers("/webjars/**").permitAll()
-                        .antMatchers("/swagger-resources/**").permitAll()
-                        .antMatchers("/seed/v1/users/login").permitAll()
-                        .antMatchers(HttpMethod.OPTIONS, "/seed/v1/**").permitAll()
+                        .mvcMatchers("/h2/**").permitAll()
+                        .mvcMatchers("/actuator/**").permitAll()
+                        .mvcMatchers("/v3/api-docs/**").permitAll()
+                        .mvcMatchers("/swagger-ui.html").permitAll()
+                        .mvcMatchers("/swagger-ui/**").permitAll()
+                        .mvcMatchers("/swagger-resources/**").permitAll()
+                        .mvcMatchers("/favicon.ico").permitAll()
+                        .mvcMatchers("/webjars/**").permitAll()
+                        .mvcMatchers("/swagger-resources/**").permitAll()
+                        .mvcMatchers("/seed/v1/users/login").permitAll()
+                        .mvcMatchers(HttpMethod.OPTIONS, "/seed/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)

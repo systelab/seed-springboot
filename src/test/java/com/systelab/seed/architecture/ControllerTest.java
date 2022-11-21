@@ -20,8 +20,11 @@ public class ControllerTest {
     @ArchTest
     static ArchRule allFilesInPackageControllerShouldBeControllersOrDtos = classes()
             .that().resideInAPackage("..controller..")
-            .should().haveSimpleNameEndingWith("Controller").orShould().haveSimpleNameEndingWith("Dto")
-            .because("we want to have only controllers and dtos in the controllers package");
+            .should().haveSimpleNameEndingWith("Controller")
+            .orShould().haveSimpleNameEndingWith("Mapper")
+            .orShould().haveSimpleNameEndingWith("MapperImpl")
+            .orShould().haveSimpleNameEndingWith("DTO")
+            .because("we want to have only controllers, mappers and dtos in the controllers package");
 
     @ArchTest
     static ArchRule allPublicMethodsInRestControllersShouldReturnResponseEntity = ArchRuleDefinition.methods()

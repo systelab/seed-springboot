@@ -2,19 +2,11 @@ package com.systelab.seed.envers.patient.allergy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
+import com.systelab.seed.envers.helper.AuthenticationExtension;
 import com.systelab.seed.features.allergy.repository.AllergyRepository;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.query.AuditQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,27 +15,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revision;
+import org.springframework.data.history.RevisionMetadata;
 import org.springframework.data.history.Revisions;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.systelab.seed.core.audit.AuditRevisionEntity;
-import com.systelab.seed.envers.helper.AuthenticationHelper;
 import com.systelab.seed.features.allergy.model.Allergy;
 import com.systelab.seed.features.patient.model.Patient;
 import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
 import com.systelab.seed.features.patient.allergy.repository.PatientAllergyRepository;
 import com.systelab.seed.features.patient.repository.PatientRepository;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest()
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PatientAllergyRepositoryRevisionsTest {
-
-    @Autowired
-    EntityManagerFactory entityManagerFactory;
 
     @Autowired
     private PatientAllergyRepository patientAllergyRepository;
@@ -59,25 +48,21 @@ public class PatientAllergyRepositoryRevisionsTest {
     private PatientAllergy patientAllergy;
 
     @BeforeEach    
-    public void save() throws JsonParseException, JsonMappingException, IOException {
-
-    	AuthenticationHelper.mockAdminAuthentication();
+    void save()  {
         patientAllergyRepository.deleteAll();
         allergyRepository.deleteAll();
         patientRepository.deleteAll();
         
         patient = createPatient();
         allergy = createAllergy();
-        
-        patientAllergy = createPatientAllergy(patient, allergy, "the initial note");
-        patient.getAllergies().add(patientAllergy);
-        patientAllergy = patientAllergyRepository.save(patientAllergy);
+        patientAllergy = patientAllergyRepository.save(new PatientAllergy(patient, allergy, "the initial note"));
+        patientAllergyRepository.flush();
+
     }
 
- 
 
     @Test    
-    public void initialRevision() {
+    void initialRevision() {
         
         Revisions<Integer, PatientAllergy> revisions = patientAllergyRepository.findRevisions(patientAllergy.getId());
         
@@ -85,7 +70,7 @@ public class PatientAllergyRepositoryRevisionsTest {
                 .allSatisfy(revision -> assertThat(revision.getEntity()).extracting(PatientAllergy::getId, PatientAllergy::getNote)
                         .containsExactly(patientAllergy.getId(), patientAllergy.getNote()))
                 .allSatisfy(revision -> {
-                    DefaultRevisionMetadata metadata = (DefaultRevisionMetadata) revision.getMetadata();
+                    RevisionMetadata<Integer> metadata = revision.getMetadata();
                     AuditRevisionEntity revisionEntity = metadata.getDelegate();
                     assertThat(revisionEntity.getUsername()).isEqualTo("admin");
                 });
@@ -93,30 +78,30 @@ public class PatientAllergyRepositoryRevisionsTest {
 
 
     @Test
-    public void updateIncreasesRevisionNumber() {
+    void updateIncreasesRevisionNumber() {
         Optional<Revision<Integer, PatientAllergy>> revision = patientAllergyRepository.findLastChangeRevision(patientAllergy.getId());
-        int beforeUpdate = getTotalRevisionsById(revision);
+        int numberOfReleasesBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
 
         patientAllergy.setNote("the new Note");
         patientAllergyRepository.save(patientAllergy);
 
         Optional<Revision<Integer, PatientAllergy>> revisionAfterUpdate = patientAllergyRepository.findLastChangeRevision(patientAllergy.getId());
         assertThat(revisionAfterUpdate).isPresent()
-                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(beforeUpdate))
+                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(numberOfReleasesBeforeUpdate))
                 .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(PatientAllergy::getNote)
                         .isEqualTo("the new Note")
                 );
     }
 
     @Test
-    public void showAdminRevisionInformation() {
+    void showAdminRevisionInformation() {
 
         Revisions<Integer, PatientAllergy> revisions = patientAllergyRepository.findRevisions(patientAllergy.getId());
         assertThat(revisions).isNotEmpty()
                 .allSatisfy(revision -> assertThat(revision.getEntity()).extracting(PatientAllergy::getId, PatientAllergy::getNote)
                         .containsExactly(patientAllergy.getId(), patientAllergy.getNote()))
                 .allSatisfy(revision -> {
-                    DefaultRevisionMetadata metadata = (DefaultRevisionMetadata) revision.getMetadata();
+                    RevisionMetadata<Integer> metadata = revision.getMetadata();
                     AuditRevisionEntity revisionEntity = metadata.getDelegate();
                     assertThat(revisionEntity.getUsername()).isEqualTo("admin");
                     assertThat(revisionEntity.getIpAddress()).isEqualTo("10.0.0.1");
@@ -124,70 +109,40 @@ public class PatientAllergyRepositoryRevisionsTest {
     }
 
     @Test
-    public void checkRevisionTypeWhenModifying() {
+    void checkRevisionTypeWhenModifying() {
 
         patientAllergy.setNote("New Note");
         patientAllergyRepository.save(patientAllergy);
 
-        AuditQuery q = getPatientAllergyAuditQuery();
+        Optional<Revision<Integer, PatientAllergy>> revision = patientAllergyRepository.findLastChangeRevision(patientAllergy.getId());
 
-        List<Object[]> result = q.getResultList();
+        PatientAllergy modifiedPatientAllergy = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        PatientAllergy modifiedPatientAllergy = (PatientAllergy) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.MOD);
         assertThat(modifiedPatientAllergy.getNote()).isEqualTo("New Note");
+        Assertions.assertEquals(RevisionMetadata.RevisionType.UPDATE, revision.get().getMetadata().getRevisionType());
     }
 
     @Test
-    public void checkRevisionTypeWhenCreating() {
+    void checkRevisionTypeWhenCreating() {
 
-        patientAllergyRepository.save(createPatientAllergy(createPatient(), createAllergy(), "the initial note"));
+        PatientAllergy newPatientAllergy = patientAllergyRepository.save(new PatientAllergy(createPatient(), createAllergy(), "another note"));
 
-        AuditQuery q = getPatientAllergyAuditQuery();
+        Optional<Revision<Integer, PatientAllergy>> revision = patientAllergyRepository.findLastChangeRevision(newPatientAllergy.getId());
 
-        List<Object[]> result = q.getResultList();
+        PatientAllergy createdPatientAllergy = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        PatientAllergy createdPatientAllergy = (PatientAllergy) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.ADD);
-        assertThat(createdPatientAllergy.getNote()).isEqualTo("the initial note");
+        assertThat(createdPatientAllergy.getNote()).isEqualTo("another note");
+        Assertions.assertEquals(RevisionMetadata.RevisionType.INSERT, revision.get().getMetadata().getRevisionType());
     }
 
-    private AuditQuery getPatientAllergyAuditQuery() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        AuditReader auditReader = AuditReaderFactory.get(entityManager);
-
-        AuditQuery q = auditReader.createQuery()
-                .forRevisionsOfEntity(PatientAllergy.class, false, true);
-        return q;
-    }
-
-    private int getTotalRevisionsById(Optional<Revision<Integer, PatientAllergy>> revision) {
-
-        int beforeUpdate = revision.get()
-                .getRevisionNumber()
-                .orElse(-1);
-        return beforeUpdate;
-    }
-    
     private Allergy createAllergy() {
-        return allergyRepository.save(new Allergy("the allergy", "the signs", "the symptoms"));
+        return allergyRepository.saveAndFlush(new Allergy("the allergy", "the signs", "the symptoms"));
+
     }
 
     private Patient createPatient() {
-        return patientRepository.save(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
-    }   
-
-
-    private PatientAllergy createPatientAllergy(Patient patient, Allergy allergy, String note) {
-        return new PatientAllergy(patient, allergy, note);
+        return patientRepository.saveAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
     }
+
 
 }

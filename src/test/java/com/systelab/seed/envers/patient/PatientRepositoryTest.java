@@ -2,34 +2,29 @@ package com.systelab.seed.envers.patient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 import java.util.HashSet;
 import java.util.List;
 
+import com.systelab.seed.envers.helper.AuthenticationExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.systelab.seed.core.config.RepositoryConfig;
-import com.systelab.seed.core.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.features.patient.model.Patient;
-import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
 import com.systelab.seed.features.patient.repository.PatientRepository;
 
 
-@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class PatientRepositoryTest {
 
-    @Autowired
-    private TestEntityManager em;
 
     @Autowired
     private PatientRepository repository;
@@ -38,12 +33,14 @@ public class PatientRepositoryTest {
 
     @BeforeEach
     public void save() {
-        patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
+        repository.deleteAll();
+        patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<>()));
+        repository.flush();
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllPatients() {
+    void findAllPatients() {
         List<Patient> patients = repository.findAll();
         assertThat(patients).isNotEmpty()
                 .extracting(Patient::getName, Patient::getSurname)
@@ -52,7 +49,7 @@ public class PatientRepositoryTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void hasAuditInformation() {
+    void hasAuditInformation() {
         assertThat(patient)
                 .extracting(Patient::getCreatedBy, Patient::getCreationTime, Patient::getModifiedBy, Patient::getModificationTime, Patient::getVersion)
                 .isNotNull();

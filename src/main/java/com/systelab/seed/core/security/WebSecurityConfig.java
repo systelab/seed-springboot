@@ -15,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -35,17 +37,17 @@ public class WebSecurityConfig {
         http.csrf().disable();
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .mvcMatchers("/h2/**").permitAll()
-                        .mvcMatchers("/actuator/**").permitAll()
-                        .mvcMatchers("/v3/api-docs/**").permitAll()
-                        .mvcMatchers("/swagger-ui.html").permitAll()
-                        .mvcMatchers("/swagger-ui/**").permitAll()
-                        .mvcMatchers("/swagger-resources/**").permitAll()
-                        .mvcMatchers("/favicon.ico").permitAll()
-                        .mvcMatchers("/webjars/**").permitAll()
-                        .mvcMatchers("/swagger-resources/**").permitAll()
-                        .mvcMatchers("/seed/v1/users/login").permitAll()
-                        .mvcMatchers(HttpMethod.OPTIONS, "/seed/v1/**").permitAll()
+                        .requestMatchers(antMatcher("/h2/**")).permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers("/favicon.ico").permitAll()
+                        .requestMatchers("/webjars/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers("/seed/v1/users/login").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/seed/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)

@@ -20,9 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Tag(name = "PatientAllergy")
 @RequiredArgsConstructor

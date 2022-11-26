@@ -8,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -90,7 +89,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         final StringBuilder builder = new StringBuilder();
         builder.append(ex.getMethod());
         builder.append(" method is not supported for this request. Supported methods are ");
-        ex.getSupportedHttpMethods().forEach(t -> builder.append(t + " "));
+        ex.getSupportedHttpMethods().forEach(t -> builder.append(t).append(" "));
 
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.METHOD_NOT_ALLOWED, "ERR_HTTP_METHOD_NOT_SUPPORTED", ex.getLocalizedMessage(), builder.toString());
         final Object[] parameters = {HttpStatus.METHOD_NOT_ALLOWED, ex};
@@ -103,7 +102,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         final StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
-        ex.getSupportedMediaTypes().forEach(t -> builder.append(t + " "));
+        ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(" "));
 
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "ERR_UNSUPPORTED_MEDIA_TYPE", ex.getLocalizedMessage(), builder.substring(0, builder.length() - 2));
         final Object[] parameters = {HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex};

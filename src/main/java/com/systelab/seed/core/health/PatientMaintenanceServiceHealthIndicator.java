@@ -9,7 +9,7 @@ import java.time.*;
 @Component
 
 public class PatientMaintenanceServiceHealthIndicator implements HealthIndicator {
-    private final static String LAST_UPDATE_TAG = "last-update";
+    private static final String LAST_UPDATE_TAG = "last-update";
 
     private boolean working = true;
     private ZonedDateTime lastExecution = Instant.ofEpochMilli(Long.MIN_VALUE).atZone(ZoneOffset.UTC);

@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -33,7 +33,7 @@ public class ApiExceptionMessage {
         this.status = status;
         this.code = code;
         this.originalExceptionMessage = originalExceptionMessage;
-        messages = Arrays.asList(message);
+        messages = Collections.singletonList(message);
         this.timestamp = ZonedDateTime.now();
     }
 }

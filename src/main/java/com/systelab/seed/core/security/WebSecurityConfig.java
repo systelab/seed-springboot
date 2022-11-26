@@ -36,7 +36,7 @@ public class WebSecurityConfig {
         http.headers().frameOptions().disable();
         http.csrf().disable();
         http
-                .authorizeHttpRequests((authz) -> authz
+                .authorizeHttpRequests(authz -> authz
                         .requestMatchers(antMatcher("/h2/**")).permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()

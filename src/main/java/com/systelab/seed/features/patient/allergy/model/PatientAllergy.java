@@ -3,7 +3,6 @@ package com.systelab.seed.features.patient.allergy.model;
 import com.systelab.seed.features.allergy.model.Allergy;
 import com.systelab.seed.core.model.ModelBase;
 import com.systelab.seed.features.patient.model.Patient;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

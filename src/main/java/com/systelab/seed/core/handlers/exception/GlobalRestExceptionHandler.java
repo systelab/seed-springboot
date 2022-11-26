@@ -1,8 +1,6 @@
 package com.systelab.seed.core.handlers.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolation;
@@ -24,11 +21,10 @@ import java.util.List;
 
 @Slf4j
 @ControllerAdvice
-@Order(value = Ordered.LOWEST_PRECEDENCE)
 public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex) {
         final String message = ex.getName() + " should be of type " + ex.getRequiredType().getName();
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.BAD_REQUEST, "ERR_ARGUMENT_TYPE_MISMATCH", ex.getLocalizedMessage(), message);
         log.warn("ERR_ARGUMENT_TYPE_MISMATCH - [{}].", message, ex);
@@ -37,7 +33,7 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex) {
         final List<String> messages = new ArrayList<>();
         for (final ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             messages.add(violation.getRootBeanClass().getName() + " " + violation.getPropertyPath() + ": " + violation.getMessage());
@@ -49,7 +45,7 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityConstraintViolation(final DataIntegrityViolationException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleDataIntegrityConstraintViolation(final DataIntegrityViolationException ex) {
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.BAD_REQUEST, "ERR_CONSTRAINT_VIOLATION", ex.getLocalizedMessage(), "Constraint Violation");
         log.warn("ERR_CONSTRAINT_VIOLATION - [{}].", ex.getMessage(), ex);
 
@@ -57,14 +53,14 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleBadCredentials(final AccessDeniedException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleBadCredentials(final AccessDeniedException ex) {
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.FORBIDDEN, "ERR_ACCESS_DENIED", ex.getLocalizedMessage(), "Access denied");
         log.warn("ERR_ACCESS_DENIED - [{}].", ex.getMessage(), ex);
 
         return new ResponseEntity<>(apiExceptionMessage, new HttpHeaders(), apiExceptionMessage.getStatus());
     }
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Object> handleBadCredentials(final BadCredentialsException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleBadCredentials(final BadCredentialsException ex) {
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.FORBIDDEN, "ERR_BAD_CREDENTIALS", ex.getLocalizedMessage(), "Bad credentials");
         log.warn("ERR_BAD_CREDENTIALS_VIOLATION - [{}].", ex.getMessage(), ex);
 
@@ -72,7 +68,7 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler({MailSendException.class})
-    public ResponseEntity<Object> handleMail(final MailSendException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleMail(final MailSendException ex) {
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.INTERNAL_SERVER_ERROR, "ERR_MAIL", ex.getLocalizedMessage(), "Error sending mail");
         log.warn("ERR_MAIL - [{}].", ex.getMessage(), ex);
 
@@ -80,7 +76,7 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler({AuthorizationServiceException.class})
-    public ResponseEntity<Object> handleAuthoritzation(final AuthorizationServiceException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleAuthoritzation(final AuthorizationServiceException ex) {
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(HttpStatus.UNAUTHORIZED, "ERR_UNAUTHORIZED", ex.getLocalizedMessage(), "Unauthorized");
         log.warn("ERR_UNAUTHORIZED - [{}].", ex.getMessage(), ex);
 
@@ -88,7 +84,7 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler({Exception.class, RuntimeException.class})
-    public ResponseEntity<Object> handleAllExceptions(final Exception ex, final WebRequest request) {
+    public ResponseEntity<Object> handleAllExceptions(final Exception ex) {
         String key= getKeyForException(ex);
         final ApiExceptionMessage apiExceptionMessage = new ApiExceptionMessage(getStatusForException(ex), key, ex.getLocalizedMessage(), getHumanReadeableTextForException(ex));
         log.warn("[{}] - [{}].", key, ex.getMessage(), ex);

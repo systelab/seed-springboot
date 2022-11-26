@@ -68,7 +68,7 @@ public class TokenProvider {
                 .claim(AUTHORITIES_KEY, getAuthorities(authentication))
                 .signWith(key)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenValidityInSeconds() * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getTokenValidityInSeconds() * 1000L))
                 .compact();
     }
 
@@ -78,7 +78,7 @@ public class TokenProvider {
                     .collect(Collectors.joining(","));
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         return getUsernameFromToken(token)
                 .map(username -> username.equals(userDetails.getUsername()) && !isTokenExpired(token))
                 .orElse(false);

@@ -2,7 +2,6 @@ package com.systelab.seed.features.patient.controller;
 
 import com.systelab.seed.features.patient.controller.dto.PatientMapper;
 import com.systelab.seed.features.patient.controller.dto.PatientResponseDTO;
-import com.systelab.seed.features.patient.service.PatientService;
 import com.systelab.seed.features.patient.service.query.PatientQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

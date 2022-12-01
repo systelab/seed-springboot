@@ -2,6 +2,7 @@ package com.systelab.seed.core.security.authentication.service.filter;
 
 import com.systelab.seed.core.security.config.TokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,6 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.error("An error occurred during while getting username from token.", e);
         } catch (ExpiredJwtException e) {
             logger.warn("The token is expired and not valid anymore.", e);
+        } catch (SecurityException e) {
+            logger.warn("Authentication failed. Username or password not valid.", e);
         }
     }
 }

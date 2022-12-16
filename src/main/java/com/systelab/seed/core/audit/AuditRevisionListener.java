@@ -14,9 +14,7 @@ public class AuditRevisionListener implements RevisionListener {
     public void newRevision(Object revisionEntity) {
         if (revisionEntity instanceof AuditRevisionEntity) {
             Optional<Authentication> authentication = this.getAuthentication();
-            if (authentication.isPresent()) {
-                updateRevisionEntity((AuditRevisionEntity) revisionEntity, authentication.get());
-            }
+            authentication.ifPresent(value -> updateRevisionEntity((AuditRevisionEntity) revisionEntity, value));
         }
     }
 

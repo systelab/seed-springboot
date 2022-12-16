@@ -2,6 +2,7 @@ package com.systelab.seed.core.security.authentication.service.filter;
 
 import com.systelab.seed.core.security.config.TokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,11 +14,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.Resource;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -60,6 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.error("An error occurred during while getting username from token.", e);
         } catch (ExpiredJwtException e) {
             logger.warn("The token is expired and not valid anymore.", e);
+        } catch (SecurityException e) {
+            logger.warn("Authentication failed. Username or password not valid.", e);
         }
     }
 }

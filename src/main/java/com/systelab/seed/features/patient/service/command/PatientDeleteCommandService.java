@@ -2,7 +2,6 @@ package com.systelab.seed.features.patient.service.command;
 
 import com.systelab.seed.features.patient.model.Patient;
 import com.systelab.seed.features.patient.repository.PatientRepository;
-import com.systelab.seed.features.patient.service.PatientNotFoundException;
 import com.systelab.seed.features.patient.service.query.PatientQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

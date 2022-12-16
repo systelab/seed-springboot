@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @Service
 public class PatientMaintenanceService {
 
-    private Logger logger = LoggerFactory.getLogger(PatientMaintenanceService.class);
+    private final Logger logger = LoggerFactory.getLogger(PatientMaintenanceService.class);
 
     private final PatientRepository patientRepository;
 

@@ -1,64 +1,71 @@
 package com.systelab.seed.envers.patient.allergy;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
 import java.util.HashSet;
 import java.util.List;
 
+import com.systelab.seed.envers.helper.AuthenticationExtension;
+import com.systelab.seed.features.allergy.repository.AllergyRepository;
+import com.systelab.seed.features.patient.repository.PatientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.systelab.seed.core.config.RepositoryConfig;
-import com.systelab.seed.core.audit.SpringSecurityAuditorAware;
 import com.systelab.seed.features.allergy.model.Allergy;
 import com.systelab.seed.features.patient.model.Patient;
 import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
 import com.systelab.seed.features.patient.allergy.repository.PatientAllergyRepository;
 
-
-@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class PatientAllergyRepositoryTest {
 
     @Autowired
-    private TestEntityManager em;
+    private PatientAllergyRepository repository;
 
     @Autowired
-    private PatientAllergyRepository repository;
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private AllergyRepository allergyRepository;
 
     private Patient patient;
     private Allergy allergy;
     private PatientAllergy patientAllergy;
 
     @BeforeEach
-    public void save() {
-        patient = em.persistAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<PatientAllergy>()));
-        allergy = em.persistAndFlush(new Allergy("the allergy", "the signs", "the symptoms"));
-        
-        patientAllergy = em.persistAndFlush(new PatientAllergy(patient, allergy, "the note"));
+    void save() {
+        patientRepository.deleteAll();
+        allergyRepository.deleteAll();
+        repository.deleteAll();
+
+        patient=patientRepository.saveAndFlush(new Patient("My Surname", "My Name", null, null, null, null, new HashSet<>()));
+        allergy=allergyRepository.saveAndFlush(new Allergy("the allergy", "the signs", "the symptoms"));
+
+        patientAllergy = repository.save(new PatientAllergy(patient, allergy, "the note"));
+        repository.flush();
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllPatientAllergies() {
+    void findAllPatientAllergies() {
         List<PatientAllergy> patientAllergies = repository.findAll();
-        assertThat(patientAllergies).isNotEmpty()
-                .extracting(PatientAllergy::getPatient, PatientAllergy::getAllergy, PatientAllergy::getNote)
-                .containsExactly(tuple(patient, allergy, "the note"));
+        assertThat(patientAllergies).isNotEmpty();
+        assertThat(patientAllergies.get(0).getPatient().getName()).isEqualTo("My Name");
+        assertThat(patientAllergies.get(0).getAllergy().getName()).isEqualTo("the allergy");
+        assertThat(patientAllergies.get(0).getNote()).isEqualTo("the note");
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void hasAuditInformation() {
+    void hasAuditInformation() {
         assertThat(patientAllergy)
                 .extracting(PatientAllergy::getCreatedBy, PatientAllergy::getCreationTime, PatientAllergy::getModifiedBy, PatientAllergy::getModificationTime, PatientAllergy::getVersion)
                 .isNotNull();

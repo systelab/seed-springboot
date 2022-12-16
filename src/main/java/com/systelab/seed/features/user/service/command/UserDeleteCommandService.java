@@ -2,7 +2,6 @@ package com.systelab.seed.features.user.service.command;
 
 import com.systelab.seed.features.user.model.User;
 import com.systelab.seed.features.user.repository.UserRepository;
-import com.systelab.seed.features.user.service.UserNotFoundException;
 import com.systelab.seed.features.user.service.query.UserQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

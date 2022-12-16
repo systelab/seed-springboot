@@ -4,17 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
+import com.systelab.seed.envers.helper.AuthenticationExtension;
 import com.systelab.seed.features.allergy.repository.AllergyRepository;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.query.AuditQuery;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,41 +17,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revision;
+import org.springframework.data.history.RevisionMetadata;
 import org.springframework.data.history.Revisions;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.systelab.seed.core.audit.AuditRevisionEntity;
-import com.systelab.seed.envers.helper.AuthenticationHelper;
 import com.systelab.seed.features.allergy.model.Allergy;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest()
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class AllergyRepositoryRevisionsTest {
 
     @Autowired
-    EntityManagerFactory entityManagerFactory;
-
-    @Autowired
     private AllergyRepository repository;
+
 
     private Allergy allergy;
 
     @BeforeEach
-    public void save() throws JsonParseException, JsonMappingException, IOException {
-
-        AuthenticationHelper.mockAdminAuthentication();
+    void save() throws IOException {
         repository.deleteAll();
-
         allergy = repository.save(new Allergy("AllergyA", "signsA", null));
-
+        repository.flush();
     }
 
+
     @Test
-    public void initialRevision() {
+    void initialRevision() {
 
         Revisions<Integer, Allergy> revisions = repository.findRevisions(allergy.getId());
 
@@ -72,28 +60,28 @@ public class AllergyRepositoryRevisionsTest {
     }
 
     @Test
-    public void updateIncreasesRevisionNumber() {
+    void updateIncreasesRevisionNumber() {
         Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
-        int beforeUpdate = getTotalRevisionsById(revision);
+        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
 
         allergy.setName("New Allergy name");
         repository.save(allergy);
 
         Optional<Revision<Integer, Allergy>> revisionAfterUpdate = repository.findLastChangeRevision(allergy.getId());
-        assertThat(revisionAfterUpdate).isPresent().hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(beforeUpdate))
+        assertThat(revisionAfterUpdate).isPresent().hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(numberOfRevisionsBeforeUpdate))
                 .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(Allergy::getName).isEqualTo("New Allergy name"));
     }
 
     @Test
-    public void deletedItemWillHaveRevisionRetained() {
+    void deletedItemWillHaveRevisionRetained() {
 
         Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
-        int beforeUpdate = getTotalRevisionsById(revision);
+        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
 
         repository.delete(allergy);
 
         Revisions<Integer, Allergy> revisions = repository.findRevisions(allergy.getId());
-        assertThat(revisions).isNotEqualTo(beforeUpdate);
+        assertThat(revisions).isNotEqualTo(numberOfRevisionsBeforeUpdate);
         Iterator<Revision<Integer, Allergy>> iterator = revisions.iterator();
         Revision<Integer, Allergy> initialRevision = iterator.next();
         Revision<Integer, Allergy> finalRevision = iterator.next();
@@ -107,7 +95,7 @@ public class AllergyRepositoryRevisionsTest {
     }
 
     @Test
-    public void showAdminRevisionInformation() {
+    void showAdminRevisionInformation() {
 
         Revisions<Integer, Allergy> revisions = repository.findRevisions(allergy.getId());
         assertThat(revisions).isNotEmpty()
@@ -122,73 +110,45 @@ public class AllergyRepositoryRevisionsTest {
     }
 
     @Test
-    public void checkRevisionTypeWhenDeleting() {
+    void checkRevisionTypeWhenDeleting() {
 
         repository.delete(allergy);
 
-        AuditQuery q = getAllergyAuditQuery();
+        Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
 
-        List<Object[]> result = q.getResultList();
+        Allergy deletedAllergy = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        Allergy deletedAllergy = (Allergy) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.DEL);
         Assertions.assertNull(deletedAllergy.getSigns());
         Assertions.assertNull(deletedAllergy.getName());
         Assertions.assertNull(deletedAllergy.getSymptoms());
+        Assertions.assertEquals(RevisionMetadata.RevisionType.DELETE, revision.get().getMetadata().getRevisionType());
     }
 
     @Test
-    public void checkRevisionTypeWhenModifying() {
+    void checkRevisionTypeWhenModifying() {
 
         allergy.setName("New Name");
         repository.save(allergy);
 
-        AuditQuery q = getAllergyAuditQuery();
+        Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
 
-        List<Object[]> result = q.getResultList();
+        Allergy modifiedAllergy = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        Allergy modifiedAllergy = (Allergy) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.MOD);
         assertThat(modifiedAllergy.getName()).isEqualTo("New Name");
+        Assertions.assertEquals(RevisionMetadata.RevisionType.UPDATE, revision.get().getMetadata().getRevisionType());
     }
 
     @Test
-    public void checkRevisionTypeWhenCreating() {
+    void checkRevisionTypeWhenCreating() {
 
-        repository.save(new Allergy("Created Allergy name", "Created Allergy sign", "Created Allergy symptom"));
+        Allergy newAllergy = repository.save(new Allergy("Created Allergy name", "Created Allergy sign", "Created Allergy symptom"));
 
-        AuditQuery q = getAllergyAuditQuery();
+        Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(newAllergy.getId());
 
-        List<Object[]> result = q.getResultList();
+        Allergy createdAllergy = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        Allergy createdAllergy = (Allergy) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.ADD);
         assertThat(createdAllergy.getName()).isEqualTo("Created Allergy name");
+        Assertions.assertEquals(RevisionMetadata.RevisionType.INSERT, revision.get().getMetadata().getRevisionType());
     }
 
-    private AuditQuery getAllergyAuditQuery() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        AuditReader auditReader = AuditReaderFactory.get(entityManager);
-
-        AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Allergy.class, false, true);
-        return q;
-    }
-
-    private int getTotalRevisionsById(Optional<Revision<Integer, Allergy>> revision) {
-
-        int beforeUpdate = revision.get().getRevisionNumber().orElse(-1);
-        return beforeUpdate;
-    }
 }

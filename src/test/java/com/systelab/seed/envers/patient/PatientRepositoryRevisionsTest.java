@@ -4,16 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.RevisionType;
-import org.hibernate.envers.query.AuditQuery;
+import com.systelab.seed.envers.helper.AuthenticationExtension;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,24 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revision;
+import org.springframework.data.history.RevisionMetadata;
 import org.springframework.data.history.Revisions;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.systelab.seed.core.audit.AuditRevisionEntity;
-import com.systelab.seed.envers.helper.AuthenticationHelper;
 import com.systelab.seed.features.patient.model.Patient;
 import com.systelab.seed.features.patient.repository.PatientRepository;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest()
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class PatientRepositoryRevisionsTest {
-
-    @Autowired
-    EntityManagerFactory entityManagerFactory;
 
     @Autowired
     private PatientRepository repository;
@@ -47,15 +35,15 @@ public class PatientRepositoryRevisionsTest {
     private Patient patient;
 
     @BeforeEach
-    public void save() throws JsonParseException, JsonMappingException, IOException {
-
-    	AuthenticationHelper.mockAdminAuthentication();
+    public void save() throws IOException {
         repository.deleteAll();
         patient = repository.save(new Patient("My Surname", "My Name", null, null, null, null, null));
+        repository.flush();
     }
 
+
     @Test
-    public void initialRevision() {
+    void initialRevision() {
 
         Revisions<Integer, Patient> revisions = repository.findRevisions(patient.getId());
 
@@ -63,7 +51,7 @@ public class PatientRepositoryRevisionsTest {
                 .allSatisfy(revision -> assertThat(revision.getEntity()).extracting(Patient::getId, Patient::getName, Patient::getSurname)
                         .containsExactly(patient.getId(), patient.getName(), patient.getSurname()))
                 .allSatisfy(revision -> {
-                    DefaultRevisionMetadata metadata = (DefaultRevisionMetadata) revision.getMetadata();
+                    RevisionMetadata<Integer> metadata = revision.getMetadata();
                     AuditRevisionEntity revisionEntity = metadata.getDelegate();
                     assertThat(revisionEntity.getUsername()).isEqualTo("admin");
                 });
@@ -71,31 +59,31 @@ public class PatientRepositoryRevisionsTest {
 
 
     @Test
-    public void updateIncreasesRevisionNumber() {
+    void updateIncreasesRevisionNumber() {
         Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
-        int beforeUpdate = getTotalRevisionsById(revision);
+        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
 
         patient.setName("New Name");
         repository.save(patient);
 
         Optional<Revision<Integer, Patient>> revisionAfterUpdate = repository.findLastChangeRevision(patient.getId());
         assertThat(revisionAfterUpdate).isPresent()
-                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(beforeUpdate))
+                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(numberOfRevisionsBeforeUpdate))
                 .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(Patient::getName)
                         .isEqualTo("New Name")
                 );
     }
 
     @Test
-    public void deletedItemWillHaveRevisionRetained() {
+    void deletedItemWillHaveRevisionRetained() {
 
         Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
-        int beforeUpdate = getTotalRevisionsById(revision);
+        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
 
         repository.delete(patient);
 
         Revisions<Integer, Patient> revisions = repository.findRevisions(patient.getId());
-        assertThat(revisions).isNotEqualTo(beforeUpdate);
+        assertThat(revisions).isNotEqualTo(numberOfRevisionsBeforeUpdate);
         Iterator<Revision<Integer, Patient>> iterator = revisions.iterator();
         Revision<Integer, Patient> initialRevision = iterator.next();
         Revision<Integer, Patient> finalRevision = iterator.next();
@@ -112,14 +100,14 @@ public class PatientRepositoryRevisionsTest {
 
 
     @Test
-    public void showAdminRevisionInformation() {
+    void showAdminRevisionInformation() {
 
         Revisions<Integer, Patient> revisions = repository.findRevisions(patient.getId());
         assertThat(revisions).isNotEmpty()
                 .allSatisfy(revision -> assertThat(revision.getEntity()).extracting(Patient::getId, Patient::getName, Patient::getSurname)
                         .containsExactly(patient.getId(), patient.getName(), patient.getSurname()))
                 .allSatisfy(revision -> {
-                    DefaultRevisionMetadata metadata = (DefaultRevisionMetadata) revision.getMetadata();
+                    RevisionMetadata<Integer> metadata = revision.getMetadata();
                     AuditRevisionEntity revisionEntity = metadata.getDelegate();
                     assertThat(revisionEntity.getUsername()).isEqualTo("admin");
                     assertThat(revisionEntity.getIpAddress()).isEqualTo("10.0.0.1");
@@ -127,76 +115,46 @@ public class PatientRepositoryRevisionsTest {
     }
 
     @Test
-    public void checkRevisionTypeWhenDeleting() {
+    void checkRevisionTypeWhenDeleting() {
 
         repository.delete(patient);
 
-        AuditQuery q = getPatientAuditQuery();
+        Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
 
-        List<Object[]> result = q.getResultList();
+        Patient deletedPatient = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        Patient deletedPatient = (Patient) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.DEL);
         Assertions.assertNull(deletedPatient.getAddress());
         Assertions.assertNull(deletedPatient.getName());
         Assertions.assertNull(deletedPatient.getSurname());
+        Assertions.assertEquals(RevisionMetadata.RevisionType.DELETE, revision.get().getMetadata().getRevisionType());
     }
 
     @Test
-    public void checkRevisionTypeWhenModifying() {
+    void checkRevisionTypeWhenModifying() {
 
         patient.setName("New Name");
         repository.save(patient);
 
-        AuditQuery q = getPatientAuditQuery();
+        Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
 
-        List<Object[]> result = q.getResultList();
+        Patient modifiedPatient = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        Patient modifiedPatient = (Patient) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.MOD);
         assertThat(modifiedPatient.getName()).isEqualTo("New Name");
+        Assertions.assertEquals(RevisionMetadata.RevisionType.UPDATE, revision.get().getMetadata().getRevisionType());
     }
 
     @Test
-    public void checkRevisionTypeWhenCreating() {
+    void checkRevisionTypeWhenCreating() {
 
-        repository.save(new Patient("Created Patient Surname", "Created Patient Name", null, null, null, null, null));
+        Patient newPatient = repository.save(new Patient("Created Patient Surname", "Created Patient Name", null, null, null, null, null));
 
-        AuditQuery q = getPatientAuditQuery();
+        Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(newPatient.getId());
 
-        List<Object[]> result = q.getResultList();
+        Patient createdPatient = revision.get().getEntity();
 
-        Object[] tuple = result.get(result.size() - 1);
-
-        Patient createdPatient = (Patient) tuple[0];
-        RevisionType revisionType = (RevisionType) tuple[2];
-
-        Assertions.assertEquals(revisionType, RevisionType.ADD);
         assertThat(createdPatient.getName()).isEqualTo("Created Patient Name");
+        Assertions.assertEquals(RevisionMetadata.RevisionType.INSERT, revision.get().getMetadata().getRevisionType());
     }
 
-    private AuditQuery getPatientAuditQuery() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
-        AuditQuery q = auditReader.createQuery()
-                .forRevisionsOfEntity(Patient.class, false, true);
-        return q;
-    }
-
-    private int getTotalRevisionsById(Optional<Revision<Integer, Patient>> revision) {
-
-        int beforeUpdate = revision.get()
-                .getRevisionNumber()
-                .orElse(-1);
-        return beforeUpdate;
-    }   
 }

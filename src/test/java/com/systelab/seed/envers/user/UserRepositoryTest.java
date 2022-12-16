@@ -1,33 +1,28 @@
 package com.systelab.seed.envers.user;
 
-import com.systelab.seed.core.audit.SpringSecurityAuditorAware;
+import com.systelab.seed.envers.helper.AuthenticationExtension;
 import com.systelab.seed.features.user.model.User;
 import com.systelab.seed.features.user.model.UserRole;
 import com.systelab.seed.features.user.repository.UserRepository;
-import com.systelab.seed.core.config.RepositoryConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 
-
-@DataJpaTest(includeFilters = @Filter(type = ASSIGNABLE_TYPE, classes = {SpringSecurityAuditorAware.class, RepositoryConfig.class}))
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserRepositoryTest {
 
-    @Autowired
-    private TestEntityManager em;
 
     @Autowired
     private UserRepository repository;
@@ -36,7 +31,9 @@ public class UserRepositoryTest {
 
     @BeforeEach
     public void save() {
-        user = em.persistAndFlush(new User("surname", "name", "login", "password", UserRole.USER));
+        repository.deleteAll();;
+        user = repository.save(new User("surname", "name", "login", "password", UserRole.USER));
+        repository.flush();
     }
 
     @Test

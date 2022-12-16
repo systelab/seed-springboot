@@ -10,7 +10,7 @@ import com.systelab.seed.features.patient.service.query.PatientQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.UUID;
 
 @RequiredArgsConstructor

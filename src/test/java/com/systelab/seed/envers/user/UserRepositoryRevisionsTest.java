@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import javax.persistence.EntityManagerFactory;
-
+import com.systelab.seed.envers.helper.AuthenticationExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,21 +15,15 @@ import org.springframework.data.history.Revisions;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.systelab.seed.core.audit.AuditRevisionEntity;
-import com.systelab.seed.envers.helper.AuthenticationHelper;
 import com.systelab.seed.features.user.model.User;
 import com.systelab.seed.features.user.model.UserRole;
 import com.systelab.seed.features.user.repository.UserRepository;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest()
+@ExtendWith({SpringExtension.class, AuthenticationExtension.class})
+@SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class UserRepositoryRevisionsTest {
-
-    @Autowired
-    EntityManagerFactory entityManagerFactory;
 
     @Autowired
     private UserRepository repository;
@@ -38,14 +31,14 @@ public class UserRepositoryRevisionsTest {
     private User user;
 
     @BeforeEach
-    public void save() throws JsonParseException, JsonMappingException, IOException {
-
-        AuthenticationHelper.mockAdminAuthentication();
+    public void save() throws IOException {
+        repository.deleteAll();
         user = repository.save(new User("login", "name", "surname", "password", UserRole.USER));
+        repository.flush();
     }
 
     @Test
-    public void initialRevision() {
+    void initialRevision() {
 
         Revisions<Integer, User> revisions = repository.findRevisions(user.getId());
 

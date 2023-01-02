@@ -2,7 +2,6 @@ package com.systelab.seed.envers.allergy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -28,16 +27,15 @@ import com.systelab.seed.features.allergy.model.Allergy;
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class AllergyRepositoryRevisionsTest {
+class AllergyRepositoryRevisionsTest {
 
     @Autowired
     private AllergyRepository repository;
 
-
     private Allergy allergy;
 
     @BeforeEach
-    void save() throws IOException {
+    void save() {
         repository.deleteAll();
         allergy = repository.save(new Allergy("AllergyA", "signsA", null));
         repository.flush();
@@ -62,13 +60,13 @@ public class AllergyRepositoryRevisionsTest {
     @Test
     void updateIncreasesRevisionNumber() {
         Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
-        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
+        int numberOfRevisionsBeforeUpdate = revision.flatMap(Revision::getRevisionNumber).orElse(-1);
 
         allergy.setName("New Allergy name");
         repository.save(allergy);
 
         Optional<Revision<Integer, Allergy>> revisionAfterUpdate = repository.findLastChangeRevision(allergy.getId());
-        assertThat(revisionAfterUpdate).isPresent().hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(numberOfRevisionsBeforeUpdate))
+        assertThat(revisionAfterUpdate).isPresent().hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber().get()).isNotEqualTo(numberOfRevisionsBeforeUpdate))
                 .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(Allergy::getName).isEqualTo("New Allergy name"));
     }
 
@@ -76,12 +74,12 @@ public class AllergyRepositoryRevisionsTest {
     void deletedItemWillHaveRevisionRetained() {
 
         Optional<Revision<Integer, Allergy>> revision = repository.findLastChangeRevision(allergy.getId());
-        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
+        int numberOfRevisionsBeforeUpdate = revision.flatMap(Revision::getRevisionNumber).orElse(-1);
 
         repository.delete(allergy);
 
         Revisions<Integer, Allergy> revisions = repository.findRevisions(allergy.getId());
-        assertThat(revisions).isNotEqualTo(numberOfRevisionsBeforeUpdate);
+        assertThat(revisions.stream().count()).isNotEqualTo(numberOfRevisionsBeforeUpdate);
         Iterator<Revision<Integer, Allergy>> iterator = revisions.iterator();
         Revision<Integer, Allergy> initialRevision = iterator.next();
         Revision<Integer, Allergy> finalRevision = iterator.next();

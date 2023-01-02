@@ -3,7 +3,7 @@ package com.systelab.seed.features.patient.allergy.controller.dto;
 import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface PatientAllergyMapper {
 
     PatientAllergy fromRequestDTO(PatientAllergyRequestDTO dto);

@@ -21,7 +21,7 @@ import com.systelab.seed.features.allergy.model.Allergy;
 @SpringBootTest
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class AllergyRepositoryTest {
+class AllergyRepositoryTest {
 
     @Autowired
     private AllergyRepository repository;
@@ -39,14 +39,14 @@ public class AllergyRepositoryTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllAllergies() {
+    void findAllAllergies() {
         List<Allergy> allergies = repository.findAll();
         assertThat(allergies).isNotEmpty().extracting(Allergy::getName, Allergy::getSigns).containsExactly(tuple("the allergy", "the signs"));
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void hasAuditInformation() {
+    void hasAuditInformation() {
         assertThat(allergy)
                 .extracting(Allergy::getCreatedBy, Allergy::getCreationTime, Allergy::getModifiedBy, Allergy::getModificationTime, Allergy::getVersion)
                 .isNotNull();

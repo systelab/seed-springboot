@@ -23,7 +23,7 @@ import com.systelab.seed.features.user.repository.UserRepository;
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class UserRepositoryRevisionsTest {
+class UserRepositoryRevisionsTest {
 
     @Autowired
     private UserRepository repository;

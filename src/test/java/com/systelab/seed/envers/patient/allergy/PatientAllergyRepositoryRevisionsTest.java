@@ -32,7 +32,7 @@ import com.systelab.seed.features.patient.repository.PatientRepository;
 @SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class PatientAllergyRepositoryRevisionsTest {
+class PatientAllergyRepositoryRevisionsTest {
 
     @Autowired
     private PatientAllergyRepository patientAllergyRepository;
@@ -87,7 +87,7 @@ public class PatientAllergyRepositoryRevisionsTest {
 
         Optional<Revision<Integer, PatientAllergy>> revisionAfterUpdate = patientAllergyRepository.findLastChangeRevision(patientAllergy.getId());
         assertThat(revisionAfterUpdate).isPresent()
-                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(numberOfReleasesBeforeUpdate))
+                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber().get()).isNotEqualTo(numberOfReleasesBeforeUpdate))
                 .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(PatientAllergy::getNote)
                         .isEqualTo("the new Note")
                 );

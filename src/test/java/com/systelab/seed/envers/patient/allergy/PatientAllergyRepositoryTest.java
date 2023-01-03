@@ -25,7 +25,7 @@ import com.systelab.seed.features.patient.allergy.repository.PatientAllergyRepos
 @SpringBootTest
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class PatientAllergyRepositoryTest {
+class PatientAllergyRepositoryTest {
 
     @Autowired
     private PatientAllergyRepository repository;

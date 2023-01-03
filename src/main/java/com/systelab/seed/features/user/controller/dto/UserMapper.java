@@ -3,7 +3,7 @@ package com.systelab.seed.features.user.controller.dto;
 import com.systelab.seed.features.user.model.User;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface UserMapper {
 
     User fromRequestDTO(UserRequestDTO dto);

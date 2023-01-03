@@ -86,16 +86,6 @@ spring:
       enabled: true
       path: /h2
 
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
-  web:
-    resources:
-      cache:
-        cachecontrol:
-          max-age: 120
-          must-revalidate: true
-
 patient:
   maintenance:
     cron:

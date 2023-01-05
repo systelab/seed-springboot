@@ -96,6 +96,10 @@ spring:
           max-age: 120
           must-revalidate: true
 
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+
 patient:
   maintenance:
     cron:

@@ -85,6 +85,12 @@ spring:
     console:
       enabled: true
       path: /h2
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 120
+          must-revalidate: true
 
 patient:
   maintenance:

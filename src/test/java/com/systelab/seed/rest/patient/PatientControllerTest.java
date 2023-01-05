@@ -48,7 +48,7 @@ import com.systelab.seed.features.patient.repository.PatientRepository;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class PatientControllerTest {
+class PatientControllerTest {
     private MockMvc mvc;
 
     @Autowired
@@ -67,7 +67,7 @@ public class PatientControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void testGetAllPatient() throws Exception {
+    void testGetAllPatient() throws Exception {
         Patient patientA = createPatient("A");
         Patient patientB = createPatient("B");
         List<Patient> patients = Arrays.asList(patientA, patientB);
@@ -83,7 +83,7 @@ public class PatientControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void testGetPatient() throws Exception {
+    void testGetPatient() throws Exception {
         Optional<Patient> patient = Optional.of(createPatient("A"));
 
         when(mockPatientRepository.findById(isA(UUID.class))).thenReturn(patient);
@@ -95,7 +95,7 @@ public class PatientControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void testInsertPatient() throws Exception {
+    void testInsertPatient() throws Exception {
         Patient patient = createPatient("A");
 
         when(mockPatientRepository.save(any())).thenReturn(patient);
@@ -107,7 +107,7 @@ public class PatientControllerTest {
 
     @Test
     @WithMockUser(roles = "User")
-    public void testDeletePatient() throws Exception {
+    void testDeletePatient() throws Exception {
         Optional<Patient> patient = Optional.of(createPatient("A"));
         when(mockPatientRepository.findById(isA(UUID.class))).thenReturn(patient);
 

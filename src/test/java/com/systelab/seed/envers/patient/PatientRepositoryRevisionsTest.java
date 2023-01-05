@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.envers.repository.support.DefaultRevisionMetadata;
 import org.springframework.data.history.Revision;
 import org.springframework.data.history.RevisionMetadata;
 import org.springframework.data.history.Revisions;
@@ -27,7 +26,7 @@ import com.systelab.seed.features.patient.repository.PatientRepository;
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @SpringBootTest
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class PatientRepositoryRevisionsTest {
+class PatientRepositoryRevisionsTest {
 
     @Autowired
     private PatientRepository repository;
@@ -61,14 +60,14 @@ public class PatientRepositoryRevisionsTest {
     @Test
     void updateIncreasesRevisionNumber() {
         Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
-        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
+        int numberOfRevisionsBeforeUpdate = revision.flatMap(Revision::getRevisionNumber).orElse(-1);
 
         patient.setName("New Name");
         repository.save(patient);
 
         Optional<Revision<Integer, Patient>> revisionAfterUpdate = repository.findLastChangeRevision(patient.getId());
         assertThat(revisionAfterUpdate).isPresent()
-                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber()).isNotEqualTo(numberOfRevisionsBeforeUpdate))
+                .hasValueSatisfying(rev -> assertThat(rev.getRevisionNumber().get()).isNotEqualTo(numberOfRevisionsBeforeUpdate))
                 .hasValueSatisfying(rev -> assertThat(rev.getEntity()).extracting(Patient::getName)
                         .isEqualTo("New Name")
                 );
@@ -78,12 +77,12 @@ public class PatientRepositoryRevisionsTest {
     void deletedItemWillHaveRevisionRetained() {
 
         Optional<Revision<Integer, Patient>> revision = repository.findLastChangeRevision(patient.getId());
-        int numberOfRevisionsBeforeUpdate = revision.get().getRevisionNumber().orElse(-1);
+        int numberOfRevisionsBeforeUpdate = revision.flatMap(Revision::getRevisionNumber).orElse(-1);
 
         repository.delete(patient);
 
         Revisions<Integer, Patient> revisions = repository.findRevisions(patient.getId());
-        assertThat(revisions).isNotEqualTo(numberOfRevisionsBeforeUpdate);
+        assertThat(revisions.stream().count()).isNotEqualTo(numberOfRevisionsBeforeUpdate);
         Iterator<Revision<Integer, Patient>> iterator = revisions.iterator();
         Revision<Integer, Patient> initialRevision = iterator.next();
         Revision<Integer, Patient> finalRevision = iterator.next();

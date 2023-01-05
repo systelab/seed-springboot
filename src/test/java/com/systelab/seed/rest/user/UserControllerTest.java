@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class UserControllerTest {
+class UserControllerTest {
 
     private MockMvc mvc;
 
@@ -72,7 +72,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void testFindUsersAuthoritzation() throws Exception {
+    void testFindUsersAuthoritzation() throws Exception {
         //Mock Data to generate some users
         List<User> users = Arrays.asList(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Ivano", "Balic", "Balic", "Best"),
                 new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Jackson", "Richardson", "Jackson", "Rastas"));
@@ -92,7 +92,7 @@ public class UserControllerTest {
 
     @Test
     @WithAnonymousUser
-    public void shouldGetUnauthorizedWithAnonymousUser() throws Exception {
+    void shouldGetUnauthorizedWithAnonymousUser() throws Exception {
 
         mvc.perform(get("/seed/v1/users"))
                 .andExpect(status().isUnauthorized());
@@ -100,7 +100,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void testFindUser() throws Exception {
+    void testFindUser() throws Exception {
         Optional<User> user = Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Daenerys", "Targaryen", "Daenerys", "Dragons"));
 
         when(mockUserRepository.findById(isA(UUID.class))).thenReturn(user);
@@ -116,7 +116,7 @@ public class UserControllerTest {
 
     @Test
     @WithAnonymousUser
-    public void testFindUserUnauthorized() throws Exception {
+    void testFindUserUnauthorized() throws Exception {
         Optional<User> user = Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Daenerys", "Targaryen", "Daenerys", "Dragons"));
 
         when(mockUserRepository.findById(isA(UUID.class))).thenReturn(user);
@@ -129,7 +129,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void testInsertUser() throws Exception {
+    void testInsertUser() throws Exception {
 
         User user = new User();
         user.setLogin("Systelab");
@@ -150,7 +150,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(authorities = "User")
-    public void testInsertUserUnauthorized() throws Exception {
+    void testInsertUserUnauthorized() throws Exception {
 
         User user = new User();
         user.setLogin("login");
@@ -170,7 +170,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(authorities = "ADMIN")
-    public void testDeleteUser() throws Exception {
+    void testDeleteUser() throws Exception {
 
         Optional<User> user = Optional.of(new User(UUID.fromString("a98b8fe5-7cc5-4348-8f99-4860f5b84b13"), "Nikola", "Karabtic", "Leonidas", "Handball"));
 
@@ -184,7 +184,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser(authorities = "User")
-    public void testDeleteUserUnauthorized() throws Exception {
+    void testDeleteUserUnauthorized() throws Exception {
 
         mvc.perform(delete("/seed/v1/users/{id}", "a98b8fe5-7cc5-4348-8f99-4860f5b84b13")
                 .header("Authorization", "Bearer 5d1103e-b3e1-4ae9-b606-46c9c1bc915a"))

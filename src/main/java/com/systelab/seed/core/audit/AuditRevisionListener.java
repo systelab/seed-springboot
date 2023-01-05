@@ -12,17 +12,17 @@ public class AuditRevisionListener implements RevisionListener {
 
     @Override
     public void newRevision(Object revisionEntity) {
-        if (revisionEntity instanceof AuditRevisionEntity) {
+        if (revisionEntity instanceof AuditRevisionEntity auditRevisionEntity) {
             Optional<Authentication> authentication = this.getAuthentication();
-            authentication.ifPresent(value -> updateRevisionEntity((AuditRevisionEntity) revisionEntity, value));
+            authentication.ifPresent(value -> updateRevisionEntity(auditRevisionEntity, value));
         }
     }
 
     private void updateRevisionEntity(AuditRevisionEntity revisionEntity, Authentication auth) {
         revisionEntity.setUsername(auth.getName());
         Object details = auth.getDetails();
-        if (details instanceof WebAuthenticationDetails) {
-            revisionEntity.setIpAddress(((WebAuthenticationDetails) details).getRemoteAddress());
+        if (details instanceof WebAuthenticationDetails webAuthenticationDetails)  {
+            revisionEntity.setIpAddress(webAuthenticationDetails.getRemoteAddress());
         }
     }
 

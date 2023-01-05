@@ -21,7 +21,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 @SpringBootTest
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class UserRepositoryTest {
+class UserRepositoryTest {
 
 
     @Autowired
@@ -38,7 +38,7 @@ public class UserRepositoryTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void findAllUsers() {
+    void findAllUsers() {
         List<User> users = repository.findAll();
         assertThat(users).isNotEmpty()
                 .extracting(User::getSurname, User::getName, User::getLogin, User::getPassword, User::getRole)
@@ -47,7 +47,7 @@ public class UserRepositoryTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "MANAGER")
-    public void hasAuditInformation() {
+    void hasAuditInformation() {
         assertThat(user).extracting(User::getCreatedBy, User::getCreationTime, User::getModifiedBy, User::getModificationTime, User::getVersion)
                 .isNotNull();
     }

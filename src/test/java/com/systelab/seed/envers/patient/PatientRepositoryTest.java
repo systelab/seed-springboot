@@ -23,7 +23,7 @@ import com.systelab.seed.features.patient.repository.PatientRepository;
 @SpringBootTest
 @ExtendWith({SpringExtension.class, AuthenticationExtension.class})
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class PatientRepositoryTest {
+class PatientRepositoryTest {
 
 
     @Autowired

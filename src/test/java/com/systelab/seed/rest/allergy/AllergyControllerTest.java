@@ -48,7 +48,7 @@ import com.systelab.seed.features.patient.allergy.model.PatientAllergy;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @Sql(scripts = {"classpath:sql/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class AllergyControllerTest {
+class AllergyControllerTest {
     private MockMvc mvc;
 
     @Autowired
@@ -70,7 +70,7 @@ public class AllergyControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void testGetAllAllergies() throws Exception {
+    void testGetAllAllergies() throws Exception {
         
         Allergy allergyA = createAllergy("A");
         Allergy allergyB = createAllergy("B");
@@ -101,7 +101,7 @@ public class AllergyControllerTest {
    
     @Test
     @WithMockUser(roles = "USER")
-    public void testGetAllergy() throws Exception {
+    void testGetAllergy() throws Exception {
         Optional<Allergy> allergy = Optional.of(createAllergy("A"));
 
         when(mockAllergyRepository.findById(isA(UUID.class))).thenReturn(allergy);
@@ -118,7 +118,7 @@ public class AllergyControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void testInsertAllergy() throws Exception {
+    void testInsertAllergy() throws Exception {
         Allergy allergy = createAllergy("A");
 
         when(mockAllergyRepository.save(any())).thenReturn(allergy);
@@ -133,7 +133,7 @@ public class AllergyControllerTest {
 
     @Test
     @WithMockUser(roles = "User")
-    public void testDeleteAllergy() throws Exception {
+    void testDeleteAllergy() throws Exception {
         Optional<Allergy> allergy = Optional.of(createAllergy("A"));
         when(mockAllergyRepository.findById(isA(UUID.class))).thenReturn(allergy);
 

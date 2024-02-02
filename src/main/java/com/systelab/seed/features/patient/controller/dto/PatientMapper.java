@@ -9,4 +9,5 @@ public interface PatientMapper {
     Patient fromRequestDTO(PatientRequestDTO dto);
 
     PatientResponseDTO toResponseDTO(Patient user);
+
 }
